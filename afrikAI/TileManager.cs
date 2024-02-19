@@ -14,8 +14,7 @@
             width = _width;
             height = _height;
             tileGenerator = new TileGenerator(width, height);
-            tiles = new Tile[height, width];
-            tileGenerator.GenerateTiles(_filePath);
+            tiles = tileGenerator.GenerateTiles(_filePath);
         }
         public void DrawTiles() { 
             foreach (Tile tile in tiles) tile.DrawTile(); 
