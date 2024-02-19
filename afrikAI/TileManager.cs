@@ -1,62 +1,36 @@
-﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
-
-namespace afrikAI
+﻿namespace afrikAI
 {
     public class TileManager
     {
+        
         private Tile[,] tiles;
         private int width;
         private int height;
-        private string filePath;
+        private TileGenerator tileGenerator;
+        
 
-        public TileManager(int _width, int _height, string _filePath)
+        public TileManager(int _width, int _height, string? _filePath = null)
         {
             width = _width;
             height = _height;
-            filePath = _filePath;
+            tileGenerator = new TileGenerator(width, height);
             tiles = new Tile[height, width];
-            readFile();
+            tileGenerator.GenerateTiles(_filePath);
         }
-        public void DrawTiles()
-        {
-            foreach (Tile tile in tiles)
-            {
-                tile.DrawTile();
-            }
+        public void DrawTiles() { 
+            foreach (Tile tile in tiles) tile.DrawTile(); 
         }
-        private void readFile()
-        {
-            if(!File.Exists(filePath)) Debug.WriteLine($"Error In TileManager/readFile: File {filePath} doesn't exist");
-            else
-            { 
-                using(StreamReader sr = new StreamReader(filePath))
-                {
-                    int y = 0;
-                    while(!sr.EndOfStream)
-                    {
-                        string[] data = sr.ReadLine().Trim().Split(' ');
-                        if (data.Length != width) Debug.WriteLine($"Warning in TileManager/readFile file width ({data.Length}) != Tiles width ({width})");
-                        for (int x = 0;x < data.Length ;x++)
-                        {
-                            switch(data[x])
-                            {
-                                case "0":
-                                    // create TileType0 with TileFactory;
-                                    break;
-                                case "1":
-                                    // create TileType1 with TileFactory;
-                                    break;
-                                case "2":
-                                    // create TileType2 with TileFactory;
-                                    break;
-                            }
-                        }
-                        y++;
-                    }
-                    if(y != height) Debug.WriteLine( $"Warning in TileManager/readFile file height ({data.Length}) != Tiles width ({width})")
-                }
-            }
+        public void SwapTiles(int x1, int y1, int x2, int y2)
+        {    
+            // c# 7.0 or newer
+            (tiles[y2, x2], tiles[y1, x1]) = (tiles[y1, x1], tiles[y2, x2]);	
+
+            // c# 6.0 or under.
+			//Tile tmpTile = tiles[y1, x1];
+            //tiles[y1,x1] = tiles[y2,x2];
+            //tiles[y2,x2] = tmpTile;
         }
+        public void SwapTiles(int[] cord1, int[] cord2) => SwapTiles(cord1[0], cord1[1], cord2[0], cord2[1]);
+        
     }
 }
