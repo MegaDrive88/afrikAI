@@ -3,8 +3,14 @@
     public class Tile
     {
         private ConsoleColor bgColor { get; set; }
-        private Dictionary<Type, ConsoleColor> tileColors = new Dictionary<Type, ConsoleColor>()
+        private Dictionary<string, ConsoleColor> tileColors = new Dictionary<string, ConsoleColor>()
         {
+            { "ground", ConsoleColor.Yellow },
+            { "wall", ConsoleColor.DarkYellow },
+            { "water", ConsoleColor.Blue },
+            { "lion", ConsoleColor.DarkRed },
+            { "zebra", ConsoleColor.Black },
+            { "path", ConsoleColor.Red }
         };
         private int x { get; set; }
         private int y { get; set; }
@@ -13,9 +19,11 @@
             get => closestDistance; 
             set => closestDistance = Math.Max(value, closestDistance); 
         }
-        public Tile(int _x, int _y)
+        public string TileType = string.Empty;
+        public Tile(int _x, int _y, string _type)
         {
-            bgColor = tileColors[GetType()];
+            TileType = _type;
+            bgColor = tileColors[TileType];
             x = _x;
             y = _y;
         }
