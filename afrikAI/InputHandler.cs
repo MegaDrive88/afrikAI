@@ -1,4 +1,6 @@
-﻿namespace afrikAI
+﻿using System.Diagnostics;
+
+namespace afrikAI
 {
 	public class InputHandler
 	{
@@ -31,22 +33,18 @@
 			} while (y < 0 || y >= game.Height);
 			return new int[] { x, y };
 		}
-		public string GetMenuInput()
+		public void HandleMenuInput()
 		{
-			string outPut;
-			do
+			ConsoleKey consoleKey = Console.ReadKey(true).Key;
+			if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuUp();
+			else if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuDown();
+			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey)) menu.Confrim();
+			else if (Statics.KeyBinds.MenuExit.Contains(consoleKey)) menu.Exit();
+			else
 			{
-				Console.Clear();
-				Console.WriteLine("Írj be egy karaktert (a bal oldarlo) és nyomd meg az entert.");
-				foreach (KeyValuePair<string, string> pair in menu.CurrentItems)
-				{
-					Console.WriteLine($"{pair.Key} -\t{pair.Value}");
-				}
-				Console.Write("\nKarakter = ");
-				outPut = Console.ReadLine();
-
-			} while (!menu.CurrentItems.ContainsKey(outPut));
-			return outPut;
-        }
+				Debug.WriteLine($"{consoleKey} not in keybinds, press another key.");
+				HandleMenuInput();
+			}
+		}
 	}
 }
