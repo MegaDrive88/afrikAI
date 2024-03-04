@@ -12,13 +12,14 @@
             { "zebra", ConsoleColor.Black },
             { "path", ConsoleColor.Red }
         };
-        private int x { get; set; }
-        private int y { get; set; }
+        public int x { get;private set; }
+        public int y { get;private set; }
         private int closestDistance = int.MaxValue;
         public int ClosestDistance { 
             get => closestDistance; 
-            set => closestDistance = Math.Max(value, closestDistance); 
+            set => closestDistance = Math.Max(0, Math.Min(value, closestDistance)); 
         }
+        public bool Calculated;
         public string TileType = string.Empty;
         public Tile(int _x, int _y, string _type)
         {
