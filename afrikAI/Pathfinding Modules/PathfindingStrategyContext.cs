@@ -8,12 +8,10 @@ namespace afrikAI.Pathfinding_Modules
 		public void ChangeStrategy(IPathfindingStrategy strategy)
 		{
 			Strategy = strategy;
-		}
-
-		
-		public Vector2[] GetShortestPath(List<Tile> tiles)
+		}		
+		public Vector2[] GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile)
 		{
-			return Strategy.GetShortestPath(tiles);
+			return Strategy.GetShortestPath(tiles, startTile, endTile);
 		}
 	}
 }
