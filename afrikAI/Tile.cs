@@ -31,9 +31,9 @@
         //public bool IsSafe { get => GetType() == typeof(Wall)};
         public void DrawTile()
         {
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(x * 2, y);
             Console.BackgroundColor = bgColor;
-            Console.Write(" ");
+            Console.Write("  ");
         }
 
     }

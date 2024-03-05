@@ -7,13 +7,14 @@ namespace afrikAI
 		private Game game;
 		private Menu menu;
 
-		public InputHandler(Game _game, Menu _menu)
-		{
-			game = _game;
-			menu = _menu;
-		}
+        public InputHandler(Menu _menu) {
+            menu = _menu;
+        }
+        public InputHandler(Game _game) {
+            game = _game;
+        }
 
-		public int[][] GetGameInput()
+        public int[][] GetGameInput()
 		{
 			return new int[][] { getCordInput("Add meg a tile 2 kordinátáját amelyet mozgatni szeretnél"), getCordInput("Add meg azt a két kordinátát ahova mozgatni szeretnéd") };
 		}
@@ -36,8 +37,8 @@ namespace afrikAI
 		public void HandleMenuInput()
 		{
 			ConsoleKey consoleKey = Console.ReadKey(true).Key;
-			if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuUp();
-			else if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuDown();
+			if (Statics.KeyBinds.MenuUp.Contains(consoleKey)) menu.MenuMove(-1);
+			else if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuMove(1);
 			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey)) menu.Confrim();
 			else if (Statics.KeyBinds.MenuExit.Contains(consoleKey)) menu.Exit();
 			else
