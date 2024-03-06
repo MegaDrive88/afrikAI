@@ -2,13 +2,13 @@
 {
 	public class Menu
 	{
-		private int mainMenuChoice;
+		public int choice;
         private InputHandler inputHandler;
         private string[] options;
         public Menu(string[] _options) {
             options = _options;
             inputHandler = new(this);
-            mainMenuChoice = Show(options);
+            Show(options);
 		}
 		public void MenuMove(int direction)
 		{
@@ -24,16 +24,18 @@
             Console.SetCursorPosition(0, top);
             inputHandler.HandleMenuInput();
 		}
-        public void Confrim()
+        public int Confrim()
 		{
+            (_, int top) = Console.GetCursorPosition();
             Console.Clear();
+            return top;
         }
         public void Exit()
 		{
-
+            Console.Write("csontkovacs");
 		}
-        private int Show(string[] options) {
-            Console.CursorVisible = true;
+        private void Show(string[] options) {
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.DarkYellow;
             foreach (string option in options) { 
@@ -41,10 +43,27 @@
                 Console.ResetColor();
             }
             Console.SetCursorPosition(0, 0);
-            return 0;
         }
         private void LoadFromFileMenu() {
-
+            string[] files = Directory.GetFiles("./saved_deserts");
+            //if (files.Length != 0) {
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = files[i][16..];
+            }
+            List<string> temp = files.ToList();
+            temp.Add("Vissza");
+            files = temp.ToArray();
+            Menu m = new Menu(files);
+            inputHandler = new InputHandler(m);
+            inputHandler.HandleMenuInput();
+            //}
+            //else {
+            //    //Console.WriteLine("Nincsenek mentett sivatagok");
+            //    Menu m = new Menu(new[] { "Vissza" });
+            //    inputHandler = new InputHandler(m);
+            //    inputHandler.HandleMenuInput();
+            //}
         }
         private void GenRandomMenu() {
 
@@ -52,12 +71,12 @@
         private void EditorMenu() {
 
         }
-        private void MainMenuSwitch() {
-            switch (mainMenuChoice) {
-                case 0: // "Sivatag betöltése fájlból"
+        public void MainMenuSwitch() {
+            switch (choice) {
+                case 0:
                     LoadFromFileMenu();
                     break;
-                case 1: // "Sivatag random generálása"
+                case 1:
                     GenRandomMenu();
                     break;
                 case 2:
