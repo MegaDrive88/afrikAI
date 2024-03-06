@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace afrikAI
 {
@@ -6,37 +7,34 @@ namespace afrikAI
 	{
 		private int width;
 		private int height;
-
+		public TileGenerator(){}
 		public TileGenerator(int _width, int _height)
 		{
 			width = _width;
 			height = _height;
 		}
-
-		public Tile[,] GenerateTiles(string? filePath = null)
+		public Tile[,] GenerateTiles(string filePath)
 		{
-			if(filePath != null)
+			if (filePath != null)
 			{
 				return readFile(filePath);
 			}
 			else
 			{
-				return genTiles(7);
+				throw new Exception("Filepath = null in TileGenerator/GenerateTiles");
 			}
-
 		}
-		private Tile[,] genTiles(int wallCount)
+		public Tile[,] GenerateTiles(TileGeneratorData data)
 		{
 			Tile[,] tiles = new Tile[height, width];
 			genNormalTiles(tiles);
-			genWalls(wallCount, tiles);
+			genWalls(data, tiles);
 			//genStartAndEndPoint(tiles);
 			return tiles;
-
 		}
-		private void genWalls(int wallCount, Tile[,] tiles)
+		private void genWalls(TileGeneratorData data, Tile[,] tiles)
 		{
-			for (int i = 0; i < wallCount; i++)
+			for (int i = 0; i < data.Wall; i++)
 			{
                 List<int> cords = getWallTopleft();
 				//ide jon a while
@@ -73,7 +71,6 @@ namespace afrikAI
             cords.Add(dir);
             cords.Add(length);
             return cords;
-
         }
         private Tile[,] readFile(string filePath)
 		{
@@ -87,7 +84,7 @@ namespace afrikAI
 					while (!sr.EndOfStream)
 					{
 						string[] data = sr.ReadLine().Trim().Split(' ');
-						if (data.Length != width) Debug.WriteLine($"Warning in TileManager/readFile file width ({data.Length}) != Tiles width ({width})");
+						width = data.Length;
 						for (int x = 0; x < data.Length; x++)
 						{
 							switch (data[x])
@@ -107,11 +104,10 @@ namespace afrikAI
 						}
 						y++;
 					}
-					if (y != height) Debug.WriteLine($"Warning in TileManager/readFile file height ({y}) != Tiles height ({height})");
+					height = y;
 				}
 				return tiles;
 			}
-
 		}
 	}
 	
