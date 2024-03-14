@@ -12,13 +12,14 @@
                 { "Sivatag betöltése fájlból", () => LoadFromFileMenu() },
                 { "Sivatag random generálása", () => GenRandomMenu() },
                 { "Sivatagvarázsló megnyitása", () => EditorMenu() },
-                { "Vissza", () => Back()}
+                { "Vissza", () => Back() }
+                //{ "Kész", () => Back() }
+
                 // ezt kell bővíteni
             };
             Show(options);
         }
-		public void MenuMove(int direction)
-		{
+		public void MenuMove(int direction) {
             int d = direction == - 1 ? options.Length - 1 : options.Length + 1;
             (_, int top) = Console.GetCursorPosition();
             Console.Write(options[top]);
@@ -30,20 +31,28 @@
             Console.ResetColor();
             Console.SetCursorPosition(0, top);
             inputHandler.HandleMenuInput();
-		}
+        }
         public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
             try {
                 allOptions[options[top]].Invoke();
             }
             catch {
-                //fájl lett kiválasztva
+                //try {
+                using (StreamReader sr = new StreamReader($"./saved_deserts\\{options[top]}.txt")) {
+                    Console.Clear();
+                    // Console.WriteLine(sr.ReadToEnd());
+                }
+                //}
+                //catch { }
             }
         }
-        public void Exit()
-		{
+        public void Exit() {
             Console.Write("csontkovacs");
-		}
+        }
+        public void EnterNumbers() {
+
+        }
         private void Show(string[] options) {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Black;
@@ -67,8 +76,12 @@
             Show(options);
             inputHandler.HandleMenuInput();
         }
-        private void GenRandomMenu() {
-
+        private int[] GenRandomMenu() {
+            // szél, mag, lion, wall
+            options = new[] { "Szélesség: ", "Magasság: ", "Oroszlánok száma: ", "Falak száma: ", "Kész" }; // menüpontok mögé lesz írva
+            Show(options);
+            inputHandler.HandleMenuInput();
+            return new[] { 1, 1, 1, 1 };
         }
         private void EditorMenu() {
 
@@ -76,6 +89,7 @@
         private void Back() {
             
         }
+        
         //private / public dolgokat rendezni!!!
 
         // sivatag fájlból:

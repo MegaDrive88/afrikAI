@@ -34,8 +34,7 @@ namespace afrikAI
 			} while (y < 0 || y >= game.Height);
 			return new int[] { x, y };
 		}
-		public void HandleMenuInput()
-		{
+		public void HandleMenuInput() {
 			ConsoleKey consoleKey = Console.ReadKey(true).Key;
 			if (Statics.KeyBinds.MenuUp.Contains(consoleKey)) menu.MenuMove(-1);
 			else if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuMove(1);
