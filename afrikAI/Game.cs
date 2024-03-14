@@ -1,4 +1,5 @@
 ﻿using afrikAI.Pathfinding_Modules;
+using System.Numerics;
 
 namespace afrikAI
 {
@@ -24,6 +25,15 @@ namespace afrikAI
 			inputHandler = new InputHandler(this);
 			tileManager = new TileManager(filePath, ref width, ref height);
 		}
-
+		public void Start()
+		{
+			while (true)
+			{
+				tileManager.DrawTiles();
+				int[][] input = inputHandler.GetGameInput(width, height);
+				tileManager.SwapTiles(input);
+				tileManager.DrawPath(pathfindingContext);
+			}
+		}
 	}
 }

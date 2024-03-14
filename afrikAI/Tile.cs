@@ -1,4 +1,6 @@
-﻿namespace afrikAI
+﻿using System.Numerics;
+
+namespace afrikAI
 {
     public class Tile
     {
@@ -20,7 +22,15 @@
                 bgColor = Statics.tileColors[value];
             }
         }
-        public Tile(int _x, int _y, string _type)
+		/// <summary>
+		/// type: 
+		/// 0 - ground 
+		/// 1 - wall
+		/// 2 - water
+        /// 3 - lion
+        /// 4 - zebra
+		/// </summary>
+		public Tile(int _x, int _y, string _type)
         {
             TileType = _type;
             bgColor = Statics.tileColors[TileType];
@@ -32,6 +42,17 @@
             Console.SetCursorPosition(x, y);
             Console.BackgroundColor = bgColor;
             Console.Write(" ");
+        }
+        public void Draw(ConsoleColor color)
+        {
+			Console.SetCursorPosition(x, y);
+			Console.BackgroundColor = color;
+			Console.Write(" ");
+		}
+        public void SetPos(int[] pos)
+        {
+            x = pos[0];
+            y = pos[1];
         }
 
     }

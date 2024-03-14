@@ -87,20 +87,33 @@ namespace afrikAI
 						width = data.Length;
 						for (int x = 0; x < data.Length; x++)
 						{
+							Tile newTile;
 							switch (data[x])
 							{
 								// could use dictionary?
 
 								case "0":
-									// create TileType0 with TileFactory;
+									newTile = new Tile(x, y, "ground");
 									break;
 								case "1":
+									newTile = new Tile(x, y, "wall");
 									// create TileType1 with TileFactory;
 									break;
 								case "2":
+									newTile = new Tile(x, y, "water");
 									// create TileType2 with TileFactory;
 									break;
+								case "3":
+									newTile = new Tile(x, y, "lion");
+									break;
+								case "4":
+									newTile = new Tile(x, y, "zebra");
+									break;
+								default:
+									throw new Exception($"No Type for: {data[x]} in TileGenerator / readfile(filepath)"); ;
 							}
+
+							tiles[y,x] = newTile;
 						}
 						y++;
 					}

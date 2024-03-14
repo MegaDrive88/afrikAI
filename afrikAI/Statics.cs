@@ -16,7 +16,6 @@
 			{ "water", ConsoleColor.Blue },
 			{ "lion", ConsoleColor.DarkRed },
 			{ "zebra", ConsoleColor.Black },
-			{ "path", ConsoleColor.Red }
 		};
 	}
 }
