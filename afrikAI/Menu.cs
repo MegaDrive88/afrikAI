@@ -12,16 +12,21 @@
                 { "Sivatag betöltése fájlból", () => LoadFromFileMenu() },
                 { "Sivatag random generálása", () => GenRandomMenu() },
                 { "Sivatagvarázsló megnyitása", () => EditorMenu() },
+                { "Szélesség:", () => inputHandler.HandleMenuInput() },
+                { "Magasság:", () => inputHandler.HandleMenuInput() },
+                { "Oroszlánok száma:", () => inputHandler.HandleMenuInput() },
+                { "Falak száma:", () => inputHandler.HandleMenuInput() },
+                { "Generálás", () => Back() }, // generate random
                 { "Vissza", () => Back() }
-                //{ "Kész", () => Back() }
 
                 // ezt kell bővíteni
             };
-            Show(options);
+            Show();
         }
 		public void MenuMove(int direction) {
             int d = direction == - 1 ? options.Length - 1 : options.Length + 1;
             (_, int top) = Console.GetCursorPosition();
+            Console.SetCursorPosition(0, top);
             Console.Write(options[top]);
             top = (top + d) % options.Length;
             Console.SetCursorPosition(0, top);
@@ -38,22 +43,42 @@
                 allOptions[options[top]].Invoke();
             }
             catch {
-                //try {
                 using (StreamReader sr = new StreamReader($"./saved_deserts\\{options[top]}.txt")) {
                     Console.Clear();
                     // Console.WriteLine(sr.ReadToEnd());
                 }
-                //}
-                //catch { }
             }
         }
         public void Exit() {
             Console.Write("csontkovacs");
         }
-        public void EnterNumbers() {
-
+        public void EnterNumbers(ConsoleKey c) {
+            (int left, int top) = Console.GetCursorPosition();
+            if (new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:" }.Contains(options[top])) {
+                if (left == 0) left = options[top].Length + 1;
+                Console.SetCursorPosition(left, top); // innen kireturnolni :(
+                if ((int)c > 57) c -= '0';
+                Console.Write((int)c - '0');
+            }
+            inputHandler.HandleMenuInput();
         }
-        private void Show(string[] options) {
+        public void DeleteNumber() {
+            Console.CursorVisible = true;
+            (int left, int top) = Console.GetCursorPosition();
+            //if (left == 0) {
+            //    left = options[top].Length - 1;
+            //    Console.WriteLine(left);
+            //}
+            // lehet el kéne menteni a számot?
+            if (left > options[top].Length + 1) {
+                Console.SetCursorPosition(left - 1, top);
+                Console.Write(' ');
+                Console.SetCursorPosition(left - 1, top);
+            }
+            inputHandler.HandleMenuInput();
+            // ha left kisebb mint az opcio hossza akk ne
+        }
+        private void Show() {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.DarkYellow;
@@ -73,13 +98,13 @@
             temp.Add("Vissza");
             files = temp.ToArray();
             options = files;
-            Show(options);
+            Show();
             inputHandler.HandleMenuInput();
         }
         private int[] GenRandomMenu() {
             // szél, mag, lion, wall
-            options = new[] { "Szélesség: ", "Magasság: ", "Oroszlánok száma: ", "Falak száma: ", "Kész" }; // menüpontok mögé lesz írva
-            Show(options);
+            options = new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:", "Generálás", "Vissza"}; // menüpontok mögé lesz írva
+            Show();
             inputHandler.HandleMenuInput();
             return new[] { 1, 1, 1, 1 };
         }
@@ -87,7 +112,9 @@
 
         }
         private void Back() {
-            
+            options = new[] { "Sivatag betöltése fájlból", "Sivatag random generálása", "Sivatagvarázsló megnyitása" };
+            Show();
+            inputHandler.HandleMenuInput();
         }
         
         //private / public dolgokat rendezni!!!
