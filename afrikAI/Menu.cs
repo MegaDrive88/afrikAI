@@ -2,14 +2,21 @@
 {
 	public class Menu
 	{
-		public int choice;
         private InputHandler inputHandler;
         private string[] options;
+        private Dictionary<string, Action> allOptions; 
         public Menu(string[] _options) {
             options = _options;
             inputHandler = new(this);
+            allOptions = new Dictionary<string, Action> {
+                { "Sivatag betöltése fájlból", () => LoadFromFileMenu() },
+                { "Sivatag random generálása", () => GenRandomMenu() },
+                { "Sivatagvarázsló megnyitása", () => EditorMenu() },
+                { "Vissza", () => Back()}
+                // ezt kell bővíteni
+            };
             Show(options);
-		}
+        }
 		public void MenuMove(int direction)
 		{
             int d = direction == - 1 ? options.Length - 1 : options.Length + 1;
@@ -24,11 +31,14 @@
             Console.SetCursorPosition(0, top);
             inputHandler.HandleMenuInput();
 		}
-        public int Confrim()
-		{
+        public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
-            Console.Clear();
-            return top;
+            try {
+                allOptions[options[top]].Invoke();
+            }
+            catch {
+                //fájl lett kiválasztva
+            }
         }
         public void Exit()
 		{
@@ -46,24 +56,16 @@
         }
         private void LoadFromFileMenu() {
             string[] files = Directory.GetFiles("./saved_deserts");
-            //if (files.Length != 0) {
-            for (int i = 0; i < files.Length; i++)
-            {
-                files[i] = files[i][16..];
-            }
             List<string> temp = files.ToList();
+            temp.Remove(@"./saved_deserts\te.st");
+            for (int i = 0; i < temp.Count; i++) {
+                temp[i] = temp[i][16..(temp[i].Length - 4)];
+            }
             temp.Add("Vissza");
             files = temp.ToArray();
-            Menu m = new Menu(files);
-            inputHandler = new InputHandler(m);
+            options = files;
+            Show(options);
             inputHandler.HandleMenuInput();
-            //}
-            //else {
-            //    //Console.WriteLine("Nincsenek mentett sivatagok");
-            //    Menu m = new Menu(new[] { "Vissza" });
-            //    inputHandler = new InputHandler(m);
-            //    inputHandler.HandleMenuInput();
-            //}
         }
         private void GenRandomMenu() {
 
@@ -71,19 +73,10 @@
         private void EditorMenu() {
 
         }
-        public void MainMenuSwitch() {
-            switch (choice) {
-                case 0:
-                    LoadFromFileMenu();
-                    break;
-                case 1:
-                    GenRandomMenu();
-                    break;
-                case 2:
-                    EditorMenu();
-                    break;
-            }
+        private void Back() {
+            
         }
+        //private / public dolgokat rendezni!!!
 
         // sivatag fájlból:
         //		fájlok kilistázás

@@ -39,11 +39,7 @@ namespace afrikAI
 			ConsoleKey consoleKey = Console.ReadKey(true).Key;
 			if (Statics.KeyBinds.MenuUp.Contains(consoleKey)) menu.MenuMove(-1);
 			else if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuMove(1);
-			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey)) {
-				menu.choice = menu.Confrim();
-				menu.MainMenuSwitch(); // nem biztos h main menu!!!
-				//Console.WriteLine(menu.choice);
-			}
+			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey)) menu.Confirm();
 			else if (Statics.KeyBinds.MenuExit.Contains(consoleKey)) menu.Exit();
 			else {
 				Debug.WriteLine($"{consoleKey} not in keybinds, press another key.");
