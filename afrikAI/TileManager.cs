@@ -42,7 +42,10 @@ namespace afrikAI
             tmp_Tile.SetPos(pos2);
             tiles[pos1[0], pos1[1]].SetPos(pos1);
         }
-        
+        public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
+        {
+            DrawPath(getClosestPathToWater(pathfindingContext));
+        }
         private void DrawPath(TilePath path)
         {
             foreach (Vector2 pos in path.Path)
@@ -50,12 +53,17 @@ namespace afrikAI
                 tiles[(int)pos.Y, (int)pos.X].Draw(ConsoleColor.Red);
             }
         }
-        private TilePath getClosestPath(PathfindingContext pathfindingContext)
+        private TilePath getClosestPathToWater(PathfindingContext pathfindingContext)
         {
             Tile zebra = getZebra();
             List<Tile> waters = getWaters();
-            Path shortestPath;
-
+            TilePath shortestPath = pathfindingContext.GetShortestPath(tiles, zebra, waters[0]);
+            for (int i = 1; i < waters.Count; i++)
+            {
+                TilePath path = pathfindingContext.GetShortestPath(tiles, zebra, waters[i]);
+                if(path.Length < shortestPath.Length) shortestPath = path;
+            }
+            return shortestPath;
         }
         private Tile getZebra()
         {

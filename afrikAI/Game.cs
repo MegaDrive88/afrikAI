@@ -32,7 +32,7 @@ namespace afrikAI
 				tileManager.DrawTiles();
 				int[][] input = inputHandler.GetGameInput(width, height);
 				tileManager.SwapTiles(input);
-				tileManager.DrawPath(pathfindingContext);
+				tileManager.DrawShortestPathToWater(pathfindingContext);
 			}
 		}
 	}
