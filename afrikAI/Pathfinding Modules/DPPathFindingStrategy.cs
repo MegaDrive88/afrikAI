@@ -4,7 +4,7 @@ namespace afrikAI.Pathfinding_Modules
 {
 	public class DPPathFindingStrategy : IPathfindingStrategy
 	{
-		private void UpdateTiles(Tile[,] tiles, Tile startTile, Tile endTile) 
+		private void UpdateTiles(Tile[,] tiles, Tile endTile) 
 		{
 			endTile.ClosestDistance = 0;
 			int width = tiles.GetLength(1);
@@ -48,7 +48,7 @@ namespace afrikAI.Pathfinding_Modules
         public List<Vector2> GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile)
 		{
 			List<Vector2> path = new List<Vector2>(); 
-			UpdateTiles(tiles, startTile, endTile);
+			UpdateTiles(tiles, endTile);
 			ClosestTileHelper(tiles, startTile, tiles.GetLength(1), tiles.GetLength(0), ref path);
 			return path;
 		}

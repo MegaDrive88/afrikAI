@@ -2,16 +2,16 @@
 {
 	public class TileGeneratorData
 	{
-		public int Ground;
-		public int Wall;
-		public int Lion;
-		public int Zebra;
-		public TileGeneratorData(int ground, int wall, int lion, int zebra)
+		public readonly int Wall;
+		public readonly int Lion;
+		public readonly int Width;
+		public readonly int Height;
+		public TileGeneratorData(int width, int height, int wall, int lion)
 		{
-			Ground = ground;
+			Width = width;
+			Height = height;
 			Wall = wall;
 			Lion = lion;
-			Zebra = zebra;
 		}
 	}
 }
