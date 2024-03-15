@@ -5,7 +5,7 @@
         private string[] options;
         private Dictionary<string, Action> allOptions;
         private List<string> rowsEntered = new List<string>(); //- csak a bevitt adatok, stringként
-        //private string errorMsg = string.Empty; ha nem felel meg a szam a korlatoknak
+        //private string errorMsg = string.Empty; //ha nem felel meg a szam a korlatoknak
         public Menu(string[] _options) {
             options = _options;
             inputHandler = new(this);
@@ -52,18 +52,13 @@
             }
         }
         public void Exit() {
-            Environment.Exit(0); // ?
+            Environment.Exit(0);
         }
-        public void EnterNumbers(ConsoleKey c) { 
-            if (rowsEntered.Count == 0) rowsEntered = new() { "", "", "", "" }; // ez a sor temporary; újrahasználhatóvá kéne tenni
+        public void GetUserInput(ConsoleKey c) {
+            if (rowsEntered.Count == 0) rowsEntered = new List<string>(new string[options.Length]);
             (int left, int top) = Console.GetCursorPosition();
             if (new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:" }.Contains(options[top])) {
-                //try {
-                //    string temp = rowsEntered[top];
-                //}
-                //catch {
-                //    Console.WriteLine(rowsEntered.ToArray().Length);
-                //}
+                if (rowsEntered[top] is null) rowsEntered[top] = "";
                 if (left == 0) left = options[top].Length + 1 + rowsEntered[top].Length;
                 Console.SetCursorPosition(left, top);
                 if ((int)c > 57) c -= 48;
@@ -108,7 +103,7 @@
         }
         private void GenRandomMenu() {
             // szél, mag, lion, wall
-            options = new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:", "Generálás", "Vissza"}; // menüpontok mögé lesz írva
+            options = new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:", "Generálás", "Vissza"};
             Show();
             inputHandler.HandleMenuInput();
         }

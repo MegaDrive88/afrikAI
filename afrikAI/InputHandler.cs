@@ -41,7 +41,7 @@ namespace afrikAI
 			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey)) menu.Confirm();
 			else if (Statics.KeyBinds.MenuExit.Contains(consoleKey)) menu.Exit();
 			else if (((int)consoleKey >= 48 && (int)consoleKey <= 57) ||
-					 ((int)consoleKey >= 96 && (int)consoleKey <= 105)) menu.EnterNumbers(consoleKey); // fomenube ne
+					 ((int)consoleKey >= 96 && (int)consoleKey <= 105)) menu.GetUserInput(consoleKey); // fomenube ne
 			else if (consoleKey == ConsoleKey.Backspace) menu.DeleteLastChar();
 			else {
 				Debug.WriteLine($"{consoleKey} not in keybinds, press another key.");
