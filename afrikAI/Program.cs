@@ -9,10 +9,7 @@
             //int width = 10;
             //TileManager tm = new TileManager(width, height);
             //tm.DrawTiles();
-            Menu menu = new Menu(new[] { "Sivatag betöltése fájlból",
-                                         "Sivatag random generálása",
-                                         "Sivatagvarázsló megnyitása",
-                                         "Kilépés" });
+            Menu menu = new Menu();
             //Game game = new Game(10, 10);
             InputHandler i = new InputHandler(menu);
             i.HandleMenuInput();

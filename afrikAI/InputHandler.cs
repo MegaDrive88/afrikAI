@@ -35,16 +35,15 @@ namespace afrikAI
 			return new int[] { x, y };
 		}
 		public void HandleMenuInput() {
-			ConsoleKey consoleKey = Console.ReadKey(true).Key;
-			if (Statics.KeyBinds.MenuUp.Contains(consoleKey)) menu.MenuMove(-1);
-			else if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuMove(1);
-			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey)) menu.Confirm();
-			else if (Statics.KeyBinds.MenuExit.Contains(consoleKey)) menu.Exit();
-			else if (((int)consoleKey >= 48 && (int)consoleKey <= 57) ||
-					 ((int)consoleKey >= 96 && (int)consoleKey <= 105)) menu.GetUserInput(consoleKey); // fomenube ne
-			else if (consoleKey == ConsoleKey.Backspace) menu.DeleteLastChar();
+			ConsoleKeyInfo consoleKey = Console.ReadKey(true);
+			if (consoleKey.Key == ConsoleKey.UpArrow) menu.MenuMove(-1);
+			else if (consoleKey.Key == ConsoleKey.DownArrow) menu.MenuMove(1);
+			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey.Key)) menu.Confirm();
+			else if (consoleKey.Key == ConsoleKey.Escape) menu.Exit();
+			else if (Statics.KeyBinds.AcceptedInputKeys().Contains((int)consoleKey.Key)) menu.GetUserInput(consoleKey);
+			else if (consoleKey.Key == ConsoleKey.Backspace) menu.DeleteLastChar();
 			else {
-				Debug.WriteLine($"{consoleKey} not in keybinds, press another key.");
+				Debug.WriteLine($"{consoleKey.Key} not in keybinds, press another key.");
 				HandleMenuInput();
 			}
 		}

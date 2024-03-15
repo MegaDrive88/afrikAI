@@ -2,39 +2,29 @@
 {
     public class Menu {
         private InputHandler inputHandler;
-        private string[] options;
-        private Dictionary<string, Action> allOptions;
+        private MenuItem[] options;
         private List<string> rowsEntered = new List<string>(); //- csak a bevitt adatok, stringként
         //private string errorMsg = string.Empty; //ha nem felel meg a szam a korlatoknak
-        public Menu(string[] _options) {
-            options = _options;
-            inputHandler = new(this);
-            allOptions = new Dictionary<string, Action> {
-                { "Sivatag betöltése fájlból", () => LoadFromFileMenu() },
-                { "Sivatag random generálása", () => GenRandomMenu() },
-                { "Sivatagvarázsló megnyitása", () => EditorMenu() },
-                { "Szélesség:", () => inputHandler.HandleMenuInput() },
-                { "Magasság:", () => inputHandler.HandleMenuInput() },
-                { "Oroszlánok száma:", () => inputHandler.HandleMenuInput() },
-                { "Falak száma:", () => inputHandler.HandleMenuInput() },
-                { "Generálás", () => CheckEnteredNumbers() }, // generate random
-                { "Vissza", () => Back() },
-                { "Kilépés", () => Exit() }
-
-                // ezt kell bővíteni
+        public Menu() {
+            options = new[] {
+                new MenuItem("Sivatag betöltése fájlból", "option", () => LoadFromFileMenu()),
+                new MenuItem("Sivatag random generálása", "option", () => GenRandomMenu()),
+                new MenuItem("Sivatagvarázsló megnyitása", "option", () => EditorMenu()),
+                new MenuItem("Kilépés", "option", () => Exit()),
             };
+            inputHandler = new InputHandler(this);
             Show();
         }
 		public void MenuMove(int direction) {
             int d = direction == - 1 ? options.Length - 1 : options.Length + 1;
             (_, int top) = Console.GetCursorPosition();
             Console.SetCursorPosition(0, top);
-            Console.Write(options[top]);
+            Console.Write(options[top].Text);
             top = (top + d) % options.Length;
             Console.SetCursorPosition(0, top);
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.DarkYellow;
-            Console.Write(options[top]);
+            Console.Write(options[top].Text);
             Console.ResetColor();
             Console.SetCursorPosition(0, top);
             inputHandler.HandleMenuInput();
@@ -42,7 +32,7 @@
         public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
             try {
-                allOptions[options[top]].Invoke();
+                options[top].Action.Invoke();
             }
             catch {
                 using (StreamReader sr = new StreamReader($"./saved_deserts\\{options[top]}.txt")) {
@@ -54,22 +44,21 @@
         public void Exit() {
             Environment.Exit(0);
         }
-        public void GetUserInput(ConsoleKey c) {
+        public void GetUserInput(ConsoleKeyInfo cki) {
             if (rowsEntered.Count == 0) rowsEntered = new List<string>(new string[options.Length]);
             (int left, int top) = Console.GetCursorPosition();
-            if (new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:" }.Contains(options[top])) {
+            if ((options[top].Type == "numericInput" && char.IsNumber(cki.KeyChar)) || options[top].Type == "anyInput") {
                 if (rowsEntered[top] is null) rowsEntered[top] = "";
-                if (left == 0) left = options[top].Length + 1 + rowsEntered[top].Length;
+                if (left == 0) left = options[top].Text.Length + 1 + rowsEntered[top].Length;
                 Console.SetCursorPosition(left, top);
-                if ((int)c > 57) c -= 48;
-                rowsEntered[top] += ((int)c - '0').ToString();
-                Console.Write((int)c - '0');
+                rowsEntered[top] += cki.KeyChar;
+                Console.Write(cki.KeyChar);
             }
             inputHandler.HandleMenuInput();
         }
         public void DeleteLastChar() {
             (int left, int top) = Console.GetCursorPosition();
-            if (left == 0) left = options[top].Length + 1 + rowsEntered[top].Length;
+            if (left == 0) left = options[top].Text.Length + 1 + rowsEntered[top].Length;
             if (rowsEntered[top].Length > 0) {
                 Console.SetCursorPosition(left - 1, top);
                 Console.Write(' ');
@@ -82,38 +71,53 @@
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.DarkYellow;
-            foreach (string option in options) { 
-                Console.WriteLine(option);
+            foreach (MenuItem option in options) { 
+                Console.WriteLine(option.Text);
                 Console.ResetColor();
             }
             Console.SetCursorPosition(0, 0);
         }
         private void LoadFromFileMenu() {
             string[] files = Directory.GetFiles("./saved_deserts");
-            List<string> temp = files.ToList();
-            temp.Remove(@"./saved_deserts\te.st");
-            for (int i = 0; i < temp.Count; i++) {
-                temp[i] = temp[i][16..(temp[i].Length - 4)];
+            List<MenuItem> temp = new List<MenuItem>();
+            for (int i = 0; i < files.Length; i++) {
+                if (files[i].Contains(".txt")) temp.Add(new MenuItem(files[i][16..(files[i].Length - 4)], "option", null));
             }
-            temp.Add("Vissza");
-            files = temp.ToArray();
-            options = files;
+            temp.Add(new MenuItem("Vissza", "option", () => Back()));
+            options = temp.ToArray();
             Show();
             inputHandler.HandleMenuInput();
         }
         private void GenRandomMenu() {
             // szél, mag, lion, wall
-            options = new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:", "Generálás", "Vissza"};
+            options = new[] {
+                new MenuItem("Szélesség:", "numericInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Magasság:", "numericInput", () => inputHandler.HandleMenuInput()), //
+                new MenuItem("Oroszlánok száma:", "numericInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Falak száma:", "numericInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Generálás", "option", () => CheckEnteredNumbers()),
+                new MenuItem("Vissza", "option", () => Back()),
+            };
             Show();
             inputHandler.HandleMenuInput();
         }
         private void EditorMenu() {
-            options = new[] { "x:", "y:", "z:", "Tovább", "Vissza" };
+            options = new[] {
+                new MenuItem("Szélesség:", "numericInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Magasság:", "numericInput", () => inputHandler.HandleMenuInput()), //
+                new MenuItem("Tovább", "option", () => CheckEnteredNumbers()),
+                new MenuItem("Vissza", "option", () => Back()),
+            };
             Show();
             inputHandler.HandleMenuInput();
         }
-        private void Back() {
-            options = new[] { "Sivatag betöltése fájlból", "Sivatag random generálása", "Sivatagvarázsló megnyitása", "Kilépés" };
+        public void Back() {
+            options = new[] {
+                new MenuItem("Sivatag betöltése fájlból", "option", () => LoadFromFileMenu()),
+                new MenuItem("Sivatag random generálása", "option", () => GenRandomMenu()),
+                new MenuItem("Sivatagvarázsló megnyitása", "option", () => EditorMenu()),
+                new MenuItem("Kilépés", "option", () => Exit()),
+            };
             rowsEntered = new List<string>();
             Show();
             inputHandler.HandleMenuInput();
