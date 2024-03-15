@@ -11,7 +11,8 @@
             //tm.DrawTiles();
             Menu menu = new Menu(new[] { "Sivatag betöltése fájlból",
                                          "Sivatag random generálása",
-                                         "Sivatagvarázsló megnyitása" });
+                                         "Sivatagvarázsló megnyitása",
+                                         "Kilépés" });
             //Game game = new Game(10, 10);
             InputHandler i = new InputHandler(menu);
             i.HandleMenuInput();

@@ -4,7 +4,8 @@
         private InputHandler inputHandler;
         private string[] options;
         private Dictionary<string, Action> allOptions;
-        private List<string> numbersEntered = new List<string> { "", "", "", "" }; //- csak a bevitt számok, stringként
+        private List<string> rowsEntered = new List<string>(); //- csak a bevitt adatok, stringként
+        //private string errorMsg = string.Empty; ha nem felel meg a szam a korlatoknak
         public Menu(string[] _options) {
             options = _options;
             inputHandler = new(this);
@@ -17,7 +18,8 @@
                 { "Oroszlánok száma:", () => inputHandler.HandleMenuInput() },
                 { "Falak száma:", () => inputHandler.HandleMenuInput() },
                 { "Generálás", () => CheckEnteredNumbers() }, // generate random
-                { "Vissza", () => Back() }
+                { "Vissza", () => Back() },
+                { "Kilépés", () => Exit() }
 
                 // ezt kell bővíteni
             };
@@ -50,26 +52,33 @@
             }
         }
         public void Exit() {
-            Console.Write("csontkovacs");
+            Environment.Exit(0); // ?
         }
-        public void EnterNumbers(ConsoleKey c) {
+        public void EnterNumbers(ConsoleKey c) { 
+            if (rowsEntered.Count == 0) rowsEntered = new() { "", "", "", "" }; // ez a sor temporary; újrahasználhatóvá kéne tenni
             (int left, int top) = Console.GetCursorPosition();
             if (new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:" }.Contains(options[top])) {
-                if (left == 0) left = options[top].Length + 1 + numbersEntered[top].Length;
+                //try {
+                //    string temp = rowsEntered[top];
+                //}
+                //catch {
+                //    Console.WriteLine(rowsEntered.ToArray().Length);
+                //}
+                if (left == 0) left = options[top].Length + 1 + rowsEntered[top].Length;
                 Console.SetCursorPosition(left, top);
-                if ((int)c > 57) c -= '0';
-                numbersEntered[top] += ((int)c - '0').ToString();
+                if ((int)c > 57) c -= 48;
+                rowsEntered[top] += ((int)c - '0').ToString();
                 Console.Write((int)c - '0');
             }
             inputHandler.HandleMenuInput();
         }
-        public void DeleteNumber() {
+        public void DeleteLastChar() {
             (int left, int top) = Console.GetCursorPosition();
-            if (left == 0) left = options[top].Length + 1 + numbersEntered[top].Length;
-            if (numbersEntered[top].Length > 0) {
+            if (left == 0) left = options[top].Length + 1 + rowsEntered[top].Length;
+            if (rowsEntered[top].Length > 0) {
                 Console.SetCursorPosition(left - 1, top);
                 Console.Write(' ');
-                numbersEntered[top] = numbersEntered[top][..^1];
+                rowsEntered[top] = rowsEntered[top][..^1];
                 Console.SetCursorPosition(left - 1, top);
             }
             inputHandler.HandleMenuInput();
@@ -104,10 +113,13 @@
             inputHandler.HandleMenuInput();
         }
         private void EditorMenu() {
-
+            options = new[] { "x:", "y:", "z:", "Tovább", "Vissza" };
+            Show();
+            inputHandler.HandleMenuInput();
         }
         private void Back() {
-            options = new[] { "Sivatag betöltése fájlból", "Sivatag random generálása", "Sivatagvarázsló megnyitása" };
+            options = new[] { "Sivatag betöltése fájlból", "Sivatag random generálása", "Sivatagvarázsló megnyitása", "Kilépés" };
+            rowsEntered = new List<string>();
             Show();
             inputHandler.HandleMenuInput();
         }
