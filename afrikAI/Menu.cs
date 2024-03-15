@@ -1,10 +1,10 @@
 ﻿namespace afrikAI
 {
-	public class Menu
-	{
+    public class Menu {
         private InputHandler inputHandler;
         private string[] options;
-        private Dictionary<string, Action> allOptions; 
+        private Dictionary<string, Action> allOptions;
+        private List<string> numbersEntered = new List<string> { "", "", "", "" }; //- csak a bevitt számok, stringként
         public Menu(string[] _options) {
             options = _options;
             inputHandler = new(this);
@@ -16,7 +16,7 @@
                 { "Magasság:", () => inputHandler.HandleMenuInput() },
                 { "Oroszlánok száma:", () => inputHandler.HandleMenuInput() },
                 { "Falak száma:", () => inputHandler.HandleMenuInput() },
-                { "Generálás", () => Back() }, // generate random
+                { "Generálás", () => CheckEnteredNumbers() }, // generate random
                 { "Vissza", () => Back() }
 
                 // ezt kell bővíteni
@@ -55,28 +55,24 @@
         public void EnterNumbers(ConsoleKey c) {
             (int left, int top) = Console.GetCursorPosition();
             if (new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:" }.Contains(options[top])) {
-                if (left == 0) left = options[top].Length + 1;
-                Console.SetCursorPosition(left, top); // innen kireturnolni :(
+                if (left == 0) left = options[top].Length + 1 + numbersEntered[top].Length;
+                Console.SetCursorPosition(left, top);
                 if ((int)c > 57) c -= '0';
+                numbersEntered[top] += ((int)c - '0').ToString();
                 Console.Write((int)c - '0');
             }
             inputHandler.HandleMenuInput();
         }
         public void DeleteNumber() {
-            Console.CursorVisible = true;
             (int left, int top) = Console.GetCursorPosition();
-            //if (left == 0) {
-            //    left = options[top].Length - 1;
-            //    Console.WriteLine(left);
-            //}
-            // lehet el kéne menteni a számot?
-            if (left > options[top].Length + 1) {
+            if (left == 0) left = options[top].Length + 1 + numbersEntered[top].Length;
+            if (numbersEntered[top].Length > 0) {
                 Console.SetCursorPosition(left - 1, top);
                 Console.Write(' ');
+                numbersEntered[top] = numbersEntered[top][..^1];
                 Console.SetCursorPosition(left - 1, top);
             }
             inputHandler.HandleMenuInput();
-            // ha left kisebb mint az opcio hossza akk ne
         }
         private void Show() {
             Console.Clear();
@@ -101,12 +97,11 @@
             Show();
             inputHandler.HandleMenuInput();
         }
-        private int[] GenRandomMenu() {
+        private void GenRandomMenu() {
             // szél, mag, lion, wall
             options = new[] { "Szélesség:", "Magasság:", "Oroszlánok száma:", "Falak száma:", "Generálás", "Vissza"}; // menüpontok mögé lesz írva
             Show();
             inputHandler.HandleMenuInput();
-            return new[] { 1, 1, 1, 1 };
         }
         private void EditorMenu() {
 
@@ -116,7 +111,10 @@
             Show();
             inputHandler.HandleMenuInput();
         }
-        
+        private void CheckEnteredNumbers() {
+            // korlátok? else handlemenuinp
+        }
+
         //private / public dolgokat rendezni!!!
 
         // sivatag fájlból:
