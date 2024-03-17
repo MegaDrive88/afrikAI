@@ -39,7 +39,7 @@
             Environment.Exit(0);
         }
         public void GetUserInput(ConsoleKeyInfo cki) {
-            //delerrors
+            ClearErrors();
             if (rowsEntered.Count == 0) rowsEntered = new List<string>(new string[options.Length]);
             (int left, int top) = Console.GetCursorPosition();
             if ((options[top].Type == "numericInput" && char.IsNumber(cki.KeyChar)) || options[top].Type == "anyInput") {
@@ -139,7 +139,7 @@
                 ShowError(4);
             }
             if (int.Parse(nums[2]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 4) { // nem fer intbe xdddd
-                Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2);
+                Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2); // vagy 100*50nél nagyobb
                 errorMsg = "Az oroszlánok száma maximum a terület negyede lehet!";
                 ShowError(4);
             }
@@ -160,6 +160,14 @@
             Console.Write(errorMsg);
             Console.ResetColor();
             Console.SetCursorPosition(0, cursorPos);
+        }
+        private void ClearErrors() {
+            (int left, int top) = Console.GetCursorPosition();
+            for (int i = 0; i < rowsEntered.Count; i++) {
+                Console.SetCursorPosition(options[i].Text.Length + 2 + rowsEntered[0].Length, i);
+                Console.Write(new string(' ', Console.BufferWidth - (options[i].Text.Length + 2 + rowsEntered[0].Length))); // még jobban meg kell matekozni
+            }
+            Console.SetCursorPosition(left, top);
         }
         //private / public dolgokat rendezni!!!
 
