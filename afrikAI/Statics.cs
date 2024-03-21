@@ -9,5 +9,13 @@
 			public static ConsoleKey[] MenuConfirm = new ConsoleKey[] { ConsoleKey.Enter, ConsoleKey.Spacebar };
 			public static ConsoleKey[] MenuExit = new ConsoleKey[] { ConsoleKey.Escape, ConsoleKey.Backspace };
 		}
+		public static Dictionary<string, ConsoleColor> tileColors = new Dictionary<string, ConsoleColor>()
+		{
+			{ "ground", ConsoleColor.Yellow },
+			{ "wall", ConsoleColor.DarkYellow },
+			{ "water", ConsoleColor.Blue },
+			{ "lion", ConsoleColor.DarkRed },
+			{ "zebra", ConsoleColor.Black },
+		};
 	}
 }

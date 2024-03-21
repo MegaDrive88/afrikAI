@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using afrikAI.Pathfinding_Modules;
+using System.Numerics;
 
 namespace afrikAI
 {
@@ -7,55 +8,73 @@ namespace afrikAI
         private Tile[,] tiles;
         private int width;
         private int height;
-        private string filePath;
-
-        public TileManager(int _width, int _height, string _filePath)
+        private TileGenerator generator;
+        public TileManager(int _width, int _height, TileGeneratorData tileGeneratorData)
         {
             width = _width;
             height = _height;
-            filePath = _filePath;
-            tiles = new Tile[height, width];
-            readFile();
+            generator = new TileGenerator(width, height);
+            tiles = generator.GenerateTiles(tileGeneratorData);
         }
+        public TileManager(string _filepath, ref int _width,ref int _height) // might be better to change 
+        {
+            generator = new TileGenerator();
+            tiles = generator.GenerateTiles(_filepath);
+            width = tiles.GetLength(1);_width = width;
+            height = tiles.GetLength(0);_height = height;
+		}
         public void DrawTiles()
         {
             foreach (Tile tile in tiles)
             {
-                tile.DrawTile();
+                tile.Draw();
             }
         }
-        private void readFile()
+        public void SwapTiles(int[][] positions)
         {
-            if(!File.Exists(filePath)) Debug.WriteLine($"Error In TileManager/readFile: File {filePath} doesn't exist");
-            else
-            { 
-                using(StreamReader sr = new StreamReader(filePath))
-                {
-                    int y = 0;
-                    while(!sr.EndOfStream)
-                    {
-                        string[] data = sr.ReadLine().Trim().Split(' ');
-                        if (data.Length != width) Debug.WriteLine($"Warning in TileManager/readFile file width ({data.Length}) != Tiles width ({width})");
-                        for (int x = 0;x < data.Length ;x++)
-                        {
-                            switch(data[x])
-                            {
-                                case "0":
-                                    // create TileType0 with TileFactory;
-                                    break;
-                                case "1":
-                                    // create TileType1 with TileFactory;
-                                    break;
-                                case "2":
-                                    // create TileType2 with TileFactory;
-                                    break;
-                            }
-                        }
-                        y++;
-                    }
-                    if(y != height) Debug.WriteLine( $"Warning in TileManager/readFile file height ({data.Length}) != Tiles width ({width})")
-                }
+            SwapTiles(positions[0], positions[1]);
+        }
+        public void SwapTiles(int[] pos1, int[] pos2)
+        {
+            Tile tmp_Tile = tiles[pos1[0], pos1[1]];
+            tiles[pos1[0], pos1[1]] = tiles[pos2[0], pos2[1]];
+            tiles[pos2[0], pos2[1]] = tmp_Tile;
+            tmp_Tile.SetPos(pos2);
+            tiles[pos1[0], pos1[1]].SetPos(pos1);
+        }
+        public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
+        {
+            DrawPath(getClosestPathToWater(pathfindingContext));
+        }
+        private void DrawPath(TilePath path)
+        {
+            foreach (Vector2 pos in path.Path)
+            {
+                tiles[(int)pos.Y, (int)pos.X].Draw(ConsoleColor.Red);
             }
+        }
+        private TilePath getClosestPathToWater(PathfindingContext pathfindingContext)
+        {
+            Tile zebra = getZebra();
+            List<Tile> waters = getWaters();
+            TilePath shortestPath = pathfindingContext.GetShortestPath(tiles, zebra, waters[0]);
+            for (int i = 1; i < waters.Count; i++)
+            {
+                TilePath path = pathfindingContext.GetShortestPath(tiles, zebra, waters[i]);
+                if(path.Length < shortestPath.Length) shortestPath = path;
+            }
+            return shortestPath;
+        }
+        private Tile getZebra()
+        {
+            foreach (Tile tile in tiles) if (tile.TileType == "zebra") return tile;
+            throw new Exception("No zebra on the map");
+        }
+        private List<Tile> getWaters()
+        {
+            List<Tile> waters = new List<Tile>();
+            foreach (Tile tile in tiles) if (tile.TileType == "water") waters.Add(tile);
+            return waters;
         }
     }
 }
