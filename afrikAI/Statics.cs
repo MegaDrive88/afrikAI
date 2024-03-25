@@ -4,7 +4,14 @@
 	{
 		public static class KeyBinds
 		{
-			public static ConsoleKey[] MenuConfirm = new ConsoleKey[] { ConsoleKey.Enter, ConsoleKey.Spacebar };
+			public readonly static ConsoleKey[] MenuConfirm = new ConsoleKey[] { ConsoleKey.Enter, ConsoleKey.Spacebar };
+			public readonly static Dictionary<char, ConsoleKey[]> EditorKeys = new Dictionary<char, ConsoleKey[]>()
+			{
+				{'L',  new ConsoleKey[] {ConsoleKey.A, ConsoleKey.LeftArrow } },
+				{'R',  new ConsoleKey[] {ConsoleKey.D, ConsoleKey.RightArrow} },
+				{'U',  new ConsoleKey[] {ConsoleKey.W, ConsoleKey.UpArrow } },
+				{'D',  new ConsoleKey[] {ConsoleKey.S, ConsoleKey.DownArrow} }
+			};
 			public static List<int> AcceptedInputKeys() {
 				List<int> l = Enumerable.Range(48, 10).ToList(); // szamok
 				l.AddRange(Enumerable.Range(96, 10).ToList()); // numpad
@@ -31,6 +38,13 @@
 			{"2", "water" },
 			{"3", "lion" },
 			{"4", "zebra" }
+		};
+		public static Dictionary<char, int[]> moveMatrixes = new Dictionary<char, int[]>()
+		{
+			{'L', new int[] {-1,0} },
+			{'R', new int[] {1,0} },
+			{'U', new int[] {0,-1} },
+			{'D', new int[] {0,1} }
 		};
 	}
 }

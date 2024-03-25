@@ -16,19 +16,32 @@ namespace afrikAI
             generator = new TileGenerator(width, height);
             tiles = generator.GenerateTiles(tileGeneratorData);
         }
-        public TileManager(string _filepath, ref int _width,ref int _height) // might be better to change 
+		public TileManager(string _filepath, ref int _width,ref int _height):this(_filepath)
+
         {
-            generator = new TileGenerator();
-            tiles = generator.GenerateTiles(_filepath);
-            width = tiles.GetLength(1);_width = width;
-            height = tiles.GetLength(0);_height = height;
+            _width = width; _height = height;
 		}
-        public void DrawTiles()
+		public TileManager(string _filepath)
+		{
+			generator = new TileGenerator();
+			tiles = generator.GenerateTiles(_filepath);
+			width = tiles.GetLength(0);
+			height = tiles.GetLength(1);
+		}
+		public void DrawTiles()
         {
             foreach (Tile tile in tiles)
             {
                 tile.Draw();
             }
+        }
+        public void DrawTile(int x ,int y)
+        {
+            tiles[y,x].Draw();
+        }
+        public void DrawTile(int x, int y, ConsoleColor color)
+        {
+            tiles[y, x].Draw(color);
         }
         public void SwapTiles(int[][] positions)
         {

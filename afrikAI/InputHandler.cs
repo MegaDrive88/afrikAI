@@ -5,8 +5,9 @@ namespace afrikAI
 {
 	public class InputHandler
 	{
-		private Game game;
-		private Menu menu;
+		private readonly Game game;
+		private readonly Menu menu;
+		private readonly TileEditor tileEditor;
     
 		public InputHandler(Menu _menu)
 		{
@@ -16,7 +17,10 @@ namespace afrikAI
 		{
 			game = _game;
 		}
-
+		public InputHandler(TileEditor _editor)
+		{
+			tileEditor = _editor;
+		}
 		public int[][] GetGameInput(int width, int height)
 		{
 			return new int[][] { getCordInput(width, height, "Add meg a tile 2 kordinátáját amelyet mozgatni szeretnél"), getCordInput(width, height, "Add meg azt a két kordinátát ahova mozgatni szeretnéd") };
@@ -50,5 +54,18 @@ namespace afrikAI
 				HandleMenuInput();
 			}
 		}
+		public void HandleEditorInput()
+		{
+			ConsoleKey consoleKey = Console.ReadKey(true).Key;
+            foreach (char key in Statics.moveMatrixes.Keys)
+            {
+				if (Statics.KeyBinds.EditorKeys[key].Contains(consoleKey)) {
+					tileEditor.MoveCursor(key);
+					break;
+				}
+            }
+           
+		}
+		
 	}
 }
