@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace afrikAI
 {
@@ -6,19 +7,21 @@ namespace afrikAI
 	{
 		private Game game;
 		private Menu menu;
-
-        public InputHandler(Menu _menu) {
-            menu = _menu;
-        }
-        public InputHandler(Game _game) {
-            game = _game;
-        }
-
-        public int[][] GetGameInput()
+    
+		public InputHandler(Menu _menu)
 		{
-			return new int[][] { getCordInput("Add meg a tile 2 kordinátáját amelyet mozgatni szeretnél"), getCordInput("Add meg azt a két kordinátát ahova mozgatni szeretnéd") };
+			menu = _menu;
 		}
-		private int[] getCordInput(string inputMessage = "",string cord1Message = "", string cord2Message = "")
+		public InputHandler(Game _game) 
+		{
+			game = _game;
+		}
+
+		public int[][] GetGameInput(int width, int height)
+		{
+			return new int[][] { getCordInput(width, height, "Add meg a tile 2 kordinátáját amelyet mozgatni szeretnél"), getCordInput(width, height, "Add meg azt a két kordinátát ahova mozgatni szeretnéd") };
+		}
+		private int[] getCordInput(int width, int height, string inputMessage = "",string cord1Message = "", string cord2Message = "")
 		{
 			Console.WriteLine(inputMessage);
 			int x, y;
@@ -26,12 +29,12 @@ namespace afrikAI
 			{
 				Console.Write($"{cord1Message} x = ");
 				if (!int.TryParse(Console.ReadLine(), out x)) continue;
-			} while (x < 0 || x >= game.Width);
+			} while (x < 0 || x >= width);
 			do
 			{
 				Console.Write($"{cord2Message} y = ");
 				if (!int.TryParse(Console.ReadLine(), out y)) continue;
-			} while (y < 0 || y >= game.Height);
+			} while (y < 0 || y >= height);
 			return new int[] { x, y };
 		}
 		public void HandleMenuInput() {

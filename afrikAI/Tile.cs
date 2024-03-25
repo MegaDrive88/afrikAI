@@ -1,39 +1,58 @@
-﻿namespace afrikAI
+﻿using System.Numerics;
+
+namespace afrikAI
 {
     public class Tile
     {
-        private ConsoleColor bgColor { get; set; }
-        private Dictionary<string, ConsoleColor> tileColors = new Dictionary<string, ConsoleColor>()
-        {
-            { "ground", ConsoleColor.Yellow },
-            { "wall", ConsoleColor.DarkYellow },
-            { "water", ConsoleColor.Blue },
-            { "lion", ConsoleColor.DarkRed },
-            { "zebra", ConsoleColor.Black },
-            { "path", ConsoleColor.Red }
-        };
-        private int x { get; set; }
-        private int y { get; set; }
+        private ConsoleColor bgColor;
+        public int x { get;private set; }
+        public int y { get;private set; }
         private int closestDistance = int.MaxValue;
         public int ClosestDistance { 
             get => closestDistance; 
-            set => closestDistance = Math.Max(value, closestDistance); 
+            set => closestDistance = Math.Max(0, Math.Min(value, closestDistance)); 
         }
-        public string TileType = string.Empty;
-        public Tile(int _x, int _y, string _type)
+        public bool Calculated;
+        public string TileType { 
+            get => TileType;
+            set
+            {
+                // handle updating here???
+                TileType = value;
+                bgColor = Statics.tileColors[value];
+            }
+        }
+		/// <summary>
+		/// type: 
+		/// 0 - ground 
+		/// 1 - wall
+		/// 2 - water
+        /// 3 - lion
+        /// 4 - zebra
+		/// </summary>
+		public Tile(int _x, int _y, string _type)
         {
             TileType = _type;
-            bgColor = tileColors[TileType];
+            bgColor = Statics.tileColors[TileType];
             x = _x;
             y = _y;
         }
-        //public bool IsWater { get => GetType() == typeof(Water)};
-        //public bool IsSafe { get => GetType() == typeof(Wall)};
-        public void DrawTile()
+        public void Draw()
         {
             Console.SetCursorPosition(x * 2, y);
             Console.BackgroundColor = bgColor;
             Console.Write("  ");
+        }
+        public void Draw(ConsoleColor color)
+        {
+			Console.SetCursorPosition(x, y);
+			Console.BackgroundColor = color;
+			Console.Write(" ");
+		}
+        public void SetPos(int[] pos)
+        {
+            x = pos[0];
+            y = pos[1];
         }
 
     }

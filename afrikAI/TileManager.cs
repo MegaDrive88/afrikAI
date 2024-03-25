@@ -1,36 +1,80 @@
-﻿namespace afrikAI
+﻿using afrikAI.Pathfinding_Modules;
+using System.Numerics;
+
+namespace afrikAI
 {
     public class TileManager
     {
         private Tile[,] tiles;
         private int width;
         private int height;
-        private TileGenerator tileGenerator;
-
-        public TileManager(int _width, int _height, string? _filePath = null)
+        private TileGenerator generator;
+        public TileManager(int _width, int _height, TileGeneratorData tileGeneratorData)
         {
             width = _width;
             height = _height;
-            tileGenerator = new TileGenerator(width, height);
-            tiles = tileGenerator.GenerateTiles(_filePath);
+            generator = new TileGenerator(width, height);
+            tiles = generator.GenerateTiles(tileGeneratorData);
         }
-        public void DrawTiles() {
-            foreach (Tile tile in tiles) tile.DrawTile(); 
-            Reset();
-        }
-        public void SwapTiles(int x1, int y1, int x2, int y2)
+        public TileManager(string _filepath, ref int _width,ref int _height) // might be better to change 
         {
-            // c# 7.0 or newer
-            (tiles[y2, x2], tiles[y1, x1]) = (tiles[y1, x1], tiles[y2, x2]);	
-
-            // c# 6.0 or under.
-			//Tile tmpTile = tiles[y1, x1];
-            //tiles[y1,x1] = tiles[y2,x2];
-            //tiles[y2,x2] = tmpTile;
+            generator = new TileGenerator();
+            tiles = generator.GenerateTiles(_filepath);
+            width = tiles.GetLength(1);_width = width;
+            height = tiles.GetLength(0);_height = height;
+		}
+        public void DrawTiles()
+        {
+            foreach (Tile tile in tiles)
+            {
+                tile.Draw();
+            }
         }
-        public void SwapTiles(int[] cord1, int[] cord2) => SwapTiles(cord1[0], cord1[1], cord2[0], cord2[1]);
-        private void Reset() {
-            Console.BackgroundColor = ConsoleColor.Black;
+        public void SwapTiles(int[][] positions)
+        {
+            SwapTiles(positions[0], positions[1]);
+        }
+        public void SwapTiles(int[] pos1, int[] pos2)
+        {
+            Tile tmp_Tile = tiles[pos1[0], pos1[1]];
+            tiles[pos1[0], pos1[1]] = tiles[pos2[0], pos2[1]];
+            tiles[pos2[0], pos2[1]] = tmp_Tile;
+            tmp_Tile.SetPos(pos2);
+            tiles[pos1[0], pos1[1]].SetPos(pos1);
+        }
+        public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
+        {
+            DrawPath(getClosestPathToWater(pathfindingContext));
+        }
+        private void DrawPath(TilePath path)
+        {
+            foreach (Vector2 pos in path.Path)
+            {
+                tiles[(int)pos.Y, (int)pos.X].Draw(ConsoleColor.Red);
+            }
+        }
+        private TilePath getClosestPathToWater(PathfindingContext pathfindingContext)
+        {
+            Tile zebra = getZebra();
+            List<Tile> waters = getWaters();
+            TilePath shortestPath = pathfindingContext.GetShortestPath(tiles, zebra, waters[0]);
+            for (int i = 1; i < waters.Count; i++)
+            {
+                TilePath path = pathfindingContext.GetShortestPath(tiles, zebra, waters[i]);
+                if(path.Length < shortestPath.Length) shortestPath = path;
+            }
+            return shortestPath;
+        }
+        private Tile getZebra()
+        {
+            foreach (Tile tile in tiles) if (tile.TileType == "zebra") return tile;
+            throw new Exception("No zebra on the map");
+        }
+        private List<Tile> getWaters()
+        {
+            List<Tile> waters = new List<Tile>();
+            foreach (Tile tile in tiles) if (tile.TileType == "water") waters.Add(tile);
+            return waters;
         }
     }
 }
