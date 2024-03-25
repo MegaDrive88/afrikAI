@@ -39,9 +39,9 @@ namespace afrikAI
         }
         public void Draw()
         {
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(x * 2, y);
             Console.BackgroundColor = bgColor;
-            Console.Write(" ");
+            Console.Write("  ");
         }
         public void Draw(ConsoleColor color)
         {

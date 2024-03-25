@@ -7,7 +7,7 @@ namespace afrikAI
 	{
 		private Game game;
 		private Menu menu;
-
+    
 		public InputHandler(Menu _menu)
 		{
 			menu = _menu;
@@ -37,16 +37,16 @@ namespace afrikAI
 			} while (y < 0 || y >= height);
 			return new int[] { x, y };
 		}
-		public void HandleMenuInput()
-		{
-			ConsoleKey consoleKey = Console.ReadKey(true).Key;
-			if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuUp();
-			else if (Statics.KeyBinds.MenuDown.Contains(consoleKey)) menu.MenuDown();
-			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey)) menu.Confrim();
-			else if (Statics.KeyBinds.MenuExit.Contains(consoleKey)) menu.Exit();
-			else
-			{
-				Debug.WriteLine($"{consoleKey} not in keybinds, press another key.");
+		public void HandleMenuInput() {
+			ConsoleKeyInfo consoleKey = Console.ReadKey(true);
+			if (consoleKey.Key == ConsoleKey.UpArrow) menu.MenuMove(-1);
+			else if (consoleKey.Key == ConsoleKey.DownArrow) menu.MenuMove(1);
+			else if (Statics.KeyBinds.MenuConfirm.Contains(consoleKey.Key)) menu.Confirm();
+			else if (consoleKey.Key == ConsoleKey.Escape) menu.Exit();
+			else if (Statics.KeyBinds.AcceptedInputKeys().Contains((int)consoleKey.Key)) menu.GetUserInput(consoleKey);
+			else if (consoleKey.Key == ConsoleKey.Backspace) menu.DeleteLastChar();
+			else {
+				Debug.WriteLine($"{consoleKey.Key} not in keybinds, press another key.");
 				HandleMenuInput();
 			}
 		}
