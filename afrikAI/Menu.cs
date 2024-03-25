@@ -52,6 +52,7 @@
             inputHandler.HandleMenuInput();
         }
         public void DeleteLastChar() {
+            ClearErrors();
             (int left, int top) = Console.GetCursorPosition();
             if (left == 0) left = options[top].Text.Length + 1 + rowsEntered[top].Length;
             if (rowsEntered[top].Length > 0) {
@@ -118,54 +119,72 @@
             inputHandler.HandleMenuInput();
         }
         private void CheckRandomGenNumbers() {
-            // korlátok? else handlemenuinp
             List<string> nums = rowsEntered.Take(4).ToList();
-            // bool megfelel
-            if (rowsEntered.Count == 0 || !nums.All(x => x is not null)) {
+            bool megfelel = true;
+            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("")) {
                 Console.SetCursorPosition(options[4].Text.Length + 1, 4);
                 errorMsg = "Adjon meg pontosan 4 számot!";
                 ShowError(4);
                 inputHandler.HandleMenuInput();
                 return;
             }
-            if (int.Parse(nums[0]) > 100) { // teszt feltételek, jövőben változhat
+            if (nums[0].Length > 2 || int.Parse(nums[0]) > 60) { // teszt feltételek, jövőben változhat
                 Console.SetCursorPosition(options[0].Text.Length + 2 + nums[0].Length, 0);
-                errorMsg = "A szélesség nem lehet 100-nál nagyobb!";
-                ShowError(4);
+                errorMsg = "A szélesség nem lehet 60-nál nagyobb!";
+                megfelel = ShowError(4);
+                inputHandler.HandleMenuInput();
+                if (nums[0].Length > 2) return;
             }
-            if (int.Parse(nums[1]) > 50) {
+            if (nums[1].Length > 2 || int.Parse(nums[1]) > 25) {
                 Console.SetCursorPosition(options[1].Text.Length + 2 + nums[1].Length, 1);
-                errorMsg = "A magasság nem lehet 50-nél nagyobb!";
-                ShowError(4);
+                errorMsg = "A magasság nem lehet 25-nél nagyobb!";
+                megfelel = ShowError(4);
+                inputHandler.HandleMenuInput();
+                if (nums[1].Length > 2) return;
             }
-            if (int.Parse(nums[2]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 4) { // nem fer intbe xdddd
-                Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2); // vagy 100*50nél nagyobb
+            if (nums[2].Length > 3 || int.Parse(nums[2]) > 375 || int.Parse(nums[2]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 4) {
+                Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2);
                 errorMsg = "Az oroszlánok száma maximum a terület negyede lehet!";
-                ShowError(4);
+                megfelel = ShowError(4);
             }
-            if (int.Parse(nums[3]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 2) {
+            if (nums[3].Length > 3 || int.Parse(nums[3]) > 750 || int.Parse(nums[3]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 2) {
                 Console.SetCursorPosition(options[3].Text.Length + 2 + nums[3].Length, 3);
                 errorMsg = "A falak száma maximum a terület fele lehet!";
-                ShowError(4);
+                megfelel = ShowError(4);
+            }
+            if (megfelel) {
+                Console.Clear();
+                //tovabb
             }
             inputHandler.HandleMenuInput();
-            //else Console.Clear();
         }
         private void CheckEditorNumbers() {
-            // korlátok? else handlemenuinp
+            // korlátok? else handlemenuinp. kb ctrl cv, kis változtatásokkal
             _ = rowsEntered;
         }
-        private void ShowError(int cursorPos) {
+        private bool ShowError(int cursorPos) {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(errorMsg);
             Console.ResetColor();
             Console.SetCursorPosition(0, cursorPos);
+            return false;
         }
         private void ClearErrors() {
             (int left, int top) = Console.GetCursorPosition();
-            for (int i = 0; i < rowsEntered.Count; i++) {
-                Console.SetCursorPosition(options[i].Text.Length + 2 + rowsEntered[0].Length, i);
-                Console.Write(new string(' ', Console.BufferWidth - (options[i].Text.Length + 2 + rowsEntered[0].Length))); // még jobban meg kell matekozni
+            for (int i = 0; i < options.Length; i++) {
+                try {
+                    if (rowsEntered[i] is not null) {
+                        Console.SetCursorPosition(options[i].Text.Length + 2 + rowsEntered[i].Length, i);
+                        Console.Write(new string(' ', Console.WindowWidth - (options[i].Text.Length + 2 + rowsEntered[i].Length)));
+                    }
+                    else {
+                        throw new Exception("null, de a lista hossza nem 0");
+                    }
+                }
+                catch {
+                    Console.SetCursorPosition(options[i].Text.Length + 1, i);
+                    Console.Write(new string(' ', Console.WindowWidth - (options[i].Text.Length + 1)));
+                }
             }
             Console.SetCursorPosition(left, top);
         }
