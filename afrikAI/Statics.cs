@@ -24,5 +24,13 @@
 			{ "lion", ConsoleColor.DarkRed },
 			{ "zebra", ConsoleColor.Black },
 		};
+		public static Dictionary<string, string> tileTypes = new Dictionary<string, string>()
+		{
+			{"0", "ground" },
+			{"1", "wall" },
+			{"2", "water" },
+			{"3", "lion" },
+			{"4", "zebra" }
+		};
 	}
 }
