@@ -80,7 +80,7 @@ namespace afrikAI
 			else
 			{
 				height = File.ReadAllLines(filePath).Length;
-				width = File.ReadAllLines(filePath)[0].Length/2+1;
+				width = File.ReadAllLines(filePath)[0].Length/2;
                 Tile[,] tiles = new Tile[height, width];
                 using (StreamReader sr = new StreamReader(filePath))
 				{

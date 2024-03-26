@@ -12,7 +12,8 @@
 				{'U',  new ConsoleKey[] {ConsoleKey.W, ConsoleKey.UpArrow } },
 				{'D',  new ConsoleKey[] {ConsoleKey.S, ConsoleKey.DownArrow} },
 				{'+' , new ConsoleKey[] {ConsoleKey.Add } },
-				{'-' , new ConsoleKey[] {ConsoleKey.Subtract } }
+				{'-' , new ConsoleKey[] {ConsoleKey.Subtract } },
+				{'S', new ConsoleKey[] {ConsoleKey.V} }
 
             };
 			public static List<int> AcceptedInputKeys() {

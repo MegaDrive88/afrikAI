@@ -32,6 +32,7 @@ namespace afrikAI
         {
             foreach (Tile tile in tiles)
             {
+                Debug.WriteLine(tile.x);
                 tile.Draw();
             }
         }

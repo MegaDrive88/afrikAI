@@ -31,7 +31,7 @@ namespace afrikAI
 		}
 		public void Save()
 		{
-			tileManager.SaveTiles(name);
+			tileManager.SaveTiles("genyo.txt");
 		}
 		public void ChangeTypeUp()
 		{
