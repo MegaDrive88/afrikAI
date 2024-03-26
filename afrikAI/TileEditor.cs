@@ -23,7 +23,7 @@ namespace afrikAI
 		{
 			int[] moveMatrix = Statics.moveMatrixes[dir];
 			tileManager.DrawTile(x, y); // reset last tile
-			tileManager.DrawTile(x + moveMatrix[0], y + moveMatrix[1], SELECTEDCOLOR);
+			tileManager.DrawTile(Math.Max(Math.Min(x + moveMatrix[0], width-1), 0), Math.Max(Math.Min(y + moveMatrix[1], height-1), 0), SELECTEDCOLOR);
 		}
 		public void EditTile(string tileTpye)
 		{
@@ -41,6 +41,5 @@ namespace afrikAI
 		{
 			tileManager.AddToTile(x, y, -1);
         }
-
     }
 }

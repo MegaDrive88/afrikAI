@@ -1,4 +1,5 @@
 ﻿using afrikAI.Pathfinding_Modules;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace afrikAI
@@ -17,7 +18,6 @@ namespace afrikAI
             tiles = generator.GenerateTiles(tileGeneratorData);
         }
 		public TileManager(string _filepath, ref int _width,ref int _height):this(_filepath)
-
         {
             _width = width; _height = height;
 		}
@@ -25,8 +25,8 @@ namespace afrikAI
 		{
 			generator = new TileGenerator();
 			tiles = generator.GenerateTiles(_filepath);
-			width = tiles.GetLength(0);
-			height = tiles.GetLength(1);
+			width = tiles.GetLength(1);
+			height = tiles.GetLength(0);
 		}
 		public void DrawTiles()
         {
