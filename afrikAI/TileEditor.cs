@@ -5,18 +5,35 @@
 		private const ConsoleColor SELECTEDCOLOR = ConsoleColor.Green;
 		private TileManager tileManager;
 		private int width,height;
-		public TileEditor(string filePath) {
+		private string name;
+		private int x { get => Console.CursorLeft; }
+		private int y { get => Console.CursorLeft; }
+        public TileEditor(string filePath) {
 			tileManager = new TileManager(filePath, ref width, ref height);
 			tileManager.DrawTiles();
-
 		}
 		public void MoveCursor(char dir)
 		{
 			int[] moveMatrix = Statics.moveMatrixes[dir];
-			tileManager.DrawTile(Console.CursorLeft, Console.CursorTop); // reset last tile
-			tileManager.DrawTile(Console.CursorLeft + moveMatrix[0], Console.CursorTop + moveMatrix[1], SELECTEDCOLOR);
+			tileManager.DrawTile(x, y); // reset last tile
+			tileManager.DrawTile(x + moveMatrix[0], y + moveMatrix[1], SELECTEDCOLOR);
 		}
-		
-		
-	}
+		public void EditTile(string tileTpye)
+		{
+			tileManager.SetTileTpye(x, y, tileTpye);
+		}
+		public void Save()
+		{
+			tileManager.SaveTiles(name);
+		}
+		public void ChangeTypeUp()
+		{
+			tileManager.AddToTile(x, y, 1);
+		}
+		public void ChangeTypeDown()
+		{
+			tileManager.AddToTile(x, y, -1);
+        }
+
+    }
 }

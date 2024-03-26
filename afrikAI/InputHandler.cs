@@ -56,7 +56,8 @@ namespace afrikAI
 		}
 		public void HandleEditorInput()
 		{
-			ConsoleKey consoleKey = Console.ReadKey(true).Key;
+			ConsoleKeyInfo consoleKeyInfo = Console.ReadKey(true);
+			ConsoleKey consoleKey = consoleKeyInfo.Key;
             foreach (char key in Statics.moveMatrixes.Keys)
             {
 				if (Statics.KeyBinds.EditorKeys[key].Contains(consoleKey)) {
@@ -64,8 +65,14 @@ namespace afrikAI
 					break;
 				}
             }
-           
-		}
+			foreach (string s in Statics.tileTypes.Keys)
+			{
+				if(consoleKeyInfo.KeyChar == char.Parse(s)) tileEditor.EditTile(Statics.tileTypes[s]);
+			}
+			if (Statics.KeyBinds.EditorKeys['+'].Contains(consoleKey)) tileEditor.ChangeTypeUp();
+			else if (Statics.KeyBinds.EditorKeys['-'].Contains(consoleKey)) tileEditor.ChangeTypeDown();
+
+        }
 		
 	}
 }

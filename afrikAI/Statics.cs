@@ -10,8 +10,11 @@
 				{'L',  new ConsoleKey[] {ConsoleKey.A, ConsoleKey.LeftArrow } },
 				{'R',  new ConsoleKey[] {ConsoleKey.D, ConsoleKey.RightArrow} },
 				{'U',  new ConsoleKey[] {ConsoleKey.W, ConsoleKey.UpArrow } },
-				{'D',  new ConsoleKey[] {ConsoleKey.S, ConsoleKey.DownArrow} }
-			};
+				{'D',  new ConsoleKey[] {ConsoleKey.S, ConsoleKey.DownArrow} },
+				{'+' , new ConsoleKey[] {ConsoleKey.Add } },
+				{'-' , new ConsoleKey[] {ConsoleKey.Subtract } }
+
+            };
 			public static List<int> AcceptedInputKeys() {
 				List<int> l = Enumerable.Range(48, 10).ToList(); // szamok
 				l.AddRange(Enumerable.Range(96, 10).ToList()); // numpad
@@ -21,7 +24,7 @@
 				return l;
 			}
         }
-			public static ConsoleKey[] MenuExit = new ConsoleKey[] { ConsoleKey.Escape, ConsoleKey.Backspace };
+		public static ConsoleKey[] MenuExit = new ConsoleKey[] { ConsoleKey.Escape, ConsoleKey.Backspace };
 		
 		public static Dictionary<string, ConsoleColor> tileColors = new Dictionary<string, ConsoleColor>()
 		{
@@ -46,5 +49,9 @@
 			{'U', new int[] {0,-1} },
 			{'D', new int[] {0,1} }
 		};
-	}
+        public static string GetTypeNumFromType(string type)
+        {
+			return tileTypes.Keys.Where(k => tileTypes[k] == type).First();
+        }
+    }
 }
