@@ -11,11 +11,11 @@ namespace afrikAI
 		private readonly InputHandler inputHandler;
 		private readonly PathfindingContext pathfindingContext;
 		private readonly TileManager tileManager;
-		public Game(int _width, int _height, TileGeneratorData tileGenData, string _pathFindingCountext)
+		public Game(TileGeneratorData tileGenData, string _pathFindingCountext)
 		{
 			pathfindingContext = new PathfindingContext(_pathFindingCountext);
-			width = _width;
-			height = _height;
+			width = tileGenData.Width;
+			height = tileGenData.Height;
 			inputHandler = new InputHandler(this);
 			tileManager = new TileManager(width, height, tileGenData);
 		}
