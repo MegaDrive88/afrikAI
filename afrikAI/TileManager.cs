@@ -43,8 +43,8 @@ namespace afrikAI
         {
             Tile tile = tiles[y,x];
             int currNum = int.Parse(Statics.GetTypeNumFromType(tile.TileType));
-            currNum += amount;
-            tile.TileType = Statics.tileTypes[(currNum %= Statics.tileTypes.Count).ToString()];
+            currNum += amount + 2000; // ugly but works
+            tile.TileType = Statics.tileTypes[Math.Abs(currNum %= Statics.tileTypes.Count).ToString()];
             return tile;
         }
         public void DrawTile(int x, int y, ConsoleColor color)

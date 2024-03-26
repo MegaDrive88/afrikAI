@@ -36,10 +36,13 @@ namespace afrikAI
 		public void ChangeTypeUp()
 		{
 			tileManager.AddToTile(x, y, 1);
+			tileManager.DrawTile(x,y);
 		}
 		public void ChangeTypeDown()
 		{
 			tileManager.AddToTile(x, y, -1);
-        }
-    }
+			tileManager.DrawTile(x, y);
+
+		}
+	}
 }
