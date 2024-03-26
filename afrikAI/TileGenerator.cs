@@ -80,7 +80,7 @@ namespace afrikAI
 			else
 			{
 				height = File.ReadAllLines(filePath).Length;
-				width = File.ReadAllLines(filePath)[0].Length/2;
+				width = File.ReadAllLines(filePath)[0].Length/2+1;
                 Tile[,] tiles = new Tile[height, width];
                 using (StreamReader sr = new StreamReader(filePath))
 				{
@@ -88,12 +88,13 @@ namespace afrikAI
 					while (!sr.EndOfStream)
 					{
 						string[] data = sr.ReadLine().Trim().Split(' ');
-                        Debug.WriteLine(string.Join(',', data));
+                        Debug.WriteLine(string.Join(' ', data));
                         for (int x = 0; x < data.Length; x++)
 						{
 							Tile newTile;
-							if (Statics.tileTypes.ContainsKey(data[x])) newTile = new Tile(x, y, Statics.tileTypes[data[x]]);
+							if (Statics.tileTypes.ContainsKey(data[x].ToString())) newTile = new Tile(x, y, Statics.tileTypes[data[x].ToString()]);
 							else throw new Exception($"No Type for: {data[x]} in TileGenerator / readfile(filepath)");
+							Debug.WriteLine($"x = {x} y = {y}");
 							tiles[y,x] = newTile;
 						}
 						y++;

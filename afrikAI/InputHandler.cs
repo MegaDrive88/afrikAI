@@ -71,7 +71,7 @@ namespace afrikAI
 			}
 			if (Statics.KeyBinds.EditorKeys['+'].Contains(consoleKey)) tileEditor.ChangeTypeUp();
 			else if (Statics.KeyBinds.EditorKeys['-'].Contains(consoleKey)) tileEditor.ChangeTypeDown();
-
+			HandleEditorInput();
         }
 		
 	}

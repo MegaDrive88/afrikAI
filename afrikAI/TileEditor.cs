@@ -1,16 +1,23 @@
-﻿namespace afrikAI
+﻿using System.Diagnostics;
+
+namespace afrikAI
 {
 	public class TileEditor
 	{
+		private InputHandler inputHandler;
 		private const ConsoleColor SELECTEDCOLOR = ConsoleColor.Green;
 		private TileManager tileManager;
 		private int width,height;
 		private string name;
-		private int x { get => Console.CursorLeft * 2; }
+		private int x { get => Console.CursorLeft/2-1; }
 		private int y { get => Console.CursorTop; }
         public TileEditor(string filePath) {
+			Console.ResetColor();
+			inputHandler = new InputHandler(this);
 			tileManager = new TileManager(filePath, ref width, ref height);
 			tileManager.DrawTiles();
+			Debug.WriteLine($"x = {Console.CursorLeft} y = {Console.CursorTop}");
+			inputHandler.HandleEditorInput();
 		}
 		public void MoveCursor(char dir)
 		{
