@@ -14,4 +14,8 @@
     </EmbeddedResource>
 </ItemGroup>
 
+<ItemGroup>
+  <None Remove="saved_deserts\genyo.txt" />
+</ItemGroup>
+
 </Project>

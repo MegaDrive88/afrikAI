@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 
 namespace afrikAI
@@ -7,6 +8,7 @@ namespace afrikAI
 	{
 		private int width;
 		private int height;
+		private const string PATH = "saved_deserts\\";
 		public TileGenerator(){}
 		public TileGenerator(int _width, int _height)
 		{
@@ -17,7 +19,7 @@ namespace afrikAI
 		{
 			if (filePath != null)
 			{
-				return readFile(filePath);
+				return readFile($"{PATH}{filePath}");
 			}
 			else
 			{
@@ -77,15 +79,17 @@ namespace afrikAI
 			if (!File.Exists(filePath)) throw new Exception($"Error In TileManager/readFile: File {filePath} doesn't exist");
 			else
 			{
-				Tile[,] tiles = new Tile[height,width];
-				using (StreamReader sr = new StreamReader(filePath))
+				height = File.ReadAllLines(filePath).Length;
+				width = File.ReadAllLines(filePath)[0].Length/2;
+                Tile[,] tiles = new Tile[height, width];
+                using (StreamReader sr = new StreamReader(filePath))
 				{
-					int y = 0;
+                    int y = 0;
 					while (!sr.EndOfStream)
 					{
 						string[] data = sr.ReadLine().Trim().Split(' ');
-						width = data.Length;
-						for (int x = 0; x < data.Length; x++)
+                        Debug.WriteLine(string.Join(',', data));
+                        for (int x = 0; x < data.Length; x++)
 						{
 							Tile newTile;
 							if (Statics.tileTypes.ContainsKey(data[x])) newTile = new Tile(x, y, Statics.tileTypes[data[x]]);
@@ -94,7 +98,6 @@ namespace afrikAI
 						}
 						y++;
 					}
-					height = y;
 				}
 				return tiles;
 			}

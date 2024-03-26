@@ -10,11 +10,7 @@
             //TileManager tm = new TileManager(width, height);
             //tm.DrawTiles();
 
-            Menu menu = new Menu();
-            //Game game = new Game(10, 10);
-            InputHandler i = new InputHandler(menu);
-            i.HandleMenuInput();
-            //Console.WriteLine(Console.WindowHeight);
+            TileEditor tileEditor = new TileEditor("genyo.txt");
         }
     }
 }

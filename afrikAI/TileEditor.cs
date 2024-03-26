@@ -6,8 +6,8 @@
 		private TileManager tileManager;
 		private int width,height;
 		private string name;
-		private int x { get => Console.CursorLeft; }
-		private int y { get => Console.CursorLeft; }
+		private int x { get => Console.CursorLeft * 2; }
+		private int y { get => Console.CursorTop; }
         public TileEditor(string filePath) {
 			tileManager = new TileManager(filePath, ref width, ref height);
 			tileManager.DrawTiles();
