@@ -1,4 +1,5 @@
 ﻿using afrikAI.Pathfinding_Modules;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace afrikAI
@@ -16,19 +17,40 @@ namespace afrikAI
             generator = new TileGenerator(width, height);
             tiles = generator.GenerateTiles(tileGeneratorData);
         }
-        public TileManager(string _filepath, ref int _width,ref int _height) // might be better to change 
+		public TileManager(string _filepath, ref int _width,ref int _height):this(_filepath)
         {
-            generator = new TileGenerator();
-            tiles = generator.GenerateTiles(_filepath);
-            width = tiles.GetLength(1);_width = width;
-            height = tiles.GetLength(0);_height = height;
+            _width = width; _height = height;
 		}
-        public void DrawTiles()
+		public TileManager(string _filepath)
+		{
+			generator = new TileGenerator();
+			tiles = generator.GenerateTiles(_filepath);
+			width = tiles.GetLength(1);
+			height = tiles.GetLength(0);
+		}
+		public void DrawTiles()
         {
             foreach (Tile tile in tiles)
             {
+                Debug.WriteLine(tile.x);
                 tile.Draw();
             }
+        }
+        public void DrawTile(int x ,int y)
+        {
+            tiles[y,x].Draw();
+        }
+        public Tile AddToTile(int x, int y, int amount)
+        {
+            Tile tile = tiles[y,x];
+            int currNum = int.Parse(Statics.GetTypeNumFromType(tile.TileType));
+            currNum += amount + 2000; // ugly but works
+            tile.TileType = Statics.tileTypes[Math.Abs(currNum %= Statics.tileTypes.Count).ToString()];
+            return tile;
+        }
+        public void DrawTile(int x, int y, ConsoleColor color)
+        {
+            tiles[y, x].Draw(color);
         }
         public void SwapTiles(int[][] positions)
         {
@@ -42,11 +64,30 @@ namespace afrikAI
             tmp_Tile.SetPos(pos2);
             tiles[pos1[0], pos1[1]].SetPos(pos1);
         }
+        public void SetTileTpye(int x, int y, string Type)
+        {
+            tiles[y,x].TileType = Type;
+        }
+              
         public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
         {
-            DrawPath(getClosestPathToWater(pathfindingContext));
+            drawPath(getClosestPathToWater(pathfindingContext));
         }
-        private void DrawPath(TilePath path)
+        public void SaveTiles(string fileName)
+        {
+            using(StreamWriter sw = new StreamWriter($"saved_deserts\\{fileName}"))
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        sw.Write($"{Statics.GetTypeNumFromType(tiles[y, x].TileType)} ");
+                    }
+                    sw.Write('\n');
+                }
+            }
+        }
+        private void drawPath(TilePath path)
         {
             foreach (Vector2 pos in path.Path)
             {

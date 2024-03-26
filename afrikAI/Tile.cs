@@ -13,12 +13,13 @@ namespace afrikAI
             set => closestDistance = Math.Max(0, Math.Min(value, closestDistance)); 
         }
         public bool Calculated;
+        private string tileType;
         public string TileType { 
-            get => TileType;
+            get => tileType;
             set
             {
                 // handle updating here???
-                TileType = value;
+                tileType = value;
                 bgColor = Statics.tileColors[value];
             }
         }
@@ -45,9 +46,9 @@ namespace afrikAI
         }
         public void Draw(ConsoleColor color)
         {
-			Console.SetCursorPosition(x, y);
+			Console.SetCursorPosition(x * 2, y);
 			Console.BackgroundColor = color;
-			Console.Write(" ");
+			Console.Write("  ");
 		}
         public void SetPos(int[] pos)
         {
