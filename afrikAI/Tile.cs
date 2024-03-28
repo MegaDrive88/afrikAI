@@ -2,7 +2,7 @@
 
 namespace afrikAI
 {
-    public class Tile
+    public class Tile : ICloneable
     {
         private ConsoleColor bgColor;
         public int x { get;private set; }
@@ -43,6 +43,10 @@ namespace afrikAI
             Console.SetCursorPosition(x * 2, y);
             Console.BackgroundColor = bgColor;
             Console.Write($"  ");
+        }
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
         public void Draw(ConsoleColor color)
         {

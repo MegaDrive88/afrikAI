@@ -57,10 +57,8 @@ namespace afrikAI.Pathfinding_Modules
 			shortestLength = 0;
 			List<Vector2> path = new List<Vector2>();
 			for (int i = 0; i < 2; i++) UpdateTiles(tiles, endTile); // works? MAY NEED TO REDO!!!
-			Debug.WriteLine(tiles[2, 3].ClosestDistance);
 			ClosestTileHelper(tiles, startTile, tiles.GetLength(1), tiles.GetLength(0), ref path);
 			return new TilePath(shortestLength, path);
 		}
-		
 	}
 }

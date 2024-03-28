@@ -57,11 +57,11 @@ namespace afrikAI
         }
         public void SwapTiles(int[] pos1, int[] pos2)
         {
-            Tile tmp_Tile = tiles[pos1[0], pos1[1]];
-            tiles[pos1[0], pos1[1]] = tiles[pos2[0], pos2[1]];
-            tiles[pos2[0], pos2[1]] = tmp_Tile;
+            Tile tmp_Tile = (Tile)tiles[pos1[1], pos1[0]].Clone();
+            tiles[pos1[1], pos1[0]] = (Tile)tiles[pos2[1], pos2[0]].Clone();
+            tiles[pos2[1], pos2[0]] = tmp_Tile;
             tmp_Tile.SetPos(pos2);
-            tiles[pos1[0], pos1[1]].SetPos(pos1);
+            tiles[pos1[1], pos1[0]].SetPos(pos1);
         }
         public void SetTileTpye(int x, int y, string Type)
         {
