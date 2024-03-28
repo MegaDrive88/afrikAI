@@ -7,7 +7,7 @@ namespace afrikAI
         private ConsoleColor bgColor;
         public int x { get;private set; }
         public int y { get;private set; }
-        private int closestDistance = int.MaxValue;
+        private int closestDistance = int.MaxValue/2;
         public int ClosestDistance { 
             get => closestDistance; 
             set => closestDistance = Math.Max(0, Math.Min(value, closestDistance)); 
@@ -42,7 +42,7 @@ namespace afrikAI
         {
             Console.SetCursorPosition(x * 2, y);
             Console.BackgroundColor = bgColor;
-            Console.Write("  ");
+            Console.Write($"  ");
         }
         public void Draw(ConsoleColor color)
         {

@@ -19,11 +19,11 @@ namespace afrikAI
 			inputHandler = new InputHandler(this);
 			tileManager = new TileManager(width, height, tileGenData);
 		}
-		public Game(string filePath, string _pathfindingContext)
+		public Game(string fileName, string _pathfindingContext)
 		{
 			pathfindingContext = new PathfindingContext(_pathfindingContext);
 			inputHandler = new InputHandler(this);
-			tileManager = new TileManager(filePath, ref width, ref height);
+			tileManager = new TileManager(fileName, ref width, ref height);
 		}
 		public void Start()
 		{
@@ -34,6 +34,12 @@ namespace afrikAI
 				tileManager.SwapTiles(input);
 				tileManager.DrawShortestPathToWater(pathfindingContext);
 			}
+		}
+		public void PathTest()
+		{
+			tileManager.DrawTiles();
+			Thread.Sleep(5000);
+			tileManager.DrawShortestPathToWater(pathfindingContext);
 		}
 	}
 }

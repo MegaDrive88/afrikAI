@@ -17,14 +17,14 @@ namespace afrikAI
             generator = new TileGenerator(width, height);
             tiles = generator.GenerateTiles(tileGeneratorData);
         }
-		public TileManager(string _filepath, ref int _width,ref int _height):this(_filepath)
+		public TileManager(string _fileName, ref int _width,ref int _height):this(_fileName)
         {
             _width = width; _height = height;
 		}
-		public TileManager(string _filepath)
+		public TileManager(string _fileName)
 		{
 			generator = new TileGenerator();
-			tiles = generator.GenerateTiles(_filepath);
+			tiles = generator.GenerateTiles(_fileName);
 			width = tiles.GetLength(1);
 			height = tiles.GetLength(0);
 		}
@@ -32,7 +32,6 @@ namespace afrikAI
         {
             foreach (Tile tile in tiles)
             {
-                Debug.WriteLine(tile.x);
                 tile.Draw();
             }
         }
@@ -72,6 +71,9 @@ namespace afrikAI
         public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
         {
             drawPath(getClosestPathToWater(pathfindingContext));
+            //foreach (Tile tile in tiles) {
+            //    Debug.WriteLine($"x = {tile.x} y = {tile.y} distance = {tile.ClosestDistance}");
+            //}
         }
         public void SaveTiles(string fileName)
         {

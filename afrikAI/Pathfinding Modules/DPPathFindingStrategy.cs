@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace afrikAI.Pathfinding_Modules
 {
@@ -21,6 +22,7 @@ namespace afrikAI.Pathfinding_Modules
 			{
 				if (tile.TileType == "wall") continue;
 				tile.ClosestDistance = Tile.ClosestDistance + 1;
+				if(tile.x == 1 && tile.y == 2) Debug.WriteLine($"distance = {tile.ClosestDistance}");
 				if (tile.Calculated) continue;
 				UpdateTileHelper(tiles, tile, width, height);
 			}
@@ -48,13 +50,14 @@ namespace afrikAI.Pathfinding_Modules
 		}
 		private void ResetTiles(Tile[,] tiles)
 		{
-			foreach (Tile tile in tiles) tile.Calculated = true;
+			foreach (Tile tile in tiles) tile.Calculated = false;
         }
         public TilePath GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile)
 		{
 			shortestLength = 0;
-			List<Vector2> path = new List<Vector2>(); 
-			UpdateTiles(tiles, endTile);
+			List<Vector2> path = new List<Vector2>();
+			for (int i = 0; i < 2; i++) UpdateTiles(tiles, endTile); // works? MAY NEED TO REDO!!!
+			Debug.WriteLine(tiles[2, 3].ClosestDistance);
 			ClosestTileHelper(tiles, startTile, tiles.GetLength(1), tiles.GetLength(0), ref path);
 			return new TilePath(shortestLength, path);
 		}
