@@ -22,7 +22,6 @@ namespace afrikAI.Pathfinding_Modules
 			{
 				if (tile.TileType == "wall") continue;
 				tile.ClosestDistance = Tile.ClosestDistance + 1;
-				if(tile.x == 1 && tile.y == 2) Debug.WriteLine($"distance = {tile.ClosestDistance}");
 				if (tile.Calculated) continue;
 				UpdateTileHelper(tiles, tile, width, height);
 			}
@@ -42,7 +41,8 @@ namespace afrikAI.Pathfinding_Modules
 			Tile nextTile = nextTiles.Where(t => t.ClosestDistance == nextTiles.Min(t => t.ClosestDistance)).First(); // only returns 1 in Future could make so it returns all paths.
 			path.Add(new Vector2(tile.x, tile.y));
 			if (nextTile.ClosestDistance == 0) 
-			{ 
+			{
+				Debug.WriteLine(nextTile.x + " " + nextTile.y);
 				path.Add(new Vector2(nextTile.x, nextTile.y));
 				shortestLength++;
 			} // nextTile == endTile;
@@ -54,6 +54,7 @@ namespace afrikAI.Pathfinding_Modules
         }
         public TilePath GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile)
 		{
+			foreach(Tile tile in tiles) tile.ResetDistance(); 
 			shortestLength = 0;
 			List<Vector2> path = new List<Vector2>();
 			for (int i = 0; i < 2; i++) UpdateTiles(tiles, endTile); // works? MAY NEED TO REDO!!!

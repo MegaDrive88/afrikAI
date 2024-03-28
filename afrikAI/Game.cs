@@ -1,4 +1,5 @@
 ﻿using afrikAI.Pathfinding_Modules;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace afrikAI
@@ -29,12 +30,17 @@ namespace afrikAI
 		{
 			while (true)
 			{
+				Console.ResetColor();
+				Console.Clear();
 				tileManager.DrawTiles();
 				int[][] input = inputHandler.GetGameInput(width, height);
 				tileManager.SwapTiles(input);
 				tileManager.DrawTiles();
 				Thread.Sleep(1000);
 				tileManager.DrawShortestPathToWater(pathfindingContext);
+				Console.ReadKey();
+				tileManager.MoveCloserToWater(pathfindingContext);
+				tileManager.DrawTiles();
 				Console.ReadKey();
 			}
 		}

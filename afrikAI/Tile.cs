@@ -21,6 +21,8 @@ namespace afrikAI
                 // handle updating here???
                 tileType = value;
                 bgColor = Statics.tileColors[value];
+                ResetDistance();
+                
             }
         }
 		/// <summary>
@@ -47,6 +49,10 @@ namespace afrikAI
         public object Clone()
         {
             return MemberwiseClone();
+        }
+        public void ResetDistance()
+        {
+            closestDistance = int.MaxValue/2;
         }
         public void Draw(ConsoleColor color)
         {

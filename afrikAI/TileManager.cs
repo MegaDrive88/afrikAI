@@ -75,6 +75,19 @@ namespace afrikAI
             //    Debug.WriteLine($"x = {tile.x} y = {tile.y} distance = {tile.ClosestDistance}");
             //}
         }
+        public void MoveCloserToWater(PathfindingContext pathfindingContext)
+        {
+            TilePath path = getClosestPathToWater(pathfindingContext);
+            if(path.Length > 0)
+            {
+                Tile zebra = getZebra();
+                Debug.WriteLine($"zebra: x ={zebra.x} y = {zebra.y} path: x = {path.Path[1].X} y = {path.Path[1].Y}");
+                SwapTiles(new int[] { zebra.x, zebra.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
+                zebra = getZebra();
+				Debug.WriteLine($"zebra: x ={zebra.x} y = {zebra.y} path: x = {path.Path[1].X} y = {path.Path[1].Y}");
+
+			}
+		}
         public void SaveTiles(string fileName)
         {
             using(StreamWriter sw = new StreamWriter($"saved_deserts\\{fileName}"))
