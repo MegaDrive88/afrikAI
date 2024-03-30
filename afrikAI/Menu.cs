@@ -5,6 +5,7 @@
         private MenuItem[] options;
         private List<string> rowsEntered = new List<string>(); //- csak a bevitt adatok, stringként
         private string errorMsg = string.Empty; //ha nem felel meg a szam a korlatoknak
+        private const string PATH = "./saved_deserts\\";
         public Menu() {
             inputHandler = new InputHandler(this);
             Back();
@@ -29,8 +30,8 @@
                 options[top].Action.Invoke();
             }
             catch {
-                string path = $"./saved_deserts\\{options[top].Text}.txt";
-                using (StreamReader sr = new StreamReader(path)) {
+                string path = $"{options[top].Text}.txt";
+                using (StreamReader sr = new StreamReader(PATH + path)) {
                     Console.Clear();
                     LaunchFromFile(path);
                 }
@@ -184,6 +185,7 @@
                 inputHandler.HandleMenuInput();
                 if (nums[1].Length > 2) return;
             }
+            // if nincs olyan strategy
             if (megfelel) {
                 Console.Clear();
                 ProceedToEditor();
@@ -225,10 +227,8 @@
         private void LaunchFromFile(string _path) {
             options = new[] {
                 new MenuItem("Szerkesztés", "option", () => { 
-                    // call editor func
-                    //TileEditor te = new(); // ?
+                    TileEditor te = new TileEditor(_path);
                     ///<summary> Kérdések:
-                    /// Mit is kéne meghívni az editorhoz?
                     /// Van e még a menünek olyan része ami nincs kész? (will demonstrate)
                     /// Pathfinding strategy hogyan, mit returnoljon, hogy jelzed ki a felhasználónak (ez kb a legfontosabb),
                     ///     hol lehessen kiválasztani, kell e neki kulon menu fgv, stb
