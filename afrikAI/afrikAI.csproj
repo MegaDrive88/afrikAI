@@ -7,10 +7,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Update="saved_deserts\te.st">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+<ItemGroup>
+    <EmbeddedResource Include="saved_deserts\*.txt">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+</ItemGroup>
+
+<ItemGroup>
+  <None Remove="saved_deserts\genyo.txt" />
+</ItemGroup>
 
 </Project>
