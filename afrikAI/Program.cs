@@ -12,8 +12,6 @@
 
             Menu menu = new Menu();
             //Game game = new Game(10, 10);
-            InputHandler i = new InputHandler(menu);
-            i.HandleMenuInput();
             //Console.WriteLine(Console.WindowHeight);
         }
     }

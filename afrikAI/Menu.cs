@@ -25,15 +25,16 @@
         }
         public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
-            //try {
+            try {
                 options[top].Action.Invoke();
-            //}
-            //catch {
-            //    using (StreamReader sr = new StreamReader($"./saved_deserts\\{options[top].Text}.txt")) {
-            //        Console.Clear();
-            //        // Console.WriteLine(sr.ReadToEnd());
-            //    }
-            //}
+            }
+            catch {
+                string path = $"./saved_deserts\\{options[top].Text}.txt";
+                using (StreamReader sr = new StreamReader(path)) {
+                    Console.Clear();
+                    LaunchFromFile(path);
+                }
+            }
         }
         public void Exit() {
             Environment.Exit(0);
@@ -184,7 +185,7 @@
             }
             if (megfelel) {
                 Console.Clear();
-                //ProceedToGame(); //proceed to editor...
+                ProceedToEditor();
             }
             inputHandler.HandleMenuInput();
         }
@@ -217,14 +218,38 @@
         }
         private void ProceedToGame() {
             List<int> inputNums = rowsEntered.Take(4).ToList().ConvertAll(new Converter<string, int>(int.Parse));
-            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), "asd");
+            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), "DP");
             game.Start();
         }
-        //private void ProceedToEditor() { }
+        private void LaunchFromFile(string _path) {
+            options = new[] {
+                new MenuItem("Szerkesztés", "option", () => { 
+                    // call editor func
+
+                    ///<summary> Kérdések:
+                    /// Mit is kéne meghívni az editorhoz?
+                    /// Van e még a menünek olyan része ami nincs kész? (will demonstrate)
+                    /// Pathfinding strategy hogyan, mit returnoljon, hogy jelzed ki a felhasználónak (ez kb a legfontosabb),
+                    ///     hol lehessen kiválasztani, kell e neki kulon menu fgv, stb
+                    /// Van még valami ami nincs kész?
+                    ///</summary>
+                }),
+                new MenuItem("Futtatás", "option", () => {
+                    // van e ilyen context?
+                    Game game = new Game(_path, "DP");
+                    game.Start();
+                }),
+                new MenuItem("Vissza", "option", () => Back()),
+            };
+            Show();
+            inputHandler.HandleMenuInput();
+        }
+        private void ProceedToEditor() { }
         //private / public dolgokat rendezni!!!
 
         // sivatag fájlból:
         //		fájlok kilistázás
+        //          szerkeszt?
         //				algoritmus választása
         // random generálás
         //		szél hossz falak száma vizek oroszlánok száma
