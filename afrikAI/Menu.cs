@@ -101,7 +101,8 @@
         private void EditorMenu() { // fajlbol is
             options = new[] {
                 new MenuItem("Szélesség", "numericInput", () => inputHandler.HandleMenuInput()),
-                new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()), //
+                new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Mentési név", "anyInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Tovább", "option", () => CheckEditorNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -218,14 +219,14 @@
         }
         private void ProceedToGame() {
             List<int> inputNums = rowsEntered.Take(4).ToList().ConvertAll(new Converter<string, int>(int.Parse));
-            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), "DP");
+            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), "DP"); // kulon menupont a contextnek
             game.Start();
         }
         private void LaunchFromFile(string _path) {
             options = new[] {
                 new MenuItem("Szerkesztés", "option", () => { 
                     // call editor func
-
+                    //TileEditor te = new(); // ?
                     ///<summary> Kérdések:
                     /// Mit is kéne meghívni az editorhoz?
                     /// Van e még a menünek olyan része ami nincs kész? (will demonstrate)
@@ -236,7 +237,7 @@
                 }),
                 new MenuItem("Futtatás", "option", () => {
                     // van e ilyen context?
-                    Game game = new Game(_path, "DP");
+                    Game game = new Game(_path, "DP"); // goofy
                     game.Start();
                 }),
                 new MenuItem("Vissza", "option", () => Back()),
@@ -244,7 +245,9 @@
             Show();
             inputHandler.HandleMenuInput();
         }
-        private void ProceedToEditor() { }
+        private void ProceedToEditor() {
+            // tileeditor peldanyosit; elso 2 szam a szelesseg magassag, harmadik string a nev
+        }
         //private / public dolgokat rendezni!!!
 
         // sivatag fájlból:
