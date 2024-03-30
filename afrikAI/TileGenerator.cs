@@ -31,11 +31,12 @@ namespace afrikAI
 			Tile[,] tiles = new Tile[height, width];
 			genNormalTiles(tiles);
 			genWalls(data, tiles);
+			//genlions?
 			//genStartAndEndPoint(tiles);
 			return tiles;
 		}
 		private void genWalls(TileGeneratorData data, Tile[,] tiles)
-		{
+		{ // akk marad vagy nem?
 			for (int i = 0; i < data.Wall; i++)
 			{
                 List<int> cords = getWallTopleft();
@@ -76,6 +77,7 @@ namespace afrikAI
         }
         private Tile[,] readFile(string filePath)
 		{
+			filePath = filePath[16..];
 			if (!File.Exists(filePath)) throw new Exception($"Error In TileManager/readFile: File {filePath} doesn't exist");
 			else
 			{

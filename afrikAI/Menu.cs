@@ -1,4 +1,6 @@
-﻿namespace afrikAI
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace afrikAI
 {
     public class Menu {
         private InputHandler inputHandler;
@@ -26,16 +28,16 @@
         }
         public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
-            try {
+            //try {
                 options[top].Action.Invoke();
-            }
-            catch {
-                string path = $"{options[top].Text}.txt";
-                using (StreamReader sr = new StreamReader(PATH + path)) {
-                    Console.Clear();
-                    LaunchFromFile(path);
-                }
-            }
+            //}
+            //catch {
+            //    string path = $"{options[top].Text}.txt";
+            //    using (StreamReader sr = new StreamReader(PATH + path)) {  // nem nagyon tetszik neki a hagyományos console.readline+enter ig
+            //        Console.Clear();
+            //        LaunchFromFile(path);
+            //    }
+            //}
         }
         public void Exit() {
             Environment.Exit(0);
@@ -93,6 +95,7 @@
                 new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()), //
                 new MenuItem("Oroszlánok száma", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Falak száma", "numericInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Generálás", "option", () => CheckRandomGenNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -155,6 +158,7 @@
                 errorMsg = "A falak száma maximum a terület fele lehet!";
                 megfelel = ShowError(4);
             }
+            // van e olyan strategy...
             if (megfelel) {
                 Console.Clear();
                 ProceedToGame();
@@ -185,7 +189,8 @@
                 inputHandler.HandleMenuInput();
                 if (nums[1].Length > 2) return;
             }
-            // if nincs olyan strategy
+            //mentési név már létezik?
+            // if nincs olyan strategy - a strategyk listája legyen public ha lehet
             if (megfelel) {
                 Console.Clear();
                 ProceedToEditor();
@@ -221,7 +226,7 @@
         }
         private void ProceedToGame() {
             List<int> inputNums = rowsEntered.Take(4).ToList().ConvertAll(new Converter<string, int>(int.Parse));
-            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), "DP"); // kulon menupont a contextnek
+            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), rowsEntered[4]); // kulon menupont a strategynak
             game.Start();
         }
         private void LaunchFromFile(string _path) {
@@ -246,7 +251,13 @@
             inputHandler.HandleMenuInput();
         }
         private void ProceedToEditor() {
-            // tileeditor peldanyosit; elso 2 szam a szelesseg magassag, harmadik string a nev
+            List<int> inputNums = rowsEntered.Take(2).ToList().ConvertAll(new Converter<string, int>(int.Parse)); // min constraints?
+            using (StreamWriter sw = new($"{PATH}{rowsEntered[2]}.txt")) { // ha már létezik olyan file?
+                for (int i = 0; i < inputNums[1]; i++) {
+                    sw.WriteLine(string.Concat(Enumerable.Repeat("0 ", inputNums[0])));
+                }
+            }
+            TileEditor te = new TileEditor($"{PATH}{rowsEntered[2]}.txt"); 
         }
         //private / public dolgokat rendezni!!!
 
