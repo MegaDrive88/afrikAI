@@ -25,15 +25,16 @@
         }
         public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
-            //try {
+            try {
                 options[top].Action.Invoke();
-            //}
-            //catch {
-            //    using (StreamReader sr = new StreamReader($"./saved_deserts\\{options[top].Text}.txt")) {
-            //        Console.Clear();
-            //        // Console.WriteLine(sr.ReadToEnd());
-            //    }
-            //}
+            }
+            catch {
+                string path = $"./saved_deserts\\{options[top].Text}.txt";
+                using (StreamReader sr = new StreamReader(path)) {
+                    Console.Clear();
+                    LaunchFromFile(path);
+                }
+            }
         }
         public void Exit() {
             Environment.Exit(0);
@@ -97,10 +98,11 @@
             Show();
             inputHandler.HandleMenuInput();
         }
-        private void EditorMenu() {
+        private void EditorMenu() { // fajlbol is
             options = new[] {
                 new MenuItem("Szélesség", "numericInput", () => inputHandler.HandleMenuInput()),
-                new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()), //
+                new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Mentési név", "anyInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Tovább", "option", () => CheckEditorNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -154,13 +156,39 @@
             }
             if (megfelel) {
                 Console.Clear();
-                //tovabb
+                ProceedToGame();
             }
             inputHandler.HandleMenuInput();
         }
         private void CheckEditorNumbers() {
-            // korlátok? else handlemenuinp. kb ctrl cv, kis változtatásokkal
-            _ = rowsEntered;
+            List<string> nums = rowsEntered.Take(2).ToList();
+            bool megfelel = true;
+            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("")) {
+                Console.SetCursorPosition(options[2].Text.Length + 1, 2);
+                errorMsg = "Adjon meg pontosan 2 számot!";
+                ShowError(2);
+                inputHandler.HandleMenuInput();
+                return;
+            }
+            if (nums[0].Length > 2 || int.Parse(nums[0]) > 60) { // teszt feltételek, jövőben változhat
+                Console.SetCursorPosition(options[0].Text.Length + 2 + nums[0].Length, 0);
+                errorMsg = "A szélesség nem lehet 60-nál nagyobb!";
+                megfelel = ShowError(2);
+                inputHandler.HandleMenuInput();
+                if (nums[0].Length > 2) return;
+            }
+            if (nums[1].Length > 2 || int.Parse(nums[1]) > 25) {
+                Console.SetCursorPosition(options[1].Text.Length + 2 + nums[1].Length, 1);
+                errorMsg = "A magasság nem lehet 25-nél nagyobb!";
+                megfelel = ShowError(2);
+                inputHandler.HandleMenuInput();
+                if (nums[1].Length > 2) return;
+            }
+            if (megfelel) {
+                Console.Clear();
+                ProceedToEditor();
+            }
+            inputHandler.HandleMenuInput();
         }
         private bool ShowError(int cursorPos) {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -178,7 +206,8 @@
                         Console.Write(new string(' ', Console.WindowWidth - (options[i].Text.Length + 2 + rowsEntered[i].Length)));
                     }
                     else {
-                        throw new Exception("null, de a lista hossza nem 0");
+                        Console.SetCursorPosition(options[i].Text.Length + 1, i);
+                        Console.Write(new string(' ', Console.WindowWidth - (options[i].Text.Length + 1)));
                     }
                 }
                 catch {
@@ -188,10 +217,42 @@
             }
             Console.SetCursorPosition(left, top);
         }
+        private void ProceedToGame() {
+            List<int> inputNums = rowsEntered.Take(4).ToList().ConvertAll(new Converter<string, int>(int.Parse));
+            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), "DP"); // kulon menupont a contextnek
+            game.Start();
+        }
+        private void LaunchFromFile(string _path) {
+            options = new[] {
+                new MenuItem("Szerkesztés", "option", () => { 
+                    // call editor func
+                    //TileEditor te = new(); // ?
+                    ///<summary> Kérdések:
+                    /// Mit is kéne meghívni az editorhoz?
+                    /// Van e még a menünek olyan része ami nincs kész? (will demonstrate)
+                    /// Pathfinding strategy hogyan, mit returnoljon, hogy jelzed ki a felhasználónak (ez kb a legfontosabb),
+                    ///     hol lehessen kiválasztani, kell e neki kulon menu fgv, stb
+                    /// Van még valami ami nincs kész?
+                    ///</summary>
+                }),
+                new MenuItem("Futtatás", "option", () => {
+                    // van e ilyen context?
+                    Game game = new Game(_path, "DP"); // goofy
+                    game.Start();
+                }),
+                new MenuItem("Vissza", "option", () => Back()),
+            };
+            Show();
+            inputHandler.HandleMenuInput();
+        }
+        private void ProceedToEditor() {
+            // tileeditor peldanyosit; elso 2 szam a szelesseg magassag, harmadik string a nev
+        }
         //private / public dolgokat rendezni!!!
 
         // sivatag fájlból:
         //		fájlok kilistázás
+        //          szerkeszt?
         //				algoritmus választása
         // random generálás
         //		szél hossz falak száma vizek oroszlánok száma

@@ -9,9 +9,13 @@
             //int width = 10;
             //TileManager tm = new TileManager(width, height);
             //tm.DrawTiles();
-            Console.ResetColor();
-            Console.CursorVisible = false;
-            TileEditor tileEditor = new TileEditor("genyo.txt");
+
+            Menu menu = new Menu();
+            //Game game = new Game(10, 10);
+            //Console.WriteLine(Console.WindowHeight);
+            // Console.ResetColor();
+            // Console.CursorVisible = false;
+            // TileEditor tileEditor = new TileEditor("genyo.txt");
         }
     }
 }
