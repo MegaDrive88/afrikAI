@@ -77,7 +77,6 @@ namespace afrikAI
         }
         private Tile[,] readFile(string filePath)
 		{
-			filePath = filePath[16..];
 			if (!File.Exists(filePath)) throw new Exception($"Error In TileManager/readFile: File {filePath} doesn't exist");
 			else
 			{

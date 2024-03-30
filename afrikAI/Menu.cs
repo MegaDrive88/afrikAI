@@ -257,7 +257,7 @@ namespace afrikAI
                     sw.WriteLine(string.Concat(Enumerable.Repeat("0 ", inputNums[0])));
                 }
             }
-            TileEditor te = new TileEditor($"{PATH}{rowsEntered[2]}.txt"); 
+            TileEditor te = new TileEditor($"{rowsEntered[2]}.txt"); 
         }
         //private / public dolgokat rendezni!!!
 
