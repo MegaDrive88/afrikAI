@@ -1,6 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace afrikAI
+﻿namespace afrikAI
 {
     public class Menu {
         private InputHandler inputHandler;
@@ -28,16 +26,16 @@ namespace afrikAI
         }
         public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
-            //try {
+            try {
                 options[top].Action.Invoke();
-            //}
-            //catch {
-            //    string path = $"{options[top].Text}.txt";
-            //    using (StreamReader sr = new StreamReader(PATH + path)) {  // nem nagyon tetszik neki a hagyományos console.readline+enter ig
-            //        Console.Clear();
-            //        LaunchFromFile(path);
-            //    }
-            //}
+            }
+            catch {
+                string path = $"{options[top].Text}.txt";
+                using (StreamReader sr = new StreamReader(PATH + path)) {
+                    Console.Clear();
+                    LaunchFromFile(path);
+                }
+            }
         }
         public void Exit() {
             Environment.Exit(0);
@@ -58,6 +56,13 @@ namespace afrikAI
         public void DeleteLastChar() {
             ClearErrors();
             (int left, int top) = Console.GetCursorPosition();
+            try {
+                _ = rowsEntered[top];
+            }
+            catch {
+                inputHandler.HandleMenuInput();
+                return;
+            }
             if (left == 0) left = options[top].Text.Length + 1 + rowsEntered[top].Length;
             if (rowsEntered[top].Length > 0) {
                 Console.SetCursorPosition(left - 1, top);
@@ -102,11 +107,12 @@ namespace afrikAI
             Show();
             inputHandler.HandleMenuInput();
         }
-        private void EditorMenu() { // fajlbol is
+        private void EditorMenu() {
             options = new[] {
                 new MenuItem("Szélesség", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Mentési név", "anyInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Tovább", "option", () => CheckEditorNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -127,38 +133,42 @@ namespace afrikAI
         private void CheckRandomGenNumbers() {
             List<string> nums = rowsEntered.Take(4).ToList();
             bool megfelel = true;
-            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("")) {
-                Console.SetCursorPosition(options[4].Text.Length + 1, 4);
-                errorMsg = "Adjon meg pontosan 4 számot!";
-                ShowError(4);
+            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("") || rowsEntered[4] is null) {
+                Console.SetCursorPosition(options[5].Text.Length + 1, 5);
+                errorMsg = "Adja meg az összes adatot!";
+                ShowError(5);
                 inputHandler.HandleMenuInput();
                 return;
             }
-            if (nums[0].Length > 2 || int.Parse(nums[0]) > 60) { // teszt feltételek, jövőben változhat
+            if (nums[0].Length > 2 || int.Parse(nums[0]) > 60 || int.Parse(nums[0]) < 5) { // teszt feltételek, jövőben változhat
                 Console.SetCursorPosition(options[0].Text.Length + 2 + nums[0].Length, 0);
-                errorMsg = "A szélesség nem lehet 60-nál nagyobb!";
-                megfelel = ShowError(4);
+                errorMsg = "A szélesség 60 és 5 közé kell essen!";
+                megfelel = ShowError(5);
                 inputHandler.HandleMenuInput();
                 if (nums[0].Length > 2) return;
             }
-            if (nums[1].Length > 2 || int.Parse(nums[1]) > 25) {
+            if (nums[1].Length > 2 || int.Parse(nums[1]) > 25 || int.Parse(nums[1]) < 4) {
                 Console.SetCursorPosition(options[1].Text.Length + 2 + nums[1].Length, 1);
-                errorMsg = "A magasság nem lehet 25-nél nagyobb!";
-                megfelel = ShowError(4);
+                errorMsg = "A szélesség 25 és 4 közé kell essen!";
+                megfelel = ShowError(5);
                 inputHandler.HandleMenuInput();
                 if (nums[1].Length > 2) return;
             }
             if (nums[2].Length > 3 || int.Parse(nums[2]) > 375 || int.Parse(nums[2]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 4) {
                 Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2);
                 errorMsg = "Az oroszlánok száma maximum a terület negyede lehet!";
-                megfelel = ShowError(4);
+                megfelel = ShowError(5);
             }
             if (nums[3].Length > 3 || int.Parse(nums[3]) > 750 || int.Parse(nums[3]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 2) {
                 Console.SetCursorPosition(options[3].Text.Length + 2 + nums[3].Length, 3);
                 errorMsg = "A falak száma maximum a terület fele lehet!";
-                megfelel = ShowError(4);
+                megfelel = ShowError(5);
             }
-            // van e olyan strategy...
+            if (rowsEntered[4] == "") { // vagy nincs benne a listában...
+                Console.SetCursorPosition(options[4].Text.Length + 2 + rowsEntered[4].Length, 4);
+                errorMsg = "Hibás stratégianév!";
+                megfelel = ShowError(5);
+            }
             if (megfelel) {
                 Console.Clear();
                 ProceedToGame();
@@ -168,28 +178,37 @@ namespace afrikAI
         private void CheckEditorNumbers() {
             List<string> nums = rowsEntered.Take(2).ToList();
             bool megfelel = true;
-            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("")) {
-                Console.SetCursorPosition(options[2].Text.Length + 1, 2);
-                errorMsg = "Adjon meg pontosan 2 számot!";
-                ShowError(2);
+            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("") || rowsEntered[3] is null || rowsEntered[2] is null) {
+                Console.SetCursorPosition(options[3].Text.Length + 1, 3);
+                errorMsg = "Adja meg az összes adatot!";
+                ShowError(4);
                 inputHandler.HandleMenuInput();
                 return;
             }
-            if (nums[0].Length > 2 || int.Parse(nums[0]) > 60) { // teszt feltételek, jövőben változhat
+            if (nums[0].Length > 2 || int.Parse(nums[0]) > 60 || int.Parse(nums[0]) < 5) { // teszt feltételek, jövőben változhat
                 Console.SetCursorPosition(options[0].Text.Length + 2 + nums[0].Length, 0);
-                errorMsg = "A szélesség nem lehet 60-nál nagyobb!";
-                megfelel = ShowError(2);
+                errorMsg = "A szélesség 60 és 5 közé kell essen!";
+                megfelel = ShowError(4);
                 inputHandler.HandleMenuInput();
                 if (nums[0].Length > 2) return;
             }
-            if (nums[1].Length > 2 || int.Parse(nums[1]) > 25) {
+            if (nums[1].Length > 2 || int.Parse(nums[1]) > 25 || int.Parse(nums[1]) < 4) {
                 Console.SetCursorPosition(options[1].Text.Length + 2 + nums[1].Length, 1);
-                errorMsg = "A magasság nem lehet 25-nél nagyobb!";
-                megfelel = ShowError(2);
+                errorMsg = "A szélesség 25 és 4 közé kell essen!";
+                megfelel = ShowError(4);
                 inputHandler.HandleMenuInput();
                 if (nums[1].Length > 2) return;
             }
-            //mentési név már létezik?
+            if (rowsEntered[3] == "") { // vagy nincs benne a listában...
+                Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2);
+                errorMsg = "Hibás stratégianév!";
+                megfelel = ShowError(4);
+            }
+            if (rowsEntered[2] == "" || !rowsEntered[2].All(x => !Statics.FileValidation.invalidFilenameCharacters.Contains(x)) || File.Exists($"{PATH}{rowsEntered[2]}.txt")) {
+                Console.SetCursorPosition(options[2].Text.Length + 2 + rowsEntered[2].Length, 2);
+                errorMsg = "A fájlnév helytelen vagy már létezik ilyen fájl!";
+                megfelel = ShowError(4);
+            }
             // if nincs olyan strategy - a strategyk listája legyen public ha lehet
             if (megfelel) {
                 Console.Clear();
@@ -226,7 +245,7 @@ namespace afrikAI
         }
         private void ProceedToGame() {
             List<int> inputNums = rowsEntered.Take(4).ToList().ConvertAll(new Converter<string, int>(int.Parse));
-            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), rowsEntered[4]); // kulon menupont a strategynak
+            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), rowsEntered[4]);
             game.Start();
         }
         private void LaunchFromFile(string _path) {
@@ -241,8 +260,15 @@ namespace afrikAI
                     ///</summary>
                 }),
                 new MenuItem("Futtatás", "option", () => {
-                    // van e ilyen context?
-                    Game game = new Game(_path, "DP"); // goofy
+                    options = new[] {
+                        new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()),
+                        new MenuItem("Futtatás", "option", () => { }),
+                    };
+                    Show();
+                    inputHandler.HandleMenuInput();
+                    Console.Clear();
+                    // van e ilyen context? - if
+                    Game game = new Game(_path, rowsEntered[0]); // x = a megengedett????
                     game.Start();
                 }),
                 new MenuItem("Vissza", "option", () => Back()),
@@ -252,12 +278,12 @@ namespace afrikAI
         }
         private void ProceedToEditor() {
             List<int> inputNums = rowsEntered.Take(2).ToList().ConvertAll(new Converter<string, int>(int.Parse)); // min constraints?
-            using (StreamWriter sw = new($"{PATH}{rowsEntered[2]}.txt")) { // ha már létezik olyan file?
+            using (StreamWriter sw = new($"{PATH}{rowsEntered[2]}.txt")) {
                 for (int i = 0; i < inputNums[1]; i++) {
                     sw.WriteLine(string.Concat(Enumerable.Repeat("0 ", inputNums[0])));
                 }
             }
-            TileEditor te = new TileEditor($"{rowsEntered[2]}.txt"); 
+            TileEditor te = new TileEditor($"{rowsEntered[2]}.txt"); //hogy tudok menteni btw?
         }
         //private / public dolgokat rendezni!!!
 
@@ -272,5 +298,6 @@ namespace afrikAI
         //		szél hossz
         //				falak elhelyezése; víz elheyez; oroszlán elhelyez; név
         //						algor választ.
+        // post game: szeretné menteni a sivatagot?...
     }
 }
