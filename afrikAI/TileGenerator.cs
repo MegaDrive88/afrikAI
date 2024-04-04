@@ -31,11 +31,12 @@ namespace afrikAI
 			Tile[,] tiles = new Tile[height, width];
 			genNormalTiles(tiles);
 			genWalls(data, tiles);
+			//genlions?
 			//genStartAndEndPoint(tiles);
 			return tiles;
 		}
 		private void genWalls(TileGeneratorData data, Tile[,] tiles)
-		{
+		{ // akk marad vagy nem?
 			for (int i = 0; i < data.Wall; i++)
 			{
                 List<int> cords = getWallTopleft();
