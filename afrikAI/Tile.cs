@@ -2,12 +2,12 @@
 
 namespace afrikAI
 {
-    public class Tile
+    public class Tile : ICloneable
     {
         private ConsoleColor bgColor;
         public int x { get;private set; }
         public int y { get;private set; }
-        private int closestDistance = int.MaxValue;
+        private int closestDistance = int.MaxValue/2;
         public int ClosestDistance { 
             get => closestDistance; 
             set => closestDistance = Math.Max(0, Math.Min(value, closestDistance)); 
@@ -21,6 +21,8 @@ namespace afrikAI
                 // handle updating here???
                 tileType = value;
                 bgColor = Statics.tileColors[value];
+                ResetDistance();
+                
             }
         }
 		/// <summary>
@@ -42,7 +44,15 @@ namespace afrikAI
         {
             Console.SetCursorPosition(x * 2, y);
             Console.BackgroundColor = bgColor;
-            Console.Write("  ");
+            Console.Write($"  ");
+        }
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+        public void ResetDistance()
+        {
+            closestDistance = int.MaxValue/2;
         }
         public void Draw(ConsoleColor color)
         {

@@ -17,14 +17,14 @@ namespace afrikAI
             generator = new TileGenerator(width, height);
             tiles = generator.GenerateTiles(tileGeneratorData);
         }
-		public TileManager(string _filepath, ref int _width,ref int _height):this(_filepath)
+		public TileManager(string _fileName, ref int _width,ref int _height):this(_fileName)
         {
             _width = width; _height = height;
 		}
-		public TileManager(string _filepath)
+		public TileManager(string _fileName)
 		{
 			generator = new TileGenerator();
-			tiles = generator.GenerateTiles(_filepath);
+			tiles = generator.GenerateTiles(_fileName);
 			width = tiles.GetLength(1);
 			height = tiles.GetLength(0);
 		}
@@ -32,7 +32,6 @@ namespace afrikAI
         {
             foreach (Tile tile in tiles)
             {
-                Debug.WriteLine(tile.x);
                 tile.Draw();
             }
         }
@@ -58,11 +57,11 @@ namespace afrikAI
         }
         public void SwapTiles(int[] pos1, int[] pos2)
         {
-            Tile tmp_Tile = tiles[pos1[0], pos1[1]];
-            tiles[pos1[0], pos1[1]] = tiles[pos2[0], pos2[1]];
-            tiles[pos2[0], pos2[1]] = tmp_Tile;
+            Tile tmp_Tile = (Tile)tiles[pos1[1], pos1[0]].Clone();
+            tiles[pos1[1], pos1[0]] = (Tile)tiles[pos2[1], pos2[0]].Clone();
+            tiles[pos2[1], pos2[0]] = tmp_Tile;
             tmp_Tile.SetPos(pos2);
-            tiles[pos1[0], pos1[1]].SetPos(pos1);
+            tiles[pos1[1], pos1[0]].SetPos(pos1);
         }
         public void SetTileTpye(int x, int y, string Type)
         {
@@ -72,7 +71,23 @@ namespace afrikAI
         public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
         {
             drawPath(getClosestPathToWater(pathfindingContext));
+            //foreach (Tile tile in tiles) {
+            //    Debug.WriteLine($"x = {tile.x} y = {tile.y} distance = {tile.ClosestDistance}");
+            //}
         }
+        public void MoveCloserToWater(PathfindingContext pathfindingContext)
+        {
+            TilePath path = getClosestPathToWater(pathfindingContext);
+            if(path.Length > 0)
+            {
+                Tile zebra = getZebra();
+                Debug.WriteLine($"zebra: x ={zebra.x} y = {zebra.y} path: x = {path.Path[1].X} y = {path.Path[1].Y}");
+                SwapTiles(new int[] { zebra.x, zebra.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
+                zebra = getZebra();
+				Debug.WriteLine($"zebra: x ={zebra.x} y = {zebra.y} path: x = {path.Path[1].X} y = {path.Path[1].Y}");
+
+			}
+		}
         public void SaveTiles(string fileName)
         {
             using(StreamWriter sw = new StreamWriter($"saved_deserts\\{fileName}"))

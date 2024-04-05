@@ -23,22 +23,24 @@ namespace afrikAI
 		}
 		public int[][] GetGameInput(int width, int height)
 		{
+			Console.SetCursorPosition(0, height+1);
 			return new int[][] { getCordInput(width, height, "Add meg a tile 2 kordinátáját amelyet mozgatni szeretnél"), getCordInput(width, height, "Add meg azt a két kordinátát ahova mozgatni szeretnéd") };
 		}
 		private int[] getCordInput(int width, int height, string inputMessage = "",string cord1Message = "", string cord2Message = "")
 		{
-            Console.WriteLine();
-            Console.ResetColor();
+
+			Console.ResetColor();
+
 			Console.WriteLine(inputMessage);
 			int x, y;
 			do
 			{
-				Console.Write($"{cord1Message} x = ");
+				Console.Write($"{cord1Message}x = ");
 				if (!int.TryParse(Console.ReadLine(), out x)) continue;
 			} while (x < 0 || x >= width);
 			do
 			{
-				Console.Write($"{cord2Message} y = ");
+				Console.Write($"{cord2Message}y = ");
 				if (!int.TryParse(Console.ReadLine(), out y)) continue;
 			} while (y < 0 || y >= height);
 			return new int[] { x, y };
