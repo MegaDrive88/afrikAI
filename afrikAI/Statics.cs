@@ -59,5 +59,8 @@
         {
 			return tileTypes.Keys.Where(k => tileTypes[k] == type).First();
         }
+        public static class FileValidation {
+            public static readonly List<char> invalidFilenameCharacters = new List<char> { '\0', '\\', '/', ':', '*', '?', '\"', '<', '>', '|', '.' };
+        }
     }
 }

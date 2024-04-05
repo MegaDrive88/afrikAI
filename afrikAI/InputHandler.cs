@@ -28,7 +28,9 @@ namespace afrikAI
 		}
 		private int[] getCordInput(int width, int height, string inputMessage = "",string cord1Message = "", string cord2Message = "")
 		{
+
 			Console.ResetColor();
+
 			Console.WriteLine(inputMessage);
 			int x, y;
 			do
