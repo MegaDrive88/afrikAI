@@ -7,8 +7,9 @@ namespace afrikAI.Pathfinding_Modules
 	{
 		private Dictionary<string, IPathfindingStrategy> pathStrategys = new Dictionary<string, IPathfindingStrategy>() 
 		{
-			{"DP", new DPPathFindingStrategy()}
-		};
+			{"DP", new DPPathFindingStrategy()},
+            {"Adam", new AdamPathfindingStrategy()}
+        };
 		private IPathfindingStrategy Strategy;
 
 		public PathfindingContext(string _strategy = "DP")
