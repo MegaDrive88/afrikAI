@@ -6,27 +6,31 @@ namespace afrikAI.Pathfinding_Modules
 	public class DPPathFindingStrategy : IPathfindingStrategy
 	{
 		private int shortestLength = 0;
-		private void UpdateTiles(Tile[,] tiles, Tile endTile) 
-		{
-			endTile.ClosestDistance = 0;
-			int width = tiles.GetLength(1);
-			int height = tiles.GetLength(0);
-			UpdateTileHelper(tiles, endTile, width,height);
-			ResetTiles(tiles);
-		}
-		private void UpdateTileHelper(Tile[,] tiles, Tile Tile, int width, int height)
-		{
-			List<Tile> nextTiles = getNextTiles(tiles, Tile, width, height);
-			Tile.Calculated = true;
-			foreach(Tile tile in nextTiles)
-			{
-				if (tile.TileType == "wall") continue;
-				tile.ClosestDistance = Tile.ClosestDistance + 1;
-				if (tile.Calculated) continue;
-				UpdateTileHelper(tiles, tile, width, height);
-			}
-		}
-		private List<Tile> getNextTiles(Tile[,] tiles, Tile Tile, int width, int height)
+        private void UpdateTiles(Tile[,] tiles, Tile endTile)
+        {
+            endTile.ClosestDistance = 0;
+            int width = tiles.GetLength(1);
+            int height = tiles.GetLength(0);
+            Queue<Tile> toUpdate = new Queue<Tile>();
+            toUpdate.Enqueue(endTile);
+            while (toUpdate.Count > 0)
+            {
+                Tile currTile = toUpdate.Dequeue();
+                List<Tile> nextTiles = getNextTiles(tiles, currTile, width, height);
+                foreach (Tile tile in nextTiles)
+                {
+                    if (!tile.Calculated)
+					{
+						tile.Calculated = true;
+                        toUpdate.Enqueue(tile);
+						tile.ClosestDistance = currTile.ClosestDistance + 1;
+                    }
+                        
+                }
+            }
+            ResetTiles(tiles);
+        }
+        private List<Tile> getNextTiles(Tile[,] tiles, Tile Tile, int width, int height)
 		{
 			List<Tile> nextTiles = new List<Tile>();
 			if (Tile.x > 0) nextTiles.Add(tiles[Tile.y, Tile.x - 1]);
