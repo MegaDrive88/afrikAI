@@ -67,7 +67,14 @@ namespace afrikAI
         {
             tiles[y,x].TileType = Type;
         }
-              
+        public void MoveCloserToTile(PathfindingContext pathfindingContext, Tile startTile, Tile endTile)
+        {
+            TilePath path = pathfindingContext.GetShortestPath(tiles, startTile, endTile);
+            if(path.Length > 0)
+            {
+                SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
+            }
+        }
         public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
         {
             drawPath(getClosestPathToWater(pathfindingContext));

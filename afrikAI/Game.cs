@@ -12,6 +12,8 @@ namespace afrikAI
 		private readonly InputHandler inputHandler;
 		private readonly PathfindingContext pathfindingContext;
 		private readonly TileManager tileManager;
+
+		
 		public Game(TileGeneratorData tileGenData, string _pathFindingCountext)
 		{
 			pathfindingContext = new PathfindingContext(_pathFindingCountext);
