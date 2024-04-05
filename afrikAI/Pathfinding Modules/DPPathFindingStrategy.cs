@@ -57,8 +57,9 @@ namespace afrikAI.Pathfinding_Modules
 			foreach(Tile tile in tiles) tile.ResetDistance(); 
 			shortestLength = 0;
 			List<Vector2> path = new List<Vector2>();
-			for (int i = 0; i < 2; i++) UpdateTiles(tiles, endTile); // works? MAY NEED TO REDO!!!
+			UpdateTiles(tiles, endTile); // works? MAY NEED TO REDO!!!
 			ClosestTileHelper(tiles, startTile, tiles.GetLength(1), tiles.GetLength(0), ref path);
+			Debug.WriteLine(shortestLength);
 			return new TilePath(shortestLength, path);
 		}
 	}
