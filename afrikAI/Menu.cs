@@ -246,7 +246,7 @@
         private void ProceedToGame() {
             List<int> inputNums = rowsEntered.Take(4).ToList().ConvertAll(new Converter<string, int>(int.Parse));
             Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), rowsEntered[4]);
-            game.Start();
+            game.StartOld();
         }
         private void LaunchFromFile(string _path) {
             options = new[] {
@@ -269,7 +269,7 @@
                     Console.Clear();
                     // van e ilyen context? - if
                     Game game = new Game(_path, rowsEntered[0]); // x = a megengedett????
-                    game.Start();
+                    game.StartOld();
                 }),
                 new MenuItem("Vissza", "option", () => Back()),
             };
