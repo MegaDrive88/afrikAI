@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
+using System.Security;
 
 namespace afrikAI.Pathfinding_Modules
 {
@@ -40,8 +41,26 @@ namespace afrikAI.Pathfinding_Modules
 		}
 		private void ClosestTileHelper(Tile[,] tiles, Tile tile, int width, int height, ref List<Vector2> path)
 		{
+
+			// if path is empty list than no path has been found.
 			List<Tile> nextTiles = getNextTiles(tiles, tile, width, height);
-			Tile nextTile = nextTiles.Where(t => t.ClosestDistance == nextTiles.Min(t => t.ClosestDistance)).First(); // only returns 1 in Future could make so it returns all paths.
+			Tile? nextTile = null;
+			foreach (Tile t in nextTiles)
+			{
+				if(nextTile == null && t.TileType != "wall")
+				{
+					nextTile = t;
+				}
+				else if(nextTile != null && t.ClosestDistance < nextTile.ClosestDistance)
+				{
+					nextTile = t;
+				}
+			}
+			if(nextTile == null)
+			{
+				path = new List<Vector2>();
+				return;
+			}
 			path.Add(new Vector2(tile.x, tile.y));
 			shortestLength++;
 			
@@ -55,6 +74,7 @@ namespace afrikAI.Pathfinding_Modules
 			else if (shortestLength > width * height / 2)
 			{
 				path = new List<Vector2>();
+				return;
 			}
 			else ClosestTileHelper(tiles, nextTile, width, height, ref path);
 		}

@@ -102,6 +102,7 @@ namespace afrikAI
                         sw.Write($"{Statics.GetTypeNumFromType(tiles[y, x].TileType)} ");
                     }
                     sw.Write('\n');
+                    
                 }
             }
         }
