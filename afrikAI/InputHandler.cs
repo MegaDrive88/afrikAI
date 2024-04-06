@@ -21,30 +21,33 @@ namespace afrikAI
 		{
 			tileEditor = _editor;
 		}
-		public int[][] GetGameInput(int width, int height)
+		public int[][] GetGameInput(int width, int height, List<Tile> invalidTiles)
 		{
 			Console.SetCursorPosition(0, height+1);
-			return new int[][] { getCordInput(width, height, "Add meg a tile 2 kordinátáját amelyet mozgatni szeretnél"), getCordInput(width, height, "Add meg azt a két kordinátát ahova mozgatni szeretnéd") };
-		}
-		private int[] getCordInput(int width, int height, string inputMessage = "",string cord1Message = "", string cord2Message = "")
-		{
-
-			Console.ResetColor();
-
-			Console.WriteLine(inputMessage);
-			int x, y;
+			int[] pos1, pos2;
 			do
 			{
-				Console.Write($"{cord1Message}x = ");
-				if (!int.TryParse(Console.ReadLine(), out x)) continue;
-			} while (x < 0 || x >= width);
+				pos1 = getCordInput(width, height, "Add meg a tile 2 kordinátáját amelyet mozgatni szeretnél");
+				Console.WriteLine();
+				if (!isValidCord(pos1, invalidTiles))
+				{
+					onInvalidCord();
+				}
+				else break;
+			} while (true);
 			do
 			{
-				Console.Write($"{cord2Message}y = ");
-				if (!int.TryParse(Console.ReadLine(), out y)) continue;
-			} while (y < 0 || y >= height);
-			return new int[] { x, y };
+				pos2 = getCordInput(width, height, "Add meg azt a két kordinátát ahova mozgatni szeretnéd");
+				Console.WriteLine();
+				if (!isValidCord(pos2, invalidTiles))
+				{
+					onInvalidCord();
+				}
+				else break;
+			} while (true);
+			return new int[][] {pos1 , pos2};
 		}
+		
 		public void HandleMenuInput() {
 			ConsoleKeyInfo consoleKey = Console.ReadKey(true);
 			if (consoleKey.Key == ConsoleKey.UpArrow) menu.MenuMove(-1);
@@ -78,6 +81,36 @@ namespace afrikAI
 			else if (Statics.KeyBinds.EditorKeys['S'].Contains(consoleKey)) tileEditor.Save();
 			HandleEditorInput();
         }
-		
+		private void onInvalidCord()
+		{
+			Console.CursorTop--;
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine("\nvizet oroszlánt és zebrát nem mozgathatsz.\n");
+			Console.ResetColor();
+		}
+		private bool isValidCord(int[] cord, List<Tile> invalidTiles)
+		{
+			if (cord == null) return false;
+			foreach (Tile tile in invalidTiles) if (cord[0] == tile.x && cord[1] == tile.y) return false;
+			return true;
+		}
+		private int[] getCordInput(int width, int height, string inputMessage = "", string cord1Message = "", string cord2Message = "")
+		{
+			Console.ResetColor();
+			Console.WriteLine(inputMessage);
+			int x, y;
+			do
+			{
+				Console.Write($"{cord1Message}x = ");
+				if (!int.TryParse(Console.ReadLine(), out x)) continue;
+			} while (x < 1 || x >= width - 1);
+			do
+			{
+				Console.Write($"{cord2Message}y = ");
+				if (!int.TryParse(Console.ReadLine(), out y)) continue;
+			} while (y < 1 || y >= height - 1);
+			return new int[] { x - 1, y - 1 };
+		}
+
 	}
 }
