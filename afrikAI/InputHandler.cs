@@ -103,14 +103,13 @@ namespace afrikAI
 			{
 				Console.Write($"{cord1Message}x = ");
 				if (!int.TryParse(Console.ReadLine(), out x)) continue;
-			} while (x < 1 || x >= width - 1);
+			} while (x < 1 || x >= width + 1);
 			do
 			{
 				Console.Write($"{cord2Message}y = ");
 				if (!int.TryParse(Console.ReadLine(), out y)) continue;
-			} while (y < 1 || y >= height - 1);
+			} while (y < 1 || y >= height + 1);
 			return new int[] { x - 1, y - 1 };
 		}
-
 	}
 }
