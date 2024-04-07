@@ -67,7 +67,7 @@ namespace afrikAI
         {
             tiles[y,x].TileType = Type;
         }
-              
+         
         public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
         {
             TilePath? path = getClosestPathToWater(pathfindingContext);
@@ -106,6 +106,13 @@ namespace afrikAI
                 }
             }
         }
+        public List<Tile> GetInvalidTiles()
+        {
+            List<Tile> invalidTiles = new List<Tile>();
+            foreach (Tile tile in tiles) if (Statics.invalidTypes.Contains(tile.TileType)) invalidTiles.Add(tile);
+            return invalidTiles;
+        }
+        
         private void drawPath(TilePath path)
         {
             foreach (Vector2 pos in path.Path)
