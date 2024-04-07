@@ -27,7 +27,7 @@ namespace afrikAI
 		}
 		public void Start()
 		{
-            tileManager.DrawTiles();
+            tileManager.DrawTiles(); // ne az incomingot accepteld!!!
             while (true)
 			{
 				int[][] input = inputHandler.GetGameInput(width, height);

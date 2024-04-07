@@ -58,7 +58,7 @@ namespace afrikAI
         }
         public void SwapTiles(int[] pos1, int[] pos2)
         {
-            Tile tmp_Tile = tiles[pos1[1], pos1[0]];
+            Tile tmp_Tile = tiles[pos1[1], pos1[0]]; // azt mondtad fixaltad ugye? akkor itt se az incomingot accepteld!
             tiles[pos1[1], pos1[0]] = tiles[pos2[1], pos2[0]];
             tiles[pos2[1], pos2[0]] = tmp_Tile;
             tmp_Tile.SetPos(pos2);
