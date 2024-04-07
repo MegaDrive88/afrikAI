@@ -27,12 +27,14 @@ namespace afrikAI
 		}
 		public void Start()
 		{
-			while (true)
+            tileManager.DrawTiles();
+            while (true)
 			{
-				tileManager.DrawTiles();
 				int[][] input = inputHandler.GetGameInput(width, height);
 				tileManager.SwapTiles(input);
-				tileManager.DrawShortestPathToWater(pathfindingContext);
+                tileManager.DrawTiles();
+                tileManager.DrawShortestPathToWater(pathfindingContext); 
+				Console.SetCursorPosition(0, 7); // topot meg kell szamolni
 			}
 		}
 	}
