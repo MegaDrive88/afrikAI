@@ -5,6 +5,7 @@
 		public static class KeyBinds
 		{
 			public readonly static ConsoleKey[] MenuConfirm = new ConsoleKey[] { ConsoleKey.Enter, ConsoleKey.Spacebar };
+			
 			public readonly static Dictionary<char, ConsoleKey[]> EditorKeys = new Dictionary<char, ConsoleKey[]>()
 			{
 				{'L',  new ConsoleKey[] {ConsoleKey.A, ConsoleKey.LeftArrow } },
@@ -25,6 +26,10 @@
 				return l;
 			}
         }
+		public static class PathFindingStrategys
+		{
+			public static string DP = "DP";
+		}
 		public static ConsoleKey[] MenuExit = new ConsoleKey[] { ConsoleKey.Escape, ConsoleKey.Backspace };
 		
 		public static Dictionary<string, ConsoleColor> tileColors = new Dictionary<string, ConsoleColor>()
@@ -43,6 +48,7 @@
 			{"3", "lion" },
 			{"4", "zebra" }
 		};
+		public static List<string> invalidTypes = new List<string>() {"water", "lion", "zebra"};
 		public static Dictionary<char, int[]> moveMatrixes = new Dictionary<char, int[]>()
 		{
 			{'L', new int[] {-1,0} },
@@ -57,5 +63,6 @@
         public static class FileValidation {
             public static readonly List<char> invalidFilenameCharacters = new List<char> { '\0', '\\', '/', ':', '*', '?', '\"', '<', '>', '|', '.' };
         }
+		
     }
 }

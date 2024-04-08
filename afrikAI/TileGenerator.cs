@@ -15,11 +15,11 @@ namespace afrikAI
 			width = _width;
 			height = _height;
 		}
-		public Tile[,] GenerateTiles(string filePath)
+		public Tile[,] GenerateTiles(string fileName)
 		{
-			if (filePath != null)
+			if (fileName != null)
 			{
-				return readFile($"{PATH}{filePath}");
+				return readFile($"{PATH}{fileName}");
 			}
 			else
 			{

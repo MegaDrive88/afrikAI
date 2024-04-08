@@ -4,6 +4,6 @@ namespace afrikAI.Pathfinding_Modules
 {
 	public interface IPathfindingStrategy
 	{
-		public TilePath GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile);
+		public TilePath? GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile);
 	}
 }

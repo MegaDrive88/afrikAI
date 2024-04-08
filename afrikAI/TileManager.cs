@@ -17,14 +17,14 @@ namespace afrikAI
             generator = new TileGenerator(width, height);
             tiles = generator.GenerateTiles(tileGeneratorData);
         }
-		public TileManager(string _filepath, ref int _width,ref int _height):this(_filepath)
+		public TileManager(string _fileName, ref int _width,ref int _height):this(_fileName)
         {
             _width = width; _height = height;
 		}
-		public TileManager(string _filepath)
+		public TileManager(string _fileName)
 		{
 			generator = new TileGenerator();
-			tiles = generator.GenerateTiles(_filepath);
+			tiles = generator.GenerateTiles(_fileName);
 			width = tiles.GetLength(1);
 			height = tiles.GetLength(0);
 		}
@@ -32,7 +32,6 @@ namespace afrikAI
         {
             foreach (Tile tile in tiles)
             {
-                Debug.WriteLine(tile.x);
                 tile.Draw();
             }
         }
@@ -58,8 +57,8 @@ namespace afrikAI
         }
         public void SwapTiles(int[] pos1, int[] pos2)
         {
-            Tile tmp_Tile = tiles[pos1[1], pos1[0]]; // azt mondtad fixaltad ugye? akkor itt se az incomingot accepteld!
-            tiles[pos1[1], pos1[0]] = tiles[pos2[1], pos2[0]];
+            Tile tmp_Tile = (Tile)tiles[pos1[1], pos1[0]].Clone();
+            tiles[pos1[1], pos1[0]] = (Tile)tiles[pos2[1], pos2[0]].Clone();
             tiles[pos2[1], pos2[0]] = tmp_Tile;
             tmp_Tile.SetPos(pos2);
             tiles[pos1[1], pos1[0]].SetPos(pos1);
@@ -68,11 +67,29 @@ namespace afrikAI
         {
             tiles[y,x].TileType = Type;
         }
-              
         public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
         {
-            drawPath(getClosestPathToWater(pathfindingContext));
-        }
+            TilePath? path = getClosestPathToWater(pathfindingContext);
+            if(path != null) drawPath(path);
+		}
+        public void MoveCloserToWater(PathfindingContext pathfindingContext)
+        {
+            TilePath? path = getClosestPathToWater(pathfindingContext);
+            if(path == null) 
+            {
+                Debug.WriteLine("No Path found.");
+                return;
+            }
+            if(path.Length > 0)
+            {
+                Tile zebra = getZebra();
+                Debug.WriteLine($"zebra: x ={zebra.x} y = {zebra.y} path: x = {path.Path[1].X} y = {path.Path[1].Y}");
+                SwapTiles(new int[] { zebra.x, zebra.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
+                zebra = getZebra();
+				Debug.WriteLine($"zebra: x ={zebra.x} y = {zebra.y} path: x = {path.Path[1].X} y = {path.Path[1].Y}");
+
+			}
+		}
         public void SaveTiles(string fileName)
         {
             using(StreamWriter sw = new StreamWriter($"saved_deserts\\{fileName}"))
@@ -84,9 +101,17 @@ namespace afrikAI
                         sw.Write($"{Statics.GetTypeNumFromType(tiles[y, x].TileType)} ");
                     }
                     sw.Write('\n');
+                    
                 }
             }
         }
+        public List<Tile> GetInvalidTiles()
+        {
+            List<Tile> invalidTiles = new List<Tile>();
+            foreach (Tile tile in tiles) if (Statics.invalidTypes.Contains(tile.TileType)) invalidTiles.Add(tile);
+            return invalidTiles;
+        }
+        
         private void drawPath(TilePath path)
         {
             foreach (Vector2 pos in path.Path)
@@ -94,15 +119,15 @@ namespace afrikAI
                 tiles[(int)pos.Y, (int)pos.X].Draw(ConsoleColor.Red);
             }
         }
-        private TilePath getClosestPathToWater(PathfindingContext pathfindingContext)
+        private TilePath? getClosestPathToWater(PathfindingContext pathfindingContext)
         {
             Tile zebra = getZebra();
             List<Tile> waters = getWaters();
-            TilePath shortestPath = pathfindingContext.GetShortestPath(tiles, zebra, waters[0]);
+            TilePath? shortestPath = pathfindingContext.GetShortestPath(tiles, zebra, waters[0]);
             for (int i = 1; i < waters.Count; i++)
             {
-                TilePath path = pathfindingContext.GetShortestPath(tiles, zebra, waters[i]);
-                if(path.Length < shortestPath.Length) shortestPath = path;
+                TilePath? path = pathfindingContext.GetShortestPath(tiles, zebra, waters[i]);
+                if(path != null && (shortestPath == null || path.Length < shortestPath.Length)) shortestPath = path;
             }
             return shortestPath;
         }

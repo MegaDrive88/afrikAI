@@ -1,4 +1,5 @@
 ﻿using afrikAI.Pathfinding_Modules;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace afrikAI
@@ -19,23 +20,36 @@ namespace afrikAI
 			inputHandler = new InputHandler(this);
 			tileManager = new TileManager(width, height, tileGenData);
 		}
-		public Game(string filePath, string _pathfindingContext)
+		public Game(string fileName, string _pathfindingContext)
 		{
 			pathfindingContext = new PathfindingContext(_pathfindingContext);
 			inputHandler = new InputHandler(this);
-			tileManager = new TileManager(filePath, ref width, ref height);
+			tileManager = new TileManager(fileName, ref width, ref height);
 		}
 		public void Start()
 		{
             tileManager.DrawTiles(); // ne az incomingot accepteld!!!
             while (true)
 			{
-				int[][] input = inputHandler.GetGameInput(width, height);
+				Console.ResetColor();
+				Console.Clear();
+				tileManager.DrawTiles();
+				int[][] input = inputHandler.GetGameInput(width, height, tileManager.GetInvalidTiles());
 				tileManager.SwapTiles(input);
-                tileManager.DrawTiles();
-                tileManager.DrawShortestPathToWater(pathfindingContext); 
-				Console.SetCursorPosition(0, 7); // topot meg kell szamolni
+				tileManager.DrawTiles();
+				Thread.Sleep(1000);
+				tileManager.DrawShortestPathToWater(pathfindingContext);
+				Console.ReadKey();
+				tileManager.MoveCloserToWater(pathfindingContext);
+				tileManager.DrawTiles();
+				Console.ReadKey();
 			}
+		}
+		public void PathTest()
+		{
+			tileManager.DrawTiles();
+			Thread.Sleep(5000);
+			tileManager.DrawShortestPathToWater(pathfindingContext);
 		}
 	}
 }
