@@ -67,8 +67,6 @@ namespace afrikAI
         {
             tiles[y,x].TileType = Type;
         }
-        
-
         public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
         {
             TilePath? path = getClosestPathToWater(pathfindingContext);
@@ -120,19 +118,6 @@ namespace afrikAI
                 
 				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
                 
-			}
-		}
-		public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
-		{
-			drawPath(getClosestPathToWater(pathfindingContext));
-		}
-		public void MoveCloserToWater(PathfindingContext pathfindingContext)
-		{
-			TilePath path = getClosestPathToWater(pathfindingContext);
-			if (path.Length > 0)
-			{
-				Tile zebra = getZebra();
-				SwapTiles(new int[] { zebra.x, zebra.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
 			}
 		}
 		public Tile getZebra()
