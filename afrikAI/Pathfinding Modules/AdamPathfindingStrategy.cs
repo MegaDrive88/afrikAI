@@ -1,67 +1,48 @@
-﻿using System.Formats.Asn1;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace afrikAI.Pathfinding_Modules {
     public class AdamPathfindingStrategy : IPathfindingStrategy {
         private int shortestLength = 0;
         List<Vector2> vehtlok = new List<Vector2>();
+        private static int totalRecursions = 0;
         private static HashSet<HashSet<Tile>> paths = new HashSet<HashSet<Tile>>();
-        private int DistanceHelper(Tile[,] tiles, int[] t1, int[] t2) {
-            //int wallcount = 0;
-            //for (int i = Math.Min(t1[1], t2[1]); i <= (t1[1] < t2[1] ? t2[1] : t1[1]); i++) {
-            //    for (int j = Math.Min(t1[0], t2[0]); j <= (t1[0] < t2[0] ? t2[0] : t1[0]); j++) {
-
-            //        if (tiles[i, j].TileType == "wall") wallcount++;
-            //    }
-            //}
-            int side_a = Math.Abs(t1[1] - t2[1]) + 1;
-            int side_b = Math.Abs(t1[0] - t2[0]) + 1;
-            //if (wallcount == 0) return side_a * side_b * Math.Abs(side_b - side_a) % 99;
-            //return wallcount * 100 / (side_a * side_b) * Math.Abs(side_b - side_a);
-            int shortest = side_a + side_b;
-            return 0;
-
-        }
-        private void MagicHappensHere(Tile[,] tiles, Tile start, Tile goal, ref HashSet<Tile> path) { // ha nincs ut?
-            List<int[]> surrounding = new List<int[]> {
-                new[] { start.x, start.y - 1 },
-                new[] { start.x - 1, start.y },
-                new[] { start.x, start.y + 1 },
-                new[] { start.x + 1, start.y }
+        private List<int[]> getSurrounding(Tile tile) {
+            return new List<int[]> {
+                new[] { tile.x, tile.y - 1 },
+                new[] { tile.x - 1, tile.y },
+                new[] { tile.x, tile.y + 1 },
+                new[] { tile.x + 1, tile.y }
             };
-            foreach (int[] s in new List<int[]>(surrounding)) {
+        }
+        // private int DistanceHelper(){
+        // }
+        private void MagicHappensHere(Tile[,] tiles, Tile start, Tile goal, ref HashSet<Tile> path) { // ha nincs ut?
+            List<int[]> surrounding = getSurrounding(start);
+            foreach (int[] coords in new List<int[]>(surrounding)) {
                 try {
-                    _ = tiles[s[1], s[0]];
-                    //if (tiles[s[1], s[0]].Calculated) throw new Exception("calculated");
-                    tiles[s[1], s[0]].ClosestDistance = DistanceHelper(tiles, s, new[] { goal.x, goal.y });
+                    if (new[] { "wall", "lion" }.Contains(tiles[coords[1], coords[0]].TileType) || tiles[coords[1], coords[0]].Calculated) throw new Exception("not ground");
+                    //tiles[coords[1], coords[0]].ClosestDistance = ; // ez a lenyeg!!!!!!!!!!!!!!!!!!!!!!
                 }
                 catch {
-                    surrounding.Remove(s);
+                    surrounding.Remove(coords);
                 }
             }
-            int counter = 0;
             surrounding = surrounding.OrderBy(x => tiles[x[1], x[0]].ClosestDistance).ToList();
             if (surrounding.Find(x => tiles[x[1], x[0]].TileType == goal.TileType) is not null) surrounding[0] = surrounding.Find(x => tiles[x[1], x[0]].TileType == goal.TileType);
-            foreach (int[] s in surrounding) {
-                Tile curr = tiles[s[1], s[0]];
-                if (curr.Calculated || new[] { "wall", "lion" }.Contains(curr.TileType)) {
-                    curr.Calculated = true;
-                    continue;
-                }
-                else if (curr.TileType == goal.TileType) {
-                    path.Add(curr);
-                    paths.Add(path);
-                    path = new HashSet<Tile>();
-                }
-                else if (curr.TileType == "ground") {
-                    if (curr.ClosestDistance <= DistanceHelper(tiles, new[] { start.x, start.y }, new[] { goal.x, goal.y })) path.Add(curr);
-                    counter++;
-                    curr.Calculated = true;
-                    MagicHappensHere(tiles, curr, goal, ref path);
-                }
+            int[] s = surrounding[0];
+            Tile curr = tiles[s[1], s[0]];
+            if (curr.TileType == goal.TileType) {
+                path.Add(curr);
+                paths.Add(path);
+                path = new HashSet<Tile>();
+                return;
             }
-            //if (counter == 0) path.Remove(start);
-            paths.Add(path);            
+            else if (curr.TileType == "ground") {
+                curr.Calculated = true;
+                path.Add(curr);
+                MagicHappensHere(tiles, curr, goal, ref path);
+            }
+            //paths.Add(path); kell?
         }
         public TilePath? GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile) {
             HashSet<Tile> sPath = new HashSet<Tile>();
@@ -69,7 +50,7 @@ namespace afrikAI.Pathfinding_Modules {
             int shortestPossible = (startTile.x > endTile.x ? startTile.x - endTile.x : endTile.x - startTile.x) 
                                  + (startTile.y > endTile.y ? startTile.y - endTile.y : endTile.y - startTile.y);
             paths = new HashSet<HashSet<Tile>>() { paths.Where(x => x.Count >= shortestPossible).First() }; // szar az egesz
-            foreach (Tile t in paths.First()) { 
+            foreach (Tile t in paths.First()) { // refactor
                 vehtlok.Add(new Vector2(t.x, t.y));
             }
             return new TilePath(shortestLength, vehtlok);
