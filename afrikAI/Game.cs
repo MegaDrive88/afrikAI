@@ -28,7 +28,8 @@ namespace afrikAI
 		}
 		public void Start()
 		{
-			while (true)
+            tileManager.DrawTiles(); // ne az incomingot accepteld!!!
+            while (true)
 			{
 				Console.ResetColor();
 				Console.Clear();
