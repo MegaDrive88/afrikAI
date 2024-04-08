@@ -10,9 +10,9 @@
 
             Console.CursorVisible = false;
             Console.ResetColor();
-
-            Game game = new Game("genyo.txt", "DP");
-            game.Start();
+            Console.Clear();
+            Game game = new Game("bertold.txt", "Adam"); //1 2 - 2 3
+            game.StartOld();
         }
     }
 }

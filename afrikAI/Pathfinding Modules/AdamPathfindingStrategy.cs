@@ -57,7 +57,7 @@ namespace afrikAI.Pathfinding_Modules {
             MagicHappensHere(tiles, startTile, endTile, ref sPath);
             int shortestPossible = (startTile.x > endTile.x ? startTile.x - endTile.x : endTile.x - startTile.x) 
                                  + (startTile.y > endTile.y ? startTile.y - endTile.y : endTile.y - startTile.y);
-            paths = new HashSet<HashSet<Tile>>() { paths.Where(x => x.Count >= shortestPossible).First() };
+            paths = new HashSet<HashSet<Tile>>() { paths.Where(x => x.Count >= shortestPossible).Last() }; // szar az egesz
             foreach (Tile t in paths.First()) { 
                 vehtlok.Add(new Vector2(t.x, t.y));
             }

@@ -36,7 +36,7 @@ namespace afrikAI
 				Console.ResetColor();
 				Console.Clear();
 				tileManager.DrawTiles();
-				int[][] input = inputHandler.GetGameInput(width, height, tileManager.GetInvalidTiles());
+				int[][] input = inputHandler.GetGameInput(width, height, new());
 				tileManager.SwapTiles(input);
 				tileManager.DrawTiles();
 				Thread.Sleep(1000);
