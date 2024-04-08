@@ -7,8 +7,9 @@ namespace afrikAI.Pathfinding_Modules
 	{
 		private Dictionary<string, IPathfindingStrategy> pathStrategys = new Dictionary<string, IPathfindingStrategy>() 
 		{
-			{"DP", new DPPathFindingStrategy()}
-		};
+			{"DP", new DPPathFindingStrategy()},
+            {"Adam", new AdamPathfindingStrategy()}
+        };
 		private IPathfindingStrategy Strategy;
 
 		public PathfindingContext(string _strategy = "DP")
@@ -20,7 +21,7 @@ namespace afrikAI.Pathfinding_Modules
 			if (pathStrategys.ContainsKey(strategy)) Strategy = pathStrategys[strategy];
 			else Debug.WriteLine($"No such strategy as {strategy} (PathfindingContext.cs)");
 		}
-		public TilePath GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile)
+		public TilePath? GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile)
 		{
 			return Strategy.GetShortestPath(tiles, startTile, endTile);
 		}

@@ -1,4 +1,6 @@
-﻿namespace afrikAI
+﻿#pragma warning disable
+
+namespace afrikAI
 {
     public class Menu {
         private InputHandler inputHandler;
@@ -6,6 +8,7 @@
         private List<string> rowsEntered = new List<string>(); //- csak a bevitt adatok, stringként
         private string errorMsg = string.Empty; //ha nem felel meg a szam a korlatoknak
         private const string PATH = "./saved_deserts\\";
+        private int skipLines;
         public Menu() {
             inputHandler = new InputHandler(this);
             Back();
@@ -283,7 +286,7 @@
                     sw.WriteLine(string.Concat(Enumerable.Repeat("0 ", inputNums[0])));
                 }
             }
-            TileEditor te = new TileEditor($"{rowsEntered[2]}.txt"); //hogy tudok menteni btw?
+            TileEditor te = new TileEditor($"{rowsEntered[2]}.txt"); // v a mentes
         }
         //private / public dolgokat rendezni!!!
 
