@@ -55,8 +55,19 @@ namespace afrikAI
         {
             SwapTiles(positions[0], positions[1]);
         }
-        public void SwapTiles(int[] pos1, int[] pos2)
+        public void SwapTiles(Tile tile1, Tile tile2)
         {
+            SwapTiles(new int[] { tile1.x, tile1.y }, new int[] { tile2.x, tile2.y });
+        }
+        public void SwapTiles(int[] pos1, int[] pos2, Game? game = null)
+        {
+            string types = tiles[pos1[1], pos1[0]].TileType + tiles[pos2[1], pos2[0]].TileType;
+            Debug.WriteLine(types);
+            if (types.Contains("lion") && types.Contains("zebra") && game != null)
+            {
+                game.GameEnd();
+                return;
+            }
             Tile tmp_Tile = (Tile)tiles[pos1[1], pos1[0]].Clone();
             tiles[pos1[1], pos1[0]] = (Tile)tiles[pos2[1], pos2[0]].Clone();
             tiles[pos2[1], pos2[0]] = tmp_Tile;
@@ -74,7 +85,22 @@ namespace afrikAI
 		}
         public void MoveCloserToWater(PathfindingContext pathfindingContext)
         {
+            Tile zebra = getZebra();
             TilePath? path = getClosestPathToWater(pathfindingContext);
+            List<Tile> nextTiles = getNextTiles(tiles, zebra, width, height);
+            List<Tile> nextLions = nextTiles.Where(x => x.TileType == "lion").ToList();
+            if(nextLions.Count > 0)
+            {
+                List<Tile> invalidTiles = GetInvalidTiles();
+                foreach (Tile tile in nextTiles)
+                {
+                    if (!invalidTiles.Contains(tile))
+                    {
+                        SwapTiles(tile, zebra);
+                        return;
+                    }
+                }
+            }
             if(path == null) 
             {
                 Debug.WriteLine("No Path found.");
@@ -82,14 +108,11 @@ namespace afrikAI
             }
             if(path.Length > 0)
             {
-                Tile zebra = getZebra();
-                Debug.WriteLine($"zebra: x ={zebra.x} y = {zebra.y} path: x = {path.Path[1].X} y = {path.Path[1].Y}");
                 SwapTiles(new int[] { zebra.x, zebra.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
-                zebra = getZebra();
-				Debug.WriteLine($"zebra: x ={zebra.x} y = {zebra.y} path: x = {path.Path[1].X} y = {path.Path[1].Y}");
-
+                zebra = getZebra();  
 			}
 		}
+        
         public void SaveTiles(string fileName)
         {
             using(StreamWriter sw = new StreamWriter($"saved_deserts\\{fileName}"))
@@ -105,19 +128,13 @@ namespace afrikAI
                 }
             }
         }
-		public void MoveCloserToTile(PathfindingContext pathfindingContext, Tile startTile, Tile endTile)
+		public void MoveCloserToTile(PathfindingContext pathfindingContext, Tile startTile, Tile endTile, Game game)
 		{
-			Debug.WriteLine($"startTileType = {startTile.TileType} x = {startTile.x} y = {startTile.y}");
-			TilePath path = pathfindingContext.GetShortestPath(tiles, startTile, endTile);
+			TilePath? path = pathfindingContext.GetShortestPath(tiles, startTile, endTile);
+            if (path == null) return;
 			if (path.Length > 0)
 			{
-    //            foreach (Vector2 ge in path.Path)
-    //            {
-					
-				//}
-                
-				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
-                
+				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y }, game);   
 			}
 		}
 		public Tile getZebra()
@@ -166,5 +183,15 @@ namespace afrikAI
             foreach (Tile tile in tiles) if (tile.TileType == "water") waters.Add(tile);
             return waters;
         }
+        public static List<Tile> getNextTiles(Tile[,] tiles, Tile Tile, int width, int height)
+        {
+            List<Tile> nextTiles = new List<Tile>();
+            if (Tile.x > 0) nextTiles.Add(tiles[Tile.y, Tile.x - 1]);
+            if (Tile.x < width - 1) nextTiles.Add(tiles[Tile.y, Tile.x + 1]);
+            if (Tile.y > 0) nextTiles.Add(tiles[Tile.y - 1, Tile.x]);
+            if (Tile.y < height - 1) nextTiles.Add(tiles[Tile.y + 1, Tile.x]);
+            return nextTiles;
+        }
+
     }
 }
