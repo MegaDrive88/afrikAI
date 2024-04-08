@@ -11,7 +11,7 @@
             Console.CursorVisible = false;
             Console.ResetColor();
             Console.Clear();
-            Game game = new Game("bertold.txt", "Adam"); //1 2 - 2 3
+            Game game = new Game("bertold.txt", "Adam"); //2 2 - 9 3; 1 2 - 10 6
             game.StartOld();
         }
     }
