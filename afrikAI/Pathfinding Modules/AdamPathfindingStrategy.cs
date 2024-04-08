@@ -12,6 +12,7 @@ namespace afrikAI.Pathfinding_Modules {
                     if (tiles[i, j].TileType == "wall") wallcount++;
                 }
             }
+            if (wallcount == 0) return (((t1[1] < t2[1] ? t2[1] - t1[1] : t1[1] - t2[1]) + 1) * ((t1[0] < t2[0] ? t2[0] - t1[0] : t1[0] - t2[0]) + 1)) % 100;
             return wallcount * 100 / (((t1[1] < t2[1] ? t2[1] - t1[1] : t1[1] - t2[1]) + 1) * ((t1[0] < t2[0] ? t2[0] - t1[0] : t1[0] - t2[0]) + 1));   
         }
         private void MagicHappensHere(Tile[,] tiles, Tile start, Tile goal, ref HashSet<Tile> path) {
@@ -31,14 +32,14 @@ namespace afrikAI.Pathfinding_Modules {
                 }
             }
             surrounding = surrounding.OrderBy(x => tiles[x[1], x[0]].ClosestDistance).ToList();
-            if (surrounding.Find(x => tiles[x[1], x[0]].TileType == "water") is not null) surrounding[0] = surrounding.Find(x => tiles[x[1], x[0]].TileType == "water");
+            if (surrounding.Find(x => tiles[x[1], x[0]].TileType == goal.TileType) is not null) surrounding[0] = surrounding.Find(x => tiles[x[1], x[0]].TileType == goal.TileType);
             foreach (int[] s in surrounding) {
                 Tile curr = tiles[s[1], s[0]];
                 if (curr.Calculated || new[] { "wall", "lion" }.Contains(curr.TileType)) {
                     curr.Calculated = true;
                     continue;
                 }
-                else if (curr.TileType == "water") {
+                else if (curr.TileType == goal.TileType) {
                     path.Add(curr);
                     paths.Add(path);
                     path = new HashSet<Tile>();
@@ -56,7 +57,7 @@ namespace afrikAI.Pathfinding_Modules {
             MagicHappensHere(tiles, startTile, endTile, ref sPath);
             int shortestPossible = (startTile.x > endTile.x ? startTile.x - endTile.x : endTile.x - startTile.x) 
                                  + (startTile.y > endTile.y ? startTile.y - endTile.y : endTile.y - startTile.y);
-            paths = new HashSet<HashSet<Tile>>() { paths.Where(x => x.Count >= shortestPossible).First() }; // min?
+            paths = new HashSet<HashSet<Tile>>() { paths.Where(x => x.Count >= shortestPossible).First() };
             foreach (Tile t in paths.First()) { 
                 vehtlok.Add(new Vector2(t.x, t.y));
             }
