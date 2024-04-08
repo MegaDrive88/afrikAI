@@ -12,6 +12,8 @@ namespace afrikAI
 		private readonly InputHandler inputHandler;
 		private readonly PathfindingContext pathfindingContext;
 		private readonly TileManager tileManager;
+
+		private List<Tile> lions;
 		public Game(TileGeneratorData tileGenData, string _pathFindingCountext)
 		{
 			pathfindingContext = new PathfindingContext(_pathFindingCountext);
@@ -26,7 +28,7 @@ namespace afrikAI
 			inputHandler = new InputHandler(this);
 			tileManager = new TileManager(fileName, ref width, ref height);
 		}
-		public void Start()
+		public void StartOld()
 		{
             tileManager.DrawTiles(); // ne az incomingot accepteld!!!
             while (true)
@@ -45,11 +47,36 @@ namespace afrikAI
 				Console.ReadKey();
 			}
 		}
+		public void Start()
+		{
+			
+			lions = tileManager.GetLions();
+			while (true)
+			{
+				Console.ResetColor();
+				Console.Clear();
+				tileManager.DrawTiles();
+				int[][] input = inputHandler.GetGameInput(width, height);
+				tileManager.SwapTiles(input);
+				moveLions();
+				lions = tileManager.GetLions();
+				tileManager.MoveCloserToWater(pathfindingContext);
+			}
+		}
 		public void PathTest()
 		{
 			tileManager.DrawTiles();
 			Thread.Sleep(5000);
 			tileManager.DrawShortestPathToWater(pathfindingContext);
 		}
+		private void moveLions()
+		{
+			Tile zebra = tileManager.getZebra();
+            foreach (Tile lion in lions)
+            {
+				tileManager.MoveCloserToTile(pathfindingContext, lion, zebra);
+            }
+        }
+
 	}
 }
