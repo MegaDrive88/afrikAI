@@ -13,25 +13,28 @@ namespace afrikAI
 		private readonly PathfindingContext pathfindingContext;
 		private readonly TileManager tileManager;
 
+		private bool isRunning;
 		private List<Tile> lions;
 		public Game(TileGeneratorData tileGenData, string _pathFindingCountext)
 		{
 			pathfindingContext = new PathfindingContext(_pathFindingCountext);
 			width = tileGenData.Width;
 			height = tileGenData.Height;
-			inputHandler = new InputHandler(this);
+			inputHandler = new InputHandler();
 			tileManager = new TileManager(width, height, tileGenData);
+			isRunning = true;
 		}
 		public Game(string fileName, string _pathfindingContext)
 		{
 			pathfindingContext = new PathfindingContext(_pathfindingContext);
-			inputHandler = new InputHandler(this);
+			inputHandler = new InputHandler();
 			tileManager = new TileManager(fileName, ref width, ref height);
+			isRunning = true;
 		}
 		public void StartOld()
 		{
             tileManager.DrawTiles(); // ne az incomingot accepteld!!!
-            while (true)
+            while (isRunning)
 			{
 				Console.ResetColor();
 				Console.Clear();
@@ -50,17 +53,16 @@ namespace afrikAI
 		public void Start()
 		{
 			
-			lions = tileManager.GetLions();
-			while (true)
+			while (isRunning)
 			{
-				Console.ResetColor();
+                lions = tileManager.GetLions();
+                Console.ResetColor();
 				Console.Clear();
 				tileManager.DrawTiles();
 				int[][] input = inputHandler.GetGameInput(width, height, tileManager.GetInvalidTiles());
                 tileManager.SwapTiles(input);
                 tileManager.MoveCloserToWater(pathfindingContext);
                 moveLions();
-				lions = tileManager.GetLions();
 			}
 		}
 		public void PathTest()
@@ -71,15 +73,12 @@ namespace afrikAI
 		}
 		public void GameEnd()
 		{
-			Debug.WriteLine("GAMEEND");
+			isRunning = false;
 		}
 		private void moveLions()
 		{
-			Tile zebra = tileManager.getZebra();
-            foreach (Tile lion in lions)
-            {
-				tileManager.MoveCloserToTile(pathfindingContext, lion, zebra, this);
-            }
+			Tile zebra = tileManager.GetZebra();
+            foreach (Tile lion in lions) tileManager.MoveCloserToTile(pathfindingContext, lion, zebra, this);
         }
 
 	}

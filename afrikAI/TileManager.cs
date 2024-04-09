@@ -1,6 +1,7 @@
 ﻿using afrikAI.Pathfinding_Modules;
 using System.Diagnostics;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace afrikAI
 {
@@ -85,16 +86,15 @@ namespace afrikAI
 		}
         public void MoveCloserToWater(PathfindingContext pathfindingContext)
         {
-            Tile zebra = getZebra();
+            Tile zebra = GetZebra();
             TilePath? path = getClosestPathToWater(pathfindingContext);
-            List<Tile> nextTiles = getNextTiles(tiles, zebra, width, height);
+            List<Tile> nextTiles = GetNextTiles(tiles, zebra, width, height);
             List<Tile> nextLions = nextTiles.Where(x => x.TileType == "lion").ToList();
             if(nextLions.Count > 0)
             {
-                List<Tile> invalidTiles = GetInvalidTiles();
                 foreach (Tile tile in nextTiles)
                 {
-                    if (!invalidTiles.Contains(tile))
+                    if (tile.TileType != "wall" && tile.TileType != "lion")
                     {
                         SwapTiles(tile, zebra);
                         return;
@@ -109,10 +109,9 @@ namespace afrikAI
             if(path.Length > 0)
             {
                 SwapTiles(new int[] { zebra.x, zebra.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
-                zebra = getZebra();  
+                zebra = GetZebra();  
 			}
 		}
-        
         public void SaveTiles(string fileName)
         {
             using(StreamWriter sw = new StreamWriter($"saved_deserts\\{fileName}"))
@@ -130,14 +129,19 @@ namespace afrikAI
         }
 		public void MoveCloserToTile(PathfindingContext pathfindingContext, Tile startTile, Tile endTile, Game game)
 		{
+            if (startTile.TileType == "lion" && endTile.TileType == "zebra" && GetNextTiles(tiles, startTile, width, height).Where(x => x.TileType == "zebra").Count() > 0) {
+                game.GameEnd();
+                return;
+            }
 			TilePath? path = pathfindingContext.GetShortestPath(tiles, startTile, endTile);
             if (path == null) return;
 			if (path.Length > 0)
 			{
 				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y }, game);   
 			}
+
 		}
-		public Tile getZebra()
+		public Tile GetZebra()
 		{
 			foreach (Tile tile in tiles) if (tile.TileType == "zebra") return tile;
 			throw new Exception("No zebra on the map");
@@ -154,7 +158,7 @@ namespace afrikAI
         public List<Tile> GetInvalidTiles()
         {
             List<Tile> invalidTiles = new List<Tile>();
-            foreach (Tile tile in tiles) if (Statics.invalidTypes.Contains(tile.TileType)) invalidTiles.Add(tile);
+            foreach (Tile tile in tiles) if (Statics.invalidInputTypes.Contains(tile.TileType)) invalidTiles.Add(tile);
             return invalidTiles;
         }
         private void drawPath(TilePath path)
@@ -166,7 +170,7 @@ namespace afrikAI
         }
         private TilePath? getClosestPathToWater(PathfindingContext pathfindingContext)
         {
-            Tile zebra = getZebra();
+            Tile zebra = GetZebra();
             List<Tile> waters = getWaters();
             TilePath? shortestPath = pathfindingContext.GetShortestPath(tiles, zebra, waters[0]);
             for (int i = 1; i < waters.Count; i++)
@@ -183,7 +187,7 @@ namespace afrikAI
             foreach (Tile tile in tiles) if (tile.TileType == "water") waters.Add(tile);
             return waters;
         }
-        public static List<Tile> getNextTiles(Tile[,] tiles, Tile Tile, int width, int height)
+        public static List<Tile> GetNextTiles(Tile[,] tiles, Tile Tile, int width, int height)
         {
             List<Tile> nextTiles = new List<Tile>();
             if (Tile.x > 0) nextTiles.Add(tiles[Tile.y, Tile.x - 1]);

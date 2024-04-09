@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 
 namespace afrikAI
 {
@@ -40,12 +41,7 @@ namespace afrikAI
             x = _x;
             y = _y;
         }
-        public void Draw()
-        {
-            Console.SetCursorPosition(x * 2, y);
-            Console.BackgroundColor = bgColor;
-            Console.Write($"  ");
-        }
+        
         public object Clone()
         {
             return MemberwiseClone();
@@ -60,6 +56,13 @@ namespace afrikAI
 			Console.BackgroundColor = color;
 			Console.Write("  ");
 		}
+        public void Draw()
+        {
+            Console.SetCursorPosition(x * 2, y);
+            Console.BackgroundColor = bgColor;
+            Console.Write($"  ");
+        }
+        
         public void SetPos(int[] pos)
         {
             x = pos[0];

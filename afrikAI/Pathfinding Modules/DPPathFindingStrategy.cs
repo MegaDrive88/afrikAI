@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Numerics;
-using System.Security;
+﻿using System.Numerics;
 
 namespace afrikAI.Pathfinding_Modules
 {
@@ -17,10 +15,10 @@ namespace afrikAI.Pathfinding_Modules
             while (toUpdate.Count > 0)
             {
                 Tile currTile = toUpdate.Dequeue();
-                List<Tile> nextTiles = TileManager.getNextTiles(tiles, currTile, width, height);
+                List<Tile> nextTiles = TileManager.GetNextTiles(tiles, currTile, width, height);
                 foreach (Tile tile in nextTiles)
                 {
-                    if (!tile.Calculated && tile.TileType != "wall")
+                    if (!tile.Calculated && tile.TileType != "wall" && tile.TileType != "lion")
 					{
 						tile.Calculated = true;
                         toUpdate.Enqueue(tile);
@@ -34,11 +32,11 @@ namespace afrikAI.Pathfinding_Modules
 		{
 
 			// if path is empty list than no path has been found.
-			List<Tile> nextTiles = TileManager.getNextTiles(tiles, tile, width, height);
+			List<Tile> nextTiles = TileManager.GetNextTiles(tiles, tile, width, height);
 			Tile? nextTile = null;
 			foreach (Tile t in nextTiles)
 			{
-				if(nextTile == null && t.TileType == "ground")
+				if(nextTile == null && t.TileType != "wall" && t.TileType != "lion")
 				{
 					nextTile = t;
 				}
@@ -62,7 +60,7 @@ namespace afrikAI.Pathfinding_Modules
 				shortestLength--;
 				path.Add(new Vector2(nextTile.x, nextTile.y));
 			} // nextTile == endTile;
-			else if (shortestLength > width * height / 2)
+			else if (shortestLength > width * height)
 			{
 				path = new List<Vector2>();
 				return;
