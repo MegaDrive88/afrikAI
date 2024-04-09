@@ -44,7 +44,11 @@ namespace afrikAI
         {
             Console.SetCursorPosition(x * 2, y);
             Console.BackgroundColor = bgColor;
-            Console.Write($"  ");
+            Console.ForegroundColor = ConsoleColor.Black;
+
+            if (closestDistance.ToString().Length > 2) Console.Write("MX");
+            else if(closestDistance.ToString().Length == 1) Console.Write($"0{closestDistance}");
+            else Console.Write(closestDistance.ToString());
         }
         public object Clone()
         {
@@ -58,7 +62,7 @@ namespace afrikAI
         {
 			Console.SetCursorPosition(x * 2, y);
 			Console.BackgroundColor = color;
-			Console.Write("  ");
+            Console.Write("  ");
 		}
         public void SetPos(int[] pos)
         {
