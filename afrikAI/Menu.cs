@@ -113,7 +113,7 @@ namespace afrikAI
                 new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()), //
                 new MenuItem("Oroszlánok száma", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Falak száma", "numericInput", () => inputHandler.HandleMenuInput()),
-                new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()), // valszeg nem igy lesz
                 new MenuItem("Generálás", "option", () => CheckRandomGenNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -125,7 +125,7 @@ namespace afrikAI
                 new MenuItem("Szélesség", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Mentési név", "anyInput", () => inputHandler.HandleMenuInput()),
-                new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()), // valszeg nem igy lesz
                 new MenuItem("Tovább", "option", () => CheckEditorNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -269,18 +269,22 @@ namespace afrikAI
                     
                 }),
                 new MenuItem("Futtatás", "option", () => {
-                    options = new[] {
-                        new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()),
-                        new MenuItem("Futtatás", "option", () => { }),
-                    };
+                    string strat = string.Empty;
+                    skipLines = 1;
+                    List<MenuItem> temp = new List<MenuItem>();
+                    foreach (string strategy in Statics.PathFindingStrategys.PathfindingStrategies) {
+                        temp.Add(new MenuItem(strategy, "option", () => { strat = strategy; }));
+                    }
+                    options = temp.ToArray();
                     Show();
+                    Console.SetCursorPosition(0, 0);
+                    Console.WriteLine("Válassza ki a használni kívánt útkeresőt: ");
                     inputHandler.HandleMenuInput();
                     Console.Clear();
-                    // van e ilyen context? - if
-                    Game game = new Game(_path, rowsEntered[0]); // x = a megengedett????
+                    Game game = new Game(_path, strat);
                     game.StartOld();
                 }),
-                new MenuItem("Vissza", "option", () => Back()),
+                new MenuItem("Vissza", "option", () => LoadFromFileMenu()),
             };
             Show();
             inputHandler.HandleMenuInput();

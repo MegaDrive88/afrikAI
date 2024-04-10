@@ -2,10 +2,9 @@
 
 namespace afrikAI.Pathfinding_Modules {
     public class AdamPathfindingStrategy : IPathfindingStrategy {
-        private List<Vector2> vehtlok = new List<Vector2>();
+        private List<Vector2> finalPath = new List<Vector2>();
         private bool initNeeded = true;
         private int totalRecursions = 0;
-        private HashSet<Tile> finalPath = new HashSet<Tile>();
         private int groundCount = 0;
         private List<Tile> getSurrounding(Tile[,] tiles, Tile tile) {
             List<Tile> s = new List<Tile>();
@@ -19,19 +18,18 @@ namespace afrikAI.Pathfinding_Modules {
             List<Tile> surrounding = getSurrounding(tiles, t);
             return t.ClosestDistance = surrounding.Min(x => x.ClosestDistance) + 1;
         }
-        private void initialize(ref Tile[,] tiles, Tile goal) {
+        private void initialize(ref Tile[,] tiles) {
             initNeeded = false;
             for (int i = 0; i < tiles.GetLength(0); i++) {
                 for (int j = 0;  j < tiles.GetLength(1); j++) {
                     Tile curr = tiles[i, j];
                     if (curr.TileType == "ground") {
-                        if (getSurrounding(tiles, curr).All(x => x.TileType == "wall")) {
+                        if (getSurrounding(tiles, curr).Count(x => new[] { "wall", "lion" }.Contains(x.TileType)) >= 3) {
                             curr.Calculated = true;
                             continue;
                         }
                         groundCount++;
-                        if (j == 0) curr.ClosestDistance = Math.Abs(goal.y - i) + goal.x;
-                        else curr.ClosestDistance = distanceHelper(tiles, curr);
+                        curr.ClosestDistance = distanceHelper(tiles, curr);
                         curr.Calculated = curr.ClosestDistance != int.MaxValue / 2;
                         if (!curr.Calculated) initNeeded = true;
                     }
@@ -39,16 +37,16 @@ namespace afrikAI.Pathfinding_Modules {
                 }
             }
         }
-        private void magicHappensHere(Tile[,] tiles, Tile start, Tile goal, ref HashSet<Tile> path) {
+        private void magicHappensHere(Tile[,] tiles, Tile start, Tile goal, ref List<Vector2> path) {
             if (totalRecursions > groundCount) return;
             List<Tile> surrounding = getSurrounding(tiles, start);
             Tile curr = surrounding.OrderBy(x => x.ClosestDistance).ToList()[0];
             if (curr.TileType == goal.TileType) {
-                path.Add(curr);
+                path.Add(new Vector2(curr.x, curr.y));
                 return;
             }
             else if (curr.TileType == "ground") {
-                path.Add(curr);
+                path.Add(new Vector2(curr.x, curr.y));
                 totalRecursions++;
                 magicHappensHere(tiles, curr, goal, ref path);
             }
@@ -58,16 +56,13 @@ namespace afrikAI.Pathfinding_Modules {
             endTile.Calculated = true;
             while (initNeeded && totalRecursions <= groundCount) {
                 groundCount = 0;
-                initialize(ref tiles, endTile);
+                initialize(ref tiles);
                 totalRecursions++;
             }
             totalRecursions = 0;
             magicHappensHere(tiles, startTile, endTile, ref finalPath);
-            if (!finalPath.Contains(endTile)) return null;
-            foreach (Tile t in finalPath) { 
-                vehtlok.Add(new Vector2(t.x, t.y));
-            }
-            return new TilePath(vehtlok.Count, vehtlok);
+            if (!finalPath.Contains(new Vector2(endTile.x, endTile.y))) return null;
+            return new TilePath(finalPath.Count, finalPath);
         }
     }
 }
