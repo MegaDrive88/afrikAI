@@ -29,11 +29,12 @@ namespace afrikAI
         }
         public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
+            top -= skipLines;
             try {
-                options[top - skipLines].Action.Invoke();
+                options[top].Action.Invoke();
             }
             catch {
-                string path = $"{options[top - skipLines].Text}.txt";
+                string path = $"{options[top].Text}.txt";
                 using (StreamReader sr = new StreamReader(PATH + path)) {
                     Console.Clear();
                     LaunchFromFile(path);
@@ -47,11 +48,12 @@ namespace afrikAI
             ClearErrors();
             if (rowsEntered.Count == 0) rowsEntered = new List<string>(new string[options.Length]);
             (int left, int top) = Console.GetCursorPosition();
-            if ((options[top - skipLines].Type == "numericInput" && char.IsNumber(cki.KeyChar)) || options[top - skipLines].Type == "anyInput") {
-                if (rowsEntered[top - skipLines] is null) rowsEntered[top - skipLines] = "";
-                if (left == 0) left = options[top - skipLines].Text.Length + 1 + rowsEntered[top - skipLines].Length;
-                Console.SetCursorPosition(left, top);
-                rowsEntered[top - skipLines] += cki.KeyChar;
+            top -= skipLines;
+            if ((options[top].Type == "numericInput" && char.IsNumber(cki.KeyChar)) || options[top].Type == "anyInput") {
+                if (rowsEntered[top] is null) rowsEntered[top] = "";
+                if (left == 0) left = options[top].Text.Length + 1 + rowsEntered[top].Length;
+                Console.SetCursorPosition(left, top + skipLines);
+                rowsEntered[top] += cki.KeyChar;
                 Console.Write(cki.KeyChar);
             }
             inputHandler.HandleMenuInput();
@@ -59,19 +61,20 @@ namespace afrikAI
         public void DeleteLastChar() {
             ClearErrors();
             (int left, int top) = Console.GetCursorPosition();
+            top -= skipLines;
             try {
-                _ = rowsEntered[top - skipLines];
+                _ = rowsEntered[top];
             }
             catch {
                 inputHandler.HandleMenuInput();
                 return;
             }
-            if (left == 0) left = options[top - skipLines].Text.Length + 1 + rowsEntered[top - skipLines].Length;
-            if (rowsEntered[top - skipLines].Length > 0) {
-                Console.SetCursorPosition(left - 1, top);
+            if (left == 0) left = options[top].Text.Length + 1 + rowsEntered[top].Length;
+            if (rowsEntered[top].Length > 0) {
+                Console.SetCursorPosition(left - 1, top + skipLines);
                 Console.Write(' ');
-                rowsEntered[top - skipLines] = rowsEntered[top - skipLines][..^1];
-                Console.SetCursorPosition(left - 1, top);
+                rowsEntered[top] = rowsEntered[top][..^1];
+                Console.SetCursorPosition(left - 1, top + skipLines);
             }
             inputHandler.HandleMenuInput();
         }
@@ -175,7 +178,7 @@ namespace afrikAI
                 errorMsg = "A falak száma maximum a terület fele lehet!";
                 megfelel = ShowError(5);
             }
-            if (rowsEntered[4] == "") { // vagy nincs benne a listában...
+            if (rowsEntered[4] == "" || !Statics.PathFindingStrategys.PathfindingStrategies.Contains(rowsEntered[4])) { //lehet h mad nem is kell
                 Console.SetCursorPosition(options[4].Text.Length + 2 + rowsEntered[4].Length, 4 + skipLines);
                 errorMsg = "Hibás stratégianév!";
                 megfelel = ShowError(5);
@@ -210,7 +213,7 @@ namespace afrikAI
                 inputHandler.HandleMenuInput();
                 if (nums[1].Length > 2) return;
             }
-            if (rowsEntered[3] == "") { // vagy nincs benne a listában...
+            if (rowsEntered[3] == "" || !Statics.PathFindingStrategys.PathfindingStrategies.Contains(rowsEntered[3])) {
                 Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2 + skipLines);
                 errorMsg = "Hibás stratégianév!";
                 megfelel = ShowError(4);
@@ -263,12 +266,7 @@ namespace afrikAI
             options = new[] {
                 new MenuItem("Szerkesztés", "option", () => { 
                     TileEditor te = new TileEditor(_path);
-                    ///<summary> Kérdések:
-                    /// Van e még a menünek olyan része ami nincs kész? (will demonstrate)
-                    /// Pathfinding strategy hogyan, mit returnoljon, hogy jelzed ki a felhasználónak (ez kb a legfontosabb),
-                    ///     hol lehessen kiválasztani, kell e neki kulon menu fgv, stb
-                    /// Van még valami ami nincs kész?
-                    ///</summary>
+                    
                 }),
                 new MenuItem("Futtatás", "option", () => {
                     options = new[] {

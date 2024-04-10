@@ -28,7 +28,8 @@
         }
 		public static class PathFindingStrategys
 		{
-			public static string DP = "DP";
+			// innen kivettem h string DP = "DP"
+			public static readonly List<string> PathfindingStrategies = new List<string> { "DP", "ADM" }; //ide vedd fel a tobbit
 		}
 		public static ConsoleKey[] MenuExit = new ConsoleKey[] { ConsoleKey.Escape, ConsoleKey.Backspace };
 		
