@@ -24,10 +24,14 @@ namespace afrikAI.Pathfinding_Modules {
             for (int i = 0; i < tiles.GetLength(0); i++) {
                 for (int j = 0;  j < tiles.GetLength(1); j++) {
                     Tile curr = tiles[i, j];
-                    if (j == 0) curr.ClosestDistance = Math.Abs(goal.y - i) + goal.x;
-                    else if (curr.TileType == "ground") {
+                    if (curr.TileType == "ground") {
+                        if (getSurrounding(tiles, curr).All(x => x.TileType == "wall")) {
+                            curr.Calculated = true;
+                            continue;
+                        }
                         groundCount++;
-                        curr.ClosestDistance = distanceHelper(tiles, curr);
+                        if (j == 0) curr.ClosestDistance = Math.Abs(goal.y - i) + goal.x;
+                        else curr.ClosestDistance = distanceHelper(tiles, curr);
                         curr.Calculated = curr.ClosestDistance != int.MaxValue / 2;
                         if (!curr.Calculated) initNeeded = true;
                     }
@@ -36,6 +40,7 @@ namespace afrikAI.Pathfinding_Modules {
             }
         }
         private void magicHappensHere(Tile[,] tiles, Tile start, Tile goal, ref HashSet<Tile> path) {
+            if (totalRecursions > groundCount) return;
             List<Tile> surrounding = getSurrounding(tiles, start);
             Tile curr = surrounding.OrderBy(x => x.ClosestDistance).ToList()[0];
             if (curr.TileType == goal.TileType) {
@@ -44,6 +49,7 @@ namespace afrikAI.Pathfinding_Modules {
             }
             else if (curr.TileType == "ground") {
                 path.Add(curr);
+                totalRecursions++;
                 magicHappensHere(tiles, curr, goal, ref path);
             }
         }
@@ -55,6 +61,7 @@ namespace afrikAI.Pathfinding_Modules {
                 initialize(ref tiles, endTile);
                 totalRecursions++;
             }
+            totalRecursions = 0;
             magicHappensHere(tiles, startTile, endTile, ref finalPath);
             if (!finalPath.Contains(endTile)) return null;
             foreach (Tile t in finalPath) { 
