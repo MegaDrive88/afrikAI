@@ -113,7 +113,6 @@ namespace afrikAI
                 new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()), //
                 new MenuItem("Oroszlánok száma", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Falak száma", "numericInput", () => inputHandler.HandleMenuInput()),
-                new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()), // valszeg nem igy lesz
                 new MenuItem("Generálás", "option", () => CheckRandomGenNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -125,7 +124,7 @@ namespace afrikAI
                 new MenuItem("Szélesség", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Mentési név", "anyInput", () => inputHandler.HandleMenuInput()),
-                new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()), // valszeg nem igy lesz
+                //new MenuItem("Használni kívánt algoritmus (lehetséges:)", "anyInput", () => inputHandler.HandleMenuInput()), // valszeg nem igy lesz
                 new MenuItem("Tovább", "option", () => CheckEditorNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -147,44 +146,40 @@ namespace afrikAI
         private void CheckRandomGenNumbers() { // nem general startot meg endet
             List<string> nums = rowsEntered.Take(4).ToList();
             bool megfelel = true;
-            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("") || rowsEntered[4] is null) {
-                Console.SetCursorPosition(options[5].Text.Length + 1, 5 + skipLines);
+            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("")) {
+                Console.SetCursorPosition(options[4].Text.Length + 1, 4 + skipLines);
                 errorMsg = "Adja meg az összes adatot!";
-                ShowError(5);
+                ShowError(4);
                 inputHandler.HandleMenuInput();
                 return;
             }
             if (nums[0].Length > 2 || int.Parse(nums[0]) > 60 || int.Parse(nums[0]) < 5) { // teszt feltételek, jövőben változhat
                 Console.SetCursorPosition(options[0].Text.Length + 2 + nums[0].Length, skipLines);
                 errorMsg = "A szélesség 60 és 5 közé kell essen!";
-                megfelel = ShowError(5);
-                inputHandler.HandleMenuInput();
+                megfelel = ShowError(4);
+                inputHandler.HandleMenuInput(); // kulonben nem tudna teruletet szamolni
                 if (nums[0].Length > 2) return;
             }
             if (nums[1].Length > 2 || int.Parse(nums[1]) > 25 || int.Parse(nums[1]) < 4) {
                 Console.SetCursorPosition(options[1].Text.Length + 2 + nums[1].Length, 1 + skipLines);
                 errorMsg = "A szélesség 25 és 4 közé kell essen!";
-                megfelel = ShowError(5);
+                megfelel = ShowError(4);
                 inputHandler.HandleMenuInput();
                 if (nums[1].Length > 2) return;
             }
             if (nums[2].Length > 3 || int.Parse(nums[2]) > 375 || int.Parse(nums[2]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 4) {
                 Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2 + skipLines);
                 errorMsg = "Az oroszlánok száma maximum a terület negyede lehet!";
-                megfelel = ShowError(5);
+                megfelel = ShowError(4);
             }
             if (nums[3].Length > 3 || int.Parse(nums[3]) > 750 || int.Parse(nums[3]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 2) {
                 Console.SetCursorPosition(options[3].Text.Length + 2 + nums[3].Length, 3 + skipLines);
                 errorMsg = "A falak száma maximum a terület fele lehet!";
-                megfelel = ShowError(5);
-            }
-            if (rowsEntered[4] == "" || !Statics.PathFindingStrategys.PathfindingStrategies.Contains(rowsEntered[4])) { //lehet h mad nem is kell
-                Console.SetCursorPosition(options[4].Text.Length + 2 + rowsEntered[4].Length, 4 + skipLines);
-                errorMsg = "Hibás stratégianév!";
-                megfelel = ShowError(5);
+                megfelel = ShowError(4);
             }
             if (megfelel) {
                 Console.Clear();
+                rowsEntered[4] = StrategySelector(); // geniusz
                 ProceedToGame();
             }
             inputHandler.HandleMenuInput();
@@ -192,41 +187,40 @@ namespace afrikAI
         private void CheckEditorNumbers() {
             List<string> nums = rowsEntered.Take(2).ToList();
             bool megfelel = true;
-            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("") || rowsEntered[3] is null || rowsEntered[2] is null) {
+            if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("") || rowsEntered[2] is null) {
                 Console.SetCursorPosition(options[3].Text.Length + 1, 3 + skipLines);
                 errorMsg = "Adja meg az összes adatot!";
-                ShowError(4);
+                ShowError(3);
                 inputHandler.HandleMenuInput();
                 return;
             }
             if (nums[0].Length > 2 || int.Parse(nums[0]) > 60 || int.Parse(nums[0]) < 5) { // teszt feltételek, jövőben változhat
                 Console.SetCursorPosition(options[0].Text.Length + 2 + nums[0].Length, 0 + skipLines);
                 errorMsg = "A szélesség 60 és 5 közé kell essen!";
-                megfelel = ShowError(4);
+                megfelel = ShowError(3);
                 inputHandler.HandleMenuInput();
                 if (nums[0].Length > 2) return;
             }
             if (nums[1].Length > 2 || int.Parse(nums[1]) > 25 || int.Parse(nums[1]) < 4) {
                 Console.SetCursorPosition(options[1].Text.Length + 2 + nums[1].Length, 1 + skipLines);
                 errorMsg = "A szélesség 25 és 4 közé kell essen!";
-                megfelel = ShowError(4);
+                megfelel = ShowError(3);
                 inputHandler.HandleMenuInput();
                 if (nums[1].Length > 2) return;
             }
-            if (rowsEntered[3] == "" || !Statics.PathFindingStrategys.PathfindingStrategies.Contains(rowsEntered[3])) {
-                Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2 + skipLines);
-                errorMsg = "Hibás stratégianév!";
-                megfelel = ShowError(4);
-            }
+            //if (rowsEntered[3] == "" || !Statics.PathFindingStrategys.PathfindingStrategies.Contains(rowsEntered[3])) {
+            //    Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2 + skipLines);
+            //    errorMsg = "Hibás stratégianév!";
+            //    megfelel = ShowError(4);
+            //}
             if (rowsEntered[2] == "" || !rowsEntered[2].All(x => !Statics.FileValidation.invalidFilenameCharacters.Contains(x)) || File.Exists($"{PATH}{rowsEntered[2]}.txt")) {
                 Console.SetCursorPosition(options[2].Text.Length + 2 + rowsEntered[2].Length, 2 + skipLines);
                 errorMsg = "A fájlnév helytelen vagy már létezik ilyen fájl!";
-                megfelel = ShowError(4);
+                megfelel = ShowError(3);
             }
-            // if nincs olyan strategy - a strategyk listája legyen public ha lehet
             if (megfelel) {
                 Console.Clear();
-                ProceedToEditor();
+                ProceedToEditor(); //nemtom itt hogy legyen, ugyanugy mint a random nal, vagy csak mentes utan?
             }
             inputHandler.HandleMenuInput();
         }
@@ -262,27 +256,29 @@ namespace afrikAI
             Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), rowsEntered[4]);
             game.StartOld();
         }
+        private string StrategySelector() { // ujrahasznalhato
+            string strat = string.Empty;
+            skipLines = 1;
+            List<MenuItem> temp = new List<MenuItem>();
+            foreach (string strategy in Statics.PathFindingStrategys.PathfindingStrategies) {
+                temp.Add(new MenuItem(strategy, "option", () => { strat = strategy; }));
+            }
+            options = temp.ToArray();
+            Show();
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("Válassza ki a használni kívánt útkeresőt: ");
+            inputHandler.HandleMenuInput();
+            Console.Clear();
+            return strat;
+        }
         private void LaunchFromFile(string _path) {
             options = new[] {
                 new MenuItem("Szerkesztés", "option", () => { 
                     TileEditor te = new TileEditor(_path);
-                    
                 }),
                 new MenuItem("Futtatás", "option", () => {
-                    string strat = string.Empty;
-                    skipLines = 1;
-                    List<MenuItem> temp = new List<MenuItem>();
-                    foreach (string strategy in Statics.PathFindingStrategys.PathfindingStrategies) {
-                        temp.Add(new MenuItem(strategy, "option", () => { strat = strategy; }));
-                    }
-                    options = temp.ToArray();
-                    Show();
-                    Console.SetCursorPosition(0, 0);
-                    Console.WriteLine("Válassza ki a használni kívánt útkeresőt: ");
-                    inputHandler.HandleMenuInput();
-                    Console.Clear();
-                    Game game = new Game(_path, strat);
-                    game.StartOld();
+                    Game game = new Game(_path, StrategySelector());
+                    game.StartOld(); // gondolom majd nem startold hanem sima start
                 }),
                 new MenuItem("Vissza", "option", () => LoadFromFileMenu()),
             };
