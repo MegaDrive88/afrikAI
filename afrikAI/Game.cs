@@ -39,8 +39,8 @@ namespace afrikAI
 				Console.ResetColor();
 				Console.Clear();
 				tileManager.DrawTiles();
-				int[][] input = inputHandler.GetGameInput(width, height, tileManager.GetInvalidTiles());
-				tileManager.SwapTiles(input);
+                int[][] input = inputHandler.GetGameInput(width, height, tileManager.GetInvalidTiles());
+                tileManager.SwapTiles(input);
 				tileManager.DrawTiles();
 				Thread.Sleep(1000);
 				tileManager.DrawShortestPathToWater(pathfindingContext);

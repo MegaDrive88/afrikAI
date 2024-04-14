@@ -2,65 +2,67 @@
 
 namespace afrikAI.Pathfinding_Modules {
     public class AdamPathfindingStrategy : IPathfindingStrategy {
-        private int shortestLength = 0;
-        List<Vector2> vehtlok = new List<Vector2>();
-        private static HashSet<HashSet<Tile>> paths = new HashSet<HashSet<Tile>>();
-        private int DistanceHelper(Tile[,] tiles, int[] t1, int[] t2) {
-            int wallcount = 0;
-            for(int i = t1[1] < t2[1] ? t1[1] : t2[1]; i <= (t1[1] < t2[1] ? t2[1] : t1[1]); i++) {
-                for (int j = t1[0] < t2[0] ? t1[0] : t2[0]; j <= (t1[0] < t2[0] ? t2[0] : t1[0]); j++) {
-                    if (tiles[i, j].TileType == "wall") wallcount++;
-                }
-            }
-            return wallcount * 100 / (((t1[1] < t2[1] ? t2[1] - t1[1] : t1[1] - t2[1]) + 1) * ((t1[0] < t2[0] ? t2[0] - t1[0] : t1[0] - t2[0]) + 1));   
+        private List<Vector2> finalPath = new List<Vector2>();
+        private bool initNeeded = true;
+        private int totalRecursions = 0;
+        private int groundCount = 0;
+        private List<Tile> getSurrounding(Tile[,] tiles, Tile tile) {
+            List<Tile> s = new List<Tile>();
+            if (tile.y > 0) s.Add(tiles[tile.y - 1, tile.x]);
+            if (tile.x > 0) s.Add(tiles[tile.y, tile.x - 1]);
+            if (tile.y < tiles.GetLength(0) - 1) s.Add(tiles[tile.y + 1, tile.x]);
+            if (tile.x < tiles.GetLength(1) - 1) s.Add(tiles[tile.y, tile.x + 1]);
+            return s;
         }
-        private void MagicHappensHere(Tile[,] tiles, Tile start, Tile goal, ref HashSet<Tile> path) {
-            List<int[]> surrounding = new List<int[]> {
-                new[] { start.x, start.y - 1 },
-                new[] { start.x - 1, start.y },
-                new[] { start.x, start.y + 1 },
-                new[] { start.x + 1, start.y }
-            };
-            foreach (int[] s in new List<int[]>(surrounding)) {
-                try {
-                    _ = tiles[s[1], s[0]];
-                    tiles[s[1], s[0]].ClosestDistance = DistanceHelper(tiles, s, new[] { goal.x, goal.y });
-                }
-                catch {
-                    surrounding.Remove(s);
-                }
-            }
-            surrounding = surrounding.OrderBy(x => tiles[x[1], x[0]].ClosestDistance).ToList();
-            if (surrounding.Find(x => tiles[x[1], x[0]].TileType == "water") is not null) surrounding[0] = surrounding.Find(x => tiles[x[1], x[0]].TileType == "water");
-            foreach (int[] s in surrounding) {
-                Tile curr = tiles[s[1], s[0]];
-                if (curr.Calculated || new[] { "wall", "lion" }.Contains(curr.TileType)) {
-                    curr.Calculated = true;
-                    continue;
-                }
-                else if (curr.TileType == "water") {
-                    path.Add(curr);
-                    paths.Add(path);
-                    path = new HashSet<Tile>();
-                }
-                else if (curr.TileType == "ground") {
-                    path.Add(curr);
-                    curr.Calculated = true;
-                    MagicHappensHere(tiles, curr, goal, ref path);
-                }
-            }
-            paths.Add(path);            
+        private int distanceHelper(Tile[,] tiles, Tile t) {
+            List<Tile> surrounding = getSurrounding(tiles, t);
+            return t.ClosestDistance = surrounding.Min(x => x.ClosestDistance) + 1;
         }
-        public TilePath GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile) {
-            HashSet<Tile> sPath = new HashSet<Tile>();
-            MagicHappensHere(tiles, startTile, endTile, ref sPath);
-            int shortestPossible = (startTile.x > endTile.x ? startTile.x - endTile.x : endTile.x - startTile.x) 
-                                 + (startTile.y > endTile.y ? startTile.y - endTile.y : endTile.y - startTile.y);
-            paths = new HashSet<HashSet<Tile>>() { paths.Where(x => x.Count >= shortestPossible).First() }; // min?
-            foreach (Tile t in paths.First()) { 
-                vehtlok.Add(new Vector2(t.x, t.y));
+        private void initialize(ref Tile[,] tiles) {
+            initNeeded = false;
+            for (int i = 0; i < tiles.GetLength(0); i++) {
+                for (int j = 0;  j < tiles.GetLength(1); j++) {
+                    Tile curr = tiles[i, j];
+                    if (curr.TileType == "ground") {
+                        if (getSurrounding(tiles, curr).Count(x => new[] { "wall", "lion" }.Contains(x.TileType)) >= 3) {
+                            curr.Calculated = true;
+                            continue;
+                        }
+                        groundCount++;
+                        curr.ClosestDistance = distanceHelper(tiles, curr);
+                        curr.Calculated = curr.ClosestDistance != int.MaxValue / 2;
+                        if (!curr.Calculated) initNeeded = true;
+                    }
+                    //curr.Draw(true);
+                }
             }
-            return new TilePath(shortestLength, vehtlok);
+        }
+        private void magicHappensHere(Tile[,] tiles, Tile start, Tile goal, ref List<Vector2> path) {
+            if (totalRecursions > groundCount) return;
+            List<Tile> surrounding = getSurrounding(tiles, start);
+            Tile curr = surrounding.OrderBy(x => x.ClosestDistance).ToList()[0];
+            if (curr.TileType == goal.TileType) {
+                path.Add(new Vector2(curr.x, curr.y));
+                return;
+            }
+            else if (curr.TileType == "ground") {
+                path.Add(new Vector2(curr.x, curr.y));
+                totalRecursions++;
+                magicHappensHere(tiles, curr, goal, ref path);
+            }
+        }
+        public TilePath? GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile) {
+            endTile.ClosestDistance = 0;
+            endTile.Calculated = true;
+            while (initNeeded && totalRecursions <= groundCount) {
+                groundCount = 0;
+                initialize(ref tiles);
+                totalRecursions++;
+            }
+            totalRecursions = 0;
+            magicHappensHere(tiles, startTile, endTile, ref finalPath);
+            if (!finalPath.Contains(new Vector2(endTile.x, endTile.y))) return null;
+            return new TilePath(finalPath.Count, finalPath);
         }
     }
 }

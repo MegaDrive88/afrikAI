@@ -40,7 +40,22 @@ namespace afrikAI
             x = _x;
             y = _y;
         }
-        
+        public void Draw(bool debugMode = false)
+        {
+            Console.SetCursorPosition(x * 2, y);
+            Console.BackgroundColor = bgColor;
+            if (debugMode) {
+                Console.ForegroundColor = ConsoleColor.Black;
+                if (closestDistance.ToString().Length > 2) Console.Write("MX");
+                else if (closestDistance.ToString().Length == 1) Console.Write($"0{closestDistance}");
+                else Console.Write(closestDistance.ToString());
+            }
+            else {
+                Console.Write("  ");
+                Console.ResetColor();
+            }
+        }
+
         public object Clone()
         {
             return MemberwiseClone();
@@ -54,15 +69,9 @@ namespace afrikAI
 			Console.SetCursorPosition(x * 2, y);
 			Console.BackgroundColor = color;
 			Console.Write("  ");
-            Console.ResetColor();
+      Console.ResetColor();
+
 		}
-        public void Draw()
-        {
-            Console.SetCursorPosition(x * 2, y);
-            Console.BackgroundColor = bgColor;
-            Console.Write($"  ");
-            Console.ResetColor();
-        }
         
         public void SetPos(int[] pos)
         {
