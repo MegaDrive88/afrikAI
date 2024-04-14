@@ -23,7 +23,6 @@ namespace afrikAI
                 tileType = value;
                 bgColor = Statics.tileColors[value];
                 ResetDistance();
-                
             }
         }
 		/// <summary>
@@ -55,12 +54,14 @@ namespace afrikAI
 			Console.SetCursorPosition(x * 2, y);
 			Console.BackgroundColor = color;
 			Console.Write("  ");
+            Console.ResetColor();
 		}
         public void Draw()
         {
             Console.SetCursorPosition(x * 2, y);
             Console.BackgroundColor = bgColor;
             Console.Write($"  ");
+            Console.ResetColor();
         }
         
         public void SetPos(int[] pos)

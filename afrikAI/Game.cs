@@ -13,7 +13,7 @@ namespace afrikAI
 		private readonly PathfindingContext pathfindingContext;
 		private readonly TileManager tileManager;
 
-		private bool isRunning;
+		public bool isRunning;
 		private List<Tile> lions;
 		public Game(TileGeneratorData tileGenData, string _pathFindingCountext)
 		{
@@ -61,7 +61,7 @@ namespace afrikAI
 				tileManager.DrawTiles();
 				int[][] input = inputHandler.GetGameInput(width, height, tileManager.GetInvalidTiles());
                 tileManager.SwapTiles(input);
-                tileManager.MoveCloserToWater(pathfindingContext);
+                tileManager.MoveCloserToWater(pathfindingContext, this);
                 moveLions();
 			}
 		}
@@ -71,9 +71,14 @@ namespace afrikAI
 			Thread.Sleep(5000);
 			tileManager.DrawShortestPathToWater(pathfindingContext);
 		}
-		public void GameEnd()
+		public void GameEnd(bool win)
 		{
 			isRunning = false;
+			Console.Clear();
+			if (!win) Console.WriteLine("   ______                                 ___                           _  \r\n .' ___  |                              .'   `.                        | | \r\n/ .'   \\_|  ,--.   _ .--..--.  .---.   /  .-.  \\ _   __  .---.  _ .--. | | \r\n| |   ____ `'_\\ : [ `.-. .-. |/ /__\\\\  | |   | |[ \\ [  ]/ /__\\\\[ `/'`\\]| | \r\n\\ `.___]  |// | |, | | | | | || \\__.,  \\  `-'  / \\ \\/ / | \\__., | |    |_| \r\n `._____.' \\'-;__/[___||__||__]'.__.'   `.___.'   \\__/   '.__.'[___]   (_) \r\n");
+			else Console.WriteLine(" ____  ____                               _            _  \r\n|_  _||_  _|                             (_)          | | \r\n  \\ \\  / / .--.   __   _     _   _   __  __   _ .--.  | | \r\n   \\ \\/ // .'`\\ \\[  | | |   [ \\ [ \\ [  ][  | [ `.-. | | | \r\n   _|  |_| \\__. | | \\_/ |,   \\ \\/\\ \\/ /  | |  | | | | |_| \r\n  |______|'.__.'  '.__.'_/    \\__/\\__/  [___][___||__](_) \r\n");
+			Console.ReadKey(true);
+			Menu menu = new Menu();
 		}
 		private void moveLions()
 		{

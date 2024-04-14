@@ -60,15 +60,8 @@ namespace afrikAI
         {
             SwapTiles(new int[] { tile1.x, tile1.y }, new int[] { tile2.x, tile2.y });
         }
-        public void SwapTiles(int[] pos1, int[] pos2, Game? game = null)
+        public void SwapTiles(int[] pos1, int[] pos2)
         {
-            string types = tiles[pos1[1], pos1[0]].TileType + tiles[pos2[1], pos2[0]].TileType;
-            Debug.WriteLine(types);
-            if (types.Contains("lion") && types.Contains("zebra") && game != null)
-            {
-                game.GameEnd();
-                return;
-            }
             Tile tmp_Tile = (Tile)tiles[pos1[1], pos1[0]].Clone();
             tiles[pos1[1], pos1[0]] = (Tile)tiles[pos2[1], pos2[0]].Clone();
             tiles[pos2[1], pos2[0]] = tmp_Tile;
@@ -84,20 +77,32 @@ namespace afrikAI
             TilePath? path = getClosestPathToWater(pathfindingContext);
             if(path != null) drawPath(path);
 		}
-        public void MoveCloserToWater(PathfindingContext pathfindingContext)
+        public void MoveCloserToWater(PathfindingContext pathfindingContext, Game? game = null)
         {
             Tile zebra = GetZebra();
             TilePath? path = getClosestPathToWater(pathfindingContext);
             List<Tile> nextTiles = GetNextTiles(tiles, zebra, width, height);
+            List<Tile> nextWater = nextTiles.Where(t => t.TileType == "water").ToList();
+            if(nextWater.Count > 0 && game != null)
+            {
+                Tile water = nextWater.First();
+                zebra.TileType = "ground";
+                water.TileType = "zebra";
+                zebra.Draw();
+                water.Draw();
+                Thread.Sleep(1000);
+                game.GameEnd(true);
+			}
+            
             List<Tile> nextLions = nextTiles.Where(x => x.TileType == "lion").ToList();
             if(nextLions.Count > 0)
             {
                 foreach (Tile tile in nextTiles)
                 {
                     if (tile.TileType != "wall" && tile.TileType != "lion")
-                    {
-                        SwapTiles(tile, zebra);
-                        return;
+                    {                        
+						SwapTiles(tile, zebra);
+						return;                   
                     }
                 }
             }
@@ -129,17 +134,24 @@ namespace afrikAI
         }
 		public void MoveCloserToTile(PathfindingContext pathfindingContext, Tile startTile, Tile endTile, Game game)
 		{
-            if (startTile.TileType == "lion" && endTile.TileType == "zebra" && GetNextTiles(tiles, startTile, width, height).Where(x => x.TileType == "zebra").Count() > 0) {
-                game.GameEnd();
+            if (startTile.TileType == "lion" && endTile.TileType == "zebra" && GetNextTiles(tiles, startTile, width, height).Count(x => x.TileType == "zebra") > 0) {
+                if (game.isRunning) {
+                    startTile.TileType = "ground";
+                    endTile.TileType = "lion";
+                    startTile.Draw();
+                    endTile.Draw();
+                    Thread.Sleep(1000);
+                    game.GameEnd(false); 
+                
+                }
                 return;
             }
 			TilePath? path = pathfindingContext.GetShortestPath(tiles, startTile, endTile);
             if (path == null) return;
 			if (path.Length > 0)
 			{
-				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y }, game);   
+				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });   
 			}
-
 		}
 		public Tile GetZebra()
 		{
