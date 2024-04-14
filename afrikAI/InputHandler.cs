@@ -5,7 +5,6 @@ namespace afrikAI
 {
 	public class InputHandler
 	{
-		private readonly Game game;
 		private readonly Menu menu;
 		private readonly TileEditor tileEditor;
     
@@ -13,14 +12,11 @@ namespace afrikAI
 		{
 			menu = _menu;
 		}
-		public InputHandler(Game _game) 
-		{
-			game = _game;
-		}
 		public InputHandler(TileEditor _editor)
 		{
 			tileEditor = _editor;
 		}
+		public InputHandler() { }
 		public int[][] GetGameInput(int width, int height, List<Tile> invalidTiles)
 		{
 			Console.SetCursorPosition(0, height+1);

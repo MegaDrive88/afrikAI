@@ -49,7 +49,7 @@
 			{"3", "lion" },
 			{"4", "zebra" }
 		};
-		public static List<string> invalidTypes = new List<string>() {"water", "lion", "zebra"};
+		public static List<string> invalidInputTypes = new List<string>() {"water", "lion", "zebra"};
 		public static Dictionary<char, int[]> moveMatrixes = new Dictionary<char, int[]>()
 		{
 			{'L', new int[] {-1,0} },

@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 
 namespace afrikAI
 {
@@ -22,7 +23,6 @@ namespace afrikAI
                 tileType = value;
                 bgColor = Statics.tileColors[value];
                 ResetDistance();
-                
             }
         }
 		/// <summary>
@@ -52,8 +52,10 @@ namespace afrikAI
             }
             else {
                 Console.Write("  ");
+                Console.ResetColor();
             }
         }
+
         public object Clone()
         {
             return MemberwiseClone();
@@ -66,8 +68,11 @@ namespace afrikAI
         {
 			Console.SetCursorPosition(x * 2, y);
 			Console.BackgroundColor = color;
-            Console.Write("  ");
+			Console.Write("  ");
+      Console.ResetColor();
+
 		}
+        
         public void SetPos(int[] pos)
         {
             x = pos[0];
