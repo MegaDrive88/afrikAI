@@ -1,5 +1,5 @@
 # AfrikAI
-*Készítették:
+*Készítették:  
 Podlipnik Ádám  
 Tédi Bálint*
 
