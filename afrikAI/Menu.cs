@@ -107,7 +107,7 @@ namespace afrikAI
             // szél, mag, lion, wall
             options = new[] {
                 new MenuItem("Szélesség", "numericInput", () => inputHandler.HandleMenuInput()),
-                new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()), //
+                new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Oroszlánok száma", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Falak száma", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Generálás", "option", () => CheckRandomGenNumbers()),
@@ -275,7 +275,7 @@ namespace afrikAI
                 }),
                 new MenuItem("Futtatás", "option", () => {
                     Game game = new Game(_path, StrategySelector());
-                    game.StartOld(); // gondolom majd nem startold hanem sima start
+                    game.Start();
                 }),
                 new MenuItem("Vissza", "option", () => LoadFromFileMenu()),
             };
@@ -291,7 +291,6 @@ namespace afrikAI
             }
             TileEditor te = new TileEditor($"{rowsEntered[2]}.txt"); // v a mentes - ADDIG NE LEHESSEN MENTENI, AMIG NINCS ZEBRA MEG VIZ!!!
         }
-        //private / public dolgokat rendezni!!!
 
         // sivatag fájlból:
         //		fájlok kilistázás

@@ -54,6 +54,7 @@ namespace afrikAI.Pathfinding_Modules {
         public TilePath? GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile) {
             endTile.ClosestDistance = 0;
             endTile.Calculated = true;
+            finalPath = new List<Vector2> { new Vector2(startTile.x, startTile.y) };
             while (initNeeded && totalRecursions <= groundCount) {
                 groundCount = 0;
                 initialize(ref tiles);

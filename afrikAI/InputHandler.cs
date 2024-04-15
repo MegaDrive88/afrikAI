@@ -23,7 +23,7 @@ namespace afrikAI
 			int[] pos1, pos2;
 			do
 			{
-				pos1 = getCordInput(width, height, "Add meg a tile 2 kordinátáját amelyet mozgatni szeretnél");
+				pos1 = getCordInput(width, height, "Adja meg a mozgatni kívánt mező 2 koordinátáját:");
 				Console.WriteLine();
 				if (!isValidCord(pos1, invalidTiles))
 				{
@@ -33,7 +33,7 @@ namespace afrikAI
 			} while (true);
 			do
 			{
-				pos2 = getCordInput(width, height, "Add meg azt a két kordinátát ahova mozgatni szeretnéd");
+				pos2 = getCordInput(width, height, "Adja meg a mező új pozícióját:");
 				Console.WriteLine();
 				if (!isValidCord(pos2, invalidTiles))
 				{
@@ -81,7 +81,7 @@ namespace afrikAI
 		{
 			Console.CursorTop--;
 			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine("\nvizet oroszlánt és zebrát nem mozgathatsz.\n");
+			Console.WriteLine("\nVizet, oroszlánt és zebrát nem mozgathat.\n");
 			Console.ResetColor();
 		}
 		private bool isValidCord(int[] cord, List<Tile> invalidTiles)

@@ -69,8 +69,7 @@ namespace afrikAI
 			Console.SetCursorPosition(x * 2, y);
 			Console.BackgroundColor = color;
 			Console.Write("  ");
-      Console.ResetColor();
-
+            Console.ResetColor();
 		}
         
         public void SetPos(int[] pos)
