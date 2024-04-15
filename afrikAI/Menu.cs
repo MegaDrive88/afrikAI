@@ -30,15 +30,12 @@ namespace afrikAI
         public void Confirm() {
             (_, int top) = Console.GetCursorPosition();
             top -= skipLines;
-            try {
+            if (options[top].Action is not null)
                 options[top].Action.Invoke();
-            }
-            catch {
+            else {
                 string path = $"{options[top].Text}.txt";
-                using (StreamReader sr = new StreamReader(PATH + path)) {
-                    Console.Clear();
-                    LaunchFromFile(path);
-                }
+                Console.Clear();
+                LaunchFromFile(path);
             }
         }
         public void Exit() {
