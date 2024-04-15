@@ -119,18 +119,26 @@ namespace afrikAI
 		}
         public void SaveTiles(string fileName)
         {
-            using(StreamWriter sw = new StreamWriter($"saved_deserts\\{fileName}"))
+            try
             {
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        sw.Write($"{Statics.GetTypeNumFromType(tiles[y, x].TileType)} ");
-                    }
-                    sw.Write('\n');
-                    
-                }
+				using (StreamWriter sw = new StreamWriter($"saved_deserts\\{fileName}"))
+				{
+					for (int y = 0; y < height; y++)
+					{
+						for (int x = 0; x < width; x++)
+						{
+							sw.Write($"{Statics.GetTypeNumFromType(tiles[y, x].TileType)} ");
+						}
+						sw.Write('\n');
+
+					}
+				}
+			}
+            catch (Exception e)
+            {
+				Debug.WriteLine($"SaveTiles Error: {e.Message}");
             }
+            
         }
 		public void MoveCloserToTile(PathfindingContext pathfindingContext, Tile startTile, Tile endTile, Game game)
 		{

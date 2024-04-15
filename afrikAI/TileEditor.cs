@@ -12,11 +12,11 @@ namespace afrikAI
 		private int x { get => Console.CursorLeft/2-1; }
 		private int y { get => Console.CursorTop; }
         public TileEditor(string filePath) {
+			name = filePath;
 			Console.ResetColor();
 			inputHandler = new InputHandler(this);
 			tileManager = new TileManager(filePath, ref width, ref height);
 			tileManager.DrawTiles();
-			Debug.WriteLine($"x = {Console.CursorLeft} y = {Console.CursorTop}");
 			inputHandler.HandleEditorInput();
 		}
 		public void MoveCursor(char dir)
@@ -31,7 +31,8 @@ namespace afrikAI
 		}
 		public void Save()
 		{
-			tileManager.SaveTiles("genyo.txt");
+			
+			tileManager.SaveTiles(name);
 		}
 		public void ChangeTypeUp()
 		{
