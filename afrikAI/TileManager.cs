@@ -203,7 +203,7 @@ namespace afrikAI
             for (int i = 0; i < tiles.GetLength(1); i++) {
                 if (i % 2 == 0) Console.ForegroundColor = ConsoleColor.White;
                 else Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write((i + 1).ToString() + new string(' ', 2 - i.ToString().Length));
+                Console.Write((i + 1).ToString() + new string(' ', 2 - (i + 1).ToString().Length));
             }
             Console.ResetColor();
         }

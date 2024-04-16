@@ -24,7 +24,7 @@ namespace afrikAI.Pathfinding_Modules {
                 for (int j = 0;  j < tiles.GetLength(1); j++) {
                     Tile curr = tiles[i, j];
                     if (curr.TileType == "ground") {
-                        if (getSurrounding(tiles, curr).Count(x => new[] { "wall", "lion" }.Contains(x.TileType)) >= 3) {
+                        if (getSurrounding(tiles, curr).Count(x => x.TileType == "wall") >= 3) {
                             curr.Calculated = true;
                             continue;
                         }
@@ -52,6 +52,7 @@ namespace afrikAI.Pathfinding_Modules {
             }
         }
         public TilePath? GetShortestPath(Tile[,] tiles, Tile startTile, Tile endTile) {
+            foreach (Tile tile in tiles) tile.ResetDistance();
             endTile.ClosestDistance = 0;
             endTile.Calculated = true;
             finalPath = new List<Vector2> { new Vector2(startTile.x, startTile.y) };
