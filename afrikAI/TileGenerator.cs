@@ -69,7 +69,7 @@
                 {
                     cords = new List<int> { Random.Shared.Next(0, width - 1), Random.Shared.Next(0, height - 1) };
                 } while (tiles[cords[1], cords[0]].TileType != "ground");
-                tiles[cords[1], cords[0]] = new Tile(cords[1], cords[0], type);
+                tiles[cords[1], cords[0]] = new Tile(cords[0], cords[1], type);
             }
         }
 		private void genNormalTiles(Tile[,] tiles)
