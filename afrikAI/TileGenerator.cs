@@ -29,17 +29,18 @@
 			genWalls(data, tiles);
 			genLions(data, tiles);
 			genZebra(tiles);
-			
+			genWater(data, tiles);
 			//genStartAndEndPoint(tiles);
 			return tiles;
 		}
 		private void genLions(TileGeneratorData data, Tile[,] tiles)
 		{
-			genTileOfType("lion", 1, tiles);
+			genTileOfType("lion", data.Lion, tiles);
         }
 		private void genWater(TileGeneratorData data, Tile[,] tiles)
 		{
-			genTileOfType("water", data.)
+			genTileOfType("water", 5, tiles);
+			//genTileOfType("water", data.Water, tiles)
 		}
         private void genZebra(Tile[,] tiles)
 		{
