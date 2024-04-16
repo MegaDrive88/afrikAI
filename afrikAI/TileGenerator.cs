@@ -1,8 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-
-namespace afrikAI
+﻿namespace afrikAI
 {
 	public class TileGenerator
 	{
@@ -31,9 +27,21 @@ namespace afrikAI
 			Tile[,] tiles = new Tile[height, width];
 			genNormalTiles(tiles);
 			genWalls(data, tiles);
-			//genlions?
+			genLions(data, tiles);
 			//genStartAndEndPoint(tiles);
 			return tiles;
+		}
+		private void genLions(TileGeneratorData data, Tile[,] tiles)
+		{
+			for (int i = 0; i < data.Lion; i++)
+			{
+				List<int> cords;
+				do
+				{
+					cords = new List<int> { Random.Shared.Next(0, width - 1), Random.Shared.Next(0, height - 1) };
+                } while (tiles[cords[1], cords[0]].TileType != "ground");
+				tiles[cords[1], cords[0]] = new Tile(cords[1], cords[0], "lion");
+			}
 		}
 		private void genWalls(TileGeneratorData data, Tile[,] tiles)
 		{ // akk marad vagy nem?
