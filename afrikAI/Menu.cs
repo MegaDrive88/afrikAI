@@ -66,12 +66,14 @@ namespace afrikAI
                 inputHandler.HandleMenuInput();
                 return;
             }
-            if (left == 0) left = options[top].Text.Length + 1 + rowsEntered[top].Length;
-            if (rowsEntered[top].Length > 0) {
-                Console.SetCursorPosition(left - 1, top + skipLines);
-                Console.Write(' ');
-                rowsEntered[top] = rowsEntered[top][..^1];
-                Console.SetCursorPosition(left - 1, top + skipLines);
+            if (rowsEntered[top] is not null) {
+                if (left == 0) left = options[top].Text.Length + 1 + rowsEntered[top].Length;
+                if (rowsEntered[top].Length > 0) {
+                    Console.SetCursorPosition(left - 1, top + skipLines);
+                    Console.Write(' ');
+                    rowsEntered[top] = rowsEntered[top][..^1];
+                    Console.SetCursorPosition(left - 1, top + skipLines);
+                }
             }
             inputHandler.HandleMenuInput();
         }
@@ -110,6 +112,7 @@ namespace afrikAI
                 new MenuItem("Magasság", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Oroszlánok száma", "numericInput", () => inputHandler.HandleMenuInput()),
                 new MenuItem("Falak száma", "numericInput", () => inputHandler.HandleMenuInput()),
+                new MenuItem("Víz mezők száma", "numericInput", () => inputHandler.HandleMenuInput()), //ez most mindent elrontott -- hatarertek?
                 new MenuItem("Generálás", "option", () => CheckRandomGenNumbers()),
                 new MenuItem("Vissza", "option", () => Back()),
             };
@@ -141,42 +144,43 @@ namespace afrikAI
             inputHandler.HandleMenuInput();
         }
         private void CheckRandomGenNumbers() { // nem general startot meg endet
-            List<string> nums = rowsEntered.Take(4).ToList();
+            List<string> nums = rowsEntered.Take(5).ToList();
             bool megfelel = true;
             if (rowsEntered.Count == 0 || nums.Contains(null) || nums.Contains("")) {
-                Console.SetCursorPosition(options[4].Text.Length + 1, 4 + skipLines);
+                Console.SetCursorPosition(options[5].Text.Length + 1, 5 + skipLines);
                 errorMsg = "Adja meg az összes adatot!";
-                ShowError(4);
+                ShowError(5);
                 inputHandler.HandleMenuInput();
                 return;
             }
             if (nums[0].Length > 2 || int.Parse(nums[0]) > 60 || int.Parse(nums[0]) < 5) { // teszt feltételek, jövőben változhat
                 Console.SetCursorPosition(options[0].Text.Length + 2 + nums[0].Length, skipLines);
                 errorMsg = "A szélesség 60 és 5 közé kell essen!";
-                megfelel = ShowError(4);
+                megfelel = ShowError(5);
                 inputHandler.HandleMenuInput(); // kulonben nem tudna teruletet szamolni
                 if (nums[0].Length > 2) return;
             }
             if (nums[1].Length > 2 || int.Parse(nums[1]) > 25 || int.Parse(nums[1]) < 4) {
                 Console.SetCursorPosition(options[1].Text.Length + 2 + nums[1].Length, 1 + skipLines);
                 errorMsg = "A szélesség 25 és 4 közé kell essen!";
-                megfelel = ShowError(4);
+                megfelel = ShowError(5);
                 inputHandler.HandleMenuInput();
                 if (nums[1].Length > 2) return;
             }
             if (nums[2].Length > 3 || int.Parse(nums[2]) > 375 || int.Parse(nums[2]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 4) {
                 Console.SetCursorPosition(options[2].Text.Length + 2 + nums[2].Length, 2 + skipLines);
-                errorMsg = "Az oroszlánok száma maximum a terület negyede lehet!";
-                megfelel = ShowError(4);
+                errorMsg = "Az oroszlánok száma maximum a terület negyede lehet!"; // lehet h tul sok
+                megfelel = ShowError(5);
             }
             if (nums[3].Length > 3 || int.Parse(nums[3]) > 750 || int.Parse(nums[3]) > int.Parse(nums[0]) * int.Parse(nums[1]) / 2) {
                 Console.SetCursorPosition(options[3].Text.Length + 2 + nums[3].Length, 3 + skipLines);
                 errorMsg = "A falak száma maximum a terület fele lehet!";
-                megfelel = ShowError(4);
+                megfelel = ShowError(5);
             }
+            //if (nums[4].Length)
             if (megfelel) {
                 Console.Clear();
-                rowsEntered[4] = StrategySelector(); // geniusz
+                rowsEntered[5] = StrategySelector(); // geniusz
                 ProceedToGame();
             }
             inputHandler.HandleMenuInput();
@@ -249,9 +253,9 @@ namespace afrikAI
             Console.SetCursorPosition(left, top);
         }
         private void ProceedToGame() {
-            List<int> inputNums = rowsEntered.Take(4).ToList().ConvertAll(new Converter<string, int>(int.Parse));
-            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2]), rowsEntered[4]); // vizek szama
-            game.StartOld();
+            List<int> inputNums = rowsEntered.Take(5).ToList().ConvertAll(new Converter<string, int>(int.Parse));
+            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2], inputNums[4]), rowsEntered[5]); // vizek szama
+            game.Start();
         }
         private string StrategySelector() { // ujrahasznalhato
             string strat = string.Empty;
@@ -306,3 +310,6 @@ namespace afrikAI
         // post game: szeretné menteni a sivatagot?...
     }
 }
+// ppt - masik branch
+// escape kilep
+// viz + oroszlan kikotesek

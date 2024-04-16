@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace afrikAI
@@ -94,12 +95,19 @@ namespace afrikAI
 		{
 			Console.ResetColor();
 			Console.WriteLine(inputMessage);
+			//Menu menu;
 			int x, y;
 			do
 			{
 				Console.Write($"{cord1Message}x = ");
-				if (!int.TryParse(Console.ReadLine(), out x)) continue;
-			} while (x < 1 || x >= width + 1);
+				//ConsoleKeyInfo k = Console.ReadKey(true);
+				//if (k.Key == ConsoleKey.Escape) {
+				//    menu = new Menu();
+				//    return new[] { 0, 0 };
+				//}
+				//if (Statics.KeyBinds.AcceptedInputKeys().Contains(k.KeyChar)) Console.Write(k.KeyChar); - elso key re mukodik csak...
+				if (!int.TryParse( Console.ReadLine(), out x)) continue; // k.KeyChar +. Ezt csinaljuk mar a menummel
+            } while (x < 1 || x >= width + 1);
 			do
 			{
 				Console.Write($"{cord2Message}y = ");

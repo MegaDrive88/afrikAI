@@ -32,11 +32,11 @@
 			return tiles;
 		}
 		private void genWalls(TileGeneratorData data, Tile[,] tiles)
-		{ // akk marad vagy nem?
+		{
 			for (int i = 0; i < data.Wall; i++)
 			{
                 List<int> cords = getWallTopleft();
-				//ide jon a while
+				while (tiles[cords[1], cords[0]].TileType == "wall") cords = getWallTopleft();
                 int[] nums = new int[] { 0, 0 };
                 for (int j = 0; j < cords[3]; j++) {
 					tiles[cords[1] + nums[0], cords[0] + nums[1]] = new Tile(cords[0] + nums[1], cords[1] + nums[0], "wall");
