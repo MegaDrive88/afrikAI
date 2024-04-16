@@ -34,7 +34,6 @@ namespace afrikAI
             top -= skipLines;
             try {
                 options[top].Action.Invoke();
-
 			}
             catch {
                 string path = $"{options[top].Text}.txt";

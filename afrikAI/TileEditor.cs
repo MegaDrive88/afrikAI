@@ -31,7 +31,6 @@ namespace afrikAI
 		}
 		public void Save()
 		{
-			
 			tileManager.SaveTiles(name);
 		}
 		public void ChangeTypeUp()
@@ -43,7 +42,11 @@ namespace afrikAI
 		{
 			tileManager.AddToTile(x, y, -1);
 			tileManager.DrawTile(x, y);
-
 		}
+		public void Next()
+		{
+			Menu menu = new Menu();
+		}
+		public void Quit() => Environment.Exit(0);
 	}
 }
