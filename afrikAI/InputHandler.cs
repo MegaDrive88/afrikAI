@@ -75,6 +75,8 @@ namespace afrikAI
 			if (Statics.KeyBinds.EditorKeys['+'].Contains(consoleKey)) tileEditor.ChangeTypeUp();
 			else if (Statics.KeyBinds.EditorKeys['-'].Contains(consoleKey)) tileEditor.ChangeTypeDown();
 			else if (Statics.KeyBinds.EditorKeys['S'].Contains(consoleKey)) tileEditor.Save();
+			else if (Statics.KeyBinds.EditorKeys['Q'].Contains(consoleKey)) tileEditor.Quit();
+			else if (Statics.KeyBinds.EditorKeys['N'].Contains(consoleKey)) tileEditor.Next();
 			HandleEditorInput();
         }
 		private void onInvalidCord()

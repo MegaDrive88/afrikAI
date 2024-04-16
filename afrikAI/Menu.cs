@@ -1,5 +1,7 @@
 ﻿#pragma warning disable
 
+using System.Diagnostics;
+
 namespace afrikAI
 {
     public class Menu {
@@ -32,13 +34,10 @@ namespace afrikAI
             top -= skipLines;
             try {
                 options[top].Action.Invoke();
-            }
+			}
             catch {
                 string path = $"{options[top].Text}.txt";
-                using (StreamReader sr = new StreamReader(PATH + path)) {
-                    Console.Clear();
-                    LaunchFromFile(path);
-                }
+                LaunchFromFile(path);
             }
         }
         public void Exit() {
