@@ -28,23 +28,25 @@
 			genNormalTiles(tiles);
 			genWalls(data, tiles);
 			genLions(data, tiles);
+			genZebra(tiles);
+			
 			//genStartAndEndPoint(tiles);
 			return tiles;
 		}
 		private void genLions(TileGeneratorData data, Tile[,] tiles)
 		{
-			for (int i = 0; i < data.Lion; i++)
-			{
-				List<int> cords;
-				do
-				{
-					cords = new List<int> { Random.Shared.Next(0, width - 1), Random.Shared.Next(0, height - 1) };
-                } while (tiles[cords[1], cords[0]].TileType != "ground");
-				tiles[cords[1], cords[0]] = new Tile(cords[1], cords[0], "lion");
-			}
+			genTileOfType("lion", 1, tiles);
+        }
+		private void genWater(TileGeneratorData data, Tile[,] tiles)
+		{
+			genTileOfType("water", data.)
+		}
+        private void genZebra(Tile[,] tiles)
+		{
+			genTileOfType("zebra", 1, tiles);
 		}
 		private void genWalls(TileGeneratorData data, Tile[,] tiles)
-		{ // akk marad vagy nem?
+		{ 
 			for (int i = 0; i < data.Wall; i++)
 			{
                 List<int> cords = getWallTopleft();
@@ -57,12 +59,18 @@
 				}
 			}
 		}
-		private void genStartAndEndPoint(Tile[,] tiles)
+		private void genTileOfType(string type, int amount, Tile[,] tiles)
 		{
-			//List<List<int>> cords = genRandCords(2, tiles);
-			//tiles[cords[0][1], cords[0][0]] = endTile;
-			//tiles[cords[1][1], cords[1][0]] = startTile;
-		}
+            for (int i = 0; i < amount; i++)
+            {
+                List<int> cords;
+                do
+                {
+                    cords = new List<int> { Random.Shared.Next(0, width - 1), Random.Shared.Next(0, height - 1) };
+                } while (tiles[cords[1], cords[0]].TileType != "ground");
+                tiles[cords[1], cords[0]] = new Tile(cords[1], cords[0], type);
+            }
+        }
 		private void genNormalTiles(Tile[,] tiles)
 		{
 			for (int y = 0; y < height; y++)
