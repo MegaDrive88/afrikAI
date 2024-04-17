@@ -5,7 +5,7 @@ namespace afrikAI.Pathfinding_Modules
 	public class DPPathFindingStrategy : IPathfindingStrategy
 	{
 		private int shortestLength = 0;
-        private void UpdateTiles(Tile[,] tiles, Tile endTile)
+        private void UpdateTiles(Tile[,] tiles, Tile endTile, Tile startTile)
         {
             endTile.ClosestDistance = 0;
             int width = tiles.GetLength(1);
@@ -18,7 +18,7 @@ namespace afrikAI.Pathfinding_Modules
                 List<Tile> nextTiles = TileManager.GetNextTiles(tiles, currTile, width, height);
                 foreach (Tile tile in nextTiles)
                 {
-                    if (!tile.Calculated && tile.TileType != "wall" && tile.TileType != "lion")
+                    if (!tile.Calculated && tile.TileType != "wall" && tile.TileType != "lion" && !(tile.TileType == "water" && startTile.TileType == "lion"))
 					{
 						tile.Calculated = true;
                         toUpdate.Enqueue(tile);
@@ -76,7 +76,7 @@ namespace afrikAI.Pathfinding_Modules
 			foreach(Tile tile in tiles) tile.ResetDistance(); 
 			shortestLength = 0;
 			List<Vector2> path = new List<Vector2>();
-			UpdateTiles(tiles, endTile);
+			UpdateTiles(tiles, endTile, startTile);
 			ClosestTileHelper(tiles, startTile, tiles.GetLength(1), tiles.GetLength(0), ref path);
 			if(path.Count > 0) return new TilePath(shortestLength, path);
 			else return null;

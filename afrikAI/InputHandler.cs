@@ -87,7 +87,7 @@ namespace afrikAI
 		private bool isValidCord(int[] cord, List<Tile> invalidTiles)
 		{
 			if (cord == null) return false;
-			foreach (Tile tile in invalidTiles) if (cord[0] == tile.x && cord[1] == tile.y) return false;
+			foreach (Tile tile in invalidTiles) if (cord[0]-1 == tile.x && cord[1]-1 == tile.y) return false;
 			return true;
 		}
 	}

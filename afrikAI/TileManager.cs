@@ -38,6 +38,7 @@ namespace afrikAI
         }
         public void DrawTile(int x ,int y)
         {
+            Debug.WriteLine("x = " + x + "y = "+y);
             tiles[y,x].Draw();
         }
         public Tile AddToTile(int x, int y, int amount)
@@ -235,6 +236,7 @@ namespace afrikAI
                 Console.Write((i + 1).ToString() + new string(' ', 2 - (i + 1).ToString().Length));
             }
             Console.ResetColor();
+            Console.SetCursorPosition(width*2, height-1);
         }
         private List<Tile> getWaters()
         {
