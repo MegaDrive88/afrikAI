@@ -10,12 +10,7 @@
 <ItemGroup>
     <EmbeddedResource Include="saved_deserts\*.txt">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </EmbeddedResource>
-</ItemGroup>
-
-<ItemGroup>
-  <None Remove="saved_deserts\genyo.txt" />
 </ItemGroup>
 
 </Project>

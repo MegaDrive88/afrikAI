@@ -1,7 +1,6 @@
 ﻿using afrikAI.Pathfinding_Modules;
 using System.Diagnostics;
 using System.Numerics;
-using System.Security.Cryptography;
 
 namespace afrikAI
 {
@@ -35,6 +34,7 @@ namespace afrikAI
             {
                 tile.Draw();
             }
+            drawNumbers();
         }
         public void DrawTile(int x ,int y)
         {
@@ -200,7 +200,21 @@ namespace afrikAI
             }
             return shortestPath;
         }
-        
+        private void drawNumbers() {
+            for (int i = 0; i < tiles.GetLength(0); i++) {
+                Console.SetCursorPosition(tiles.GetLength(1) * 2, i);
+                if (i % 2 == 0) Console.ForegroundColor = ConsoleColor.White;
+                else Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write(i + 1);
+            }
+            Console.WriteLine();
+            for (int i = 0; i < tiles.GetLength(1); i++) {
+                if (i % 2 == 0) Console.ForegroundColor = ConsoleColor.White;
+                else Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write((i + 1).ToString() + new string(' ', 2 - (i + 1).ToString().Length));
+            }
+            Console.ResetColor();
+        }
         private List<Tile> getWaters()
         {
             List<Tile> waters = new List<Tile>();
