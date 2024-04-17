@@ -38,8 +38,11 @@ namespace afrikAI
         }
         public void DrawTile(int x ,int y)
         {
-            Debug.WriteLine("x = " + x + "y = "+y);
             tiles[y,x].Draw();
+        }
+        public void DrawTile(int[] cords)
+        {
+            tiles[cords[1], cords[0]].Draw();
         }
         public Tile AddToTile(int x, int y, int amount)
         {
@@ -180,7 +183,10 @@ namespace afrikAI
             if (path == null) return;
 			if (path.Length > 0)
 			{
-				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });   
+				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
+                if (startTile.TileType == "lion") Thread.Sleep(500);
+                DrawTile(startTile.x, startTile.y);
+                DrawTile((int)path.Path[1].X, (int)path.Path[1].Y);
 			}
 		}
 		public Tile GetZebra()
