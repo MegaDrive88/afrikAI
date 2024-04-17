@@ -248,7 +248,7 @@ namespace afrikAI
             }
             if (megfelel) {
                 Console.Clear();
-                ProceedToEditor(); //nemtom itt hogy legyen, ugyanugy mint a random nal, vagy csak mentes utan?
+                ProceedToEditor();
             }
             inputHandler.HandleMenuInput();
         }
@@ -281,7 +281,7 @@ namespace afrikAI
         }
         private void ProceedToGame() {
             List<int> inputNums = rowsEntered.Take(5).ToList().ConvertAll(new Converter<string, int>(int.Parse));
-            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2], inputNums[4]), rowsEntered[5]); // vizek szama
+            Game game = new Game(new TileGeneratorData(inputNums[0], inputNums[1], inputNums[3], inputNums[2], inputNums[4]), rowsEntered[5]);
             game.Start();
         }
         private string StrategySelector() { // ujrahasznalhato
@@ -320,9 +320,8 @@ namespace afrikAI
                     sw.WriteLine(string.Concat(Enumerable.Repeat("0 ", inputNums[0])));
                 }
             }
-            TileEditor te = new TileEditor($"{rowsEntered[2]}.txt"); // v a mentes - ADDIG NE LEHESSEN MENTENI, AMIG NINCS ZEBRA MEG VIZ!!!
+            TileEditor te = new TileEditor($"{rowsEntered[2]}.txt");
         }
-
         // sivatag fájlból:
         //		fájlok kilistázás
         //          szerkeszt?
@@ -332,9 +331,7 @@ namespace afrikAI
         //				algoritmus választása
         // editor
         //		szél hossz
-        //				falak elhelyezése; víz elheyez; oroszlán elhelyez; név
+        //				falak elhelyezése; víz elheyez; oroszlán elhelyez;
         //						algor választ.
-        // post game: szeretné menteni a sivatagot?...
     }
 }
-// ppt - masik branch
