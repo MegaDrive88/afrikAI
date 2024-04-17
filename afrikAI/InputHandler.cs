@@ -20,12 +20,12 @@ namespace afrikAI
 		public InputHandler() { }
 		public int[][] GetGameInput(int width, int height, List<Tile> invalidTiles)
 		{
-			Console.SetCursorPosition(0, height+1);
+			Console.SetCursorPosition(0, height + 2);
 			int[] pos1, pos2;
-			do
+			Menu menu = new Menu(false);
+            do
 			{
-				pos1 = getCordInput(width, height, "Adja meg a mozgatni kívánt mező 2 koordinátáját:");
-				Console.WriteLine();
+				pos1 = menu.getCordInput(width, height, "Adja meg a mozgatni kívánt mező 2 koordinátáját:");
 				if (!isValidCord(pos1, invalidTiles))
 				{
 					onInvalidCord();
@@ -34,8 +34,7 @@ namespace afrikAI
 			} while (true);
 			do
 			{
-				pos2 = getCordInput(width, height, "Adja meg a mező új pozícióját:");
-				Console.WriteLine();
+				pos2 = menu.getCordInput(width, height + 4, "Adja meg a mező új pozícióját:");
 				if (!isValidCord(pos2, invalidTiles))
 				{
 					onInvalidCord();
@@ -80,9 +79,9 @@ namespace afrikAI
         }
 		private void onInvalidCord()
 		{
-			Console.CursorTop--;
 			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine("\nVizet, oroszlánt és zebrát nem mozgathat.\n");
+			Console.SetCursorPosition(8, Console.CursorTop);
+			Console.WriteLine("Vizet, oroszlánt és zebrát nem mozgathat.\n");
 			Console.ResetColor();
 		}
 		private bool isValidCord(int[] cord, List<Tile> invalidTiles)
@@ -90,30 +89,6 @@ namespace afrikAI
 			if (cord == null) return false;
 			foreach (Tile tile in invalidTiles) if (cord[0] == tile.x && cord[1] == tile.y) return false;
 			return true;
-		}
-		private int[] getCordInput(int width, int height, string inputMessage = "", string cord1Message = "", string cord2Message = "")
-		{
-			Console.ResetColor();
-			Console.WriteLine(inputMessage);
-			//Menu menu;
-			int x, y;
-			do
-			{
-				Console.Write($"{cord1Message}x = ");
-				//ConsoleKeyInfo k = Console.ReadKey(true);
-				//if (k.Key == ConsoleKey.Escape) {
-				//    menu = new Menu();
-				//    return new[] { 0, 0 };
-				//}
-				//if (Statics.KeyBinds.AcceptedInputKeys().Contains(k.KeyChar)) Console.Write(k.KeyChar); - elso key re mukodik csak...
-				if (!int.TryParse( Console.ReadLine(), out x)) continue; // k.KeyChar +. Ezt csinaljuk mar a menummel
-            } while (x < 1 || x >= width + 1);
-			do
-			{
-				Console.Write($"{cord2Message}y = ");
-				if (!int.TryParse(Console.ReadLine(), out y)) continue;
-			} while (y < 1 || y >= height + 1);
-			return new int[] { x - 1, y - 1 };
 		}
 	}
 }
