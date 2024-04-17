@@ -10,6 +10,3 @@
         }
     }
 }
-// class tile
-// class "zebra" : tile - jobbra le
-// 

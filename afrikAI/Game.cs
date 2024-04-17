@@ -45,7 +45,7 @@ namespace afrikAI
 				Thread.Sleep(1000);
 				tileManager.DrawShortestPathToWater(pathfindingContext);
 				Console.ReadKey();
-				tileManager.MoveCloserToWater(pathfindingContext);
+				tileManager.MoveCloserToWater(pathfindingContext, this);
 				tileManager.DrawTiles();
 				Console.ReadKey();
 			}
@@ -77,7 +77,8 @@ namespace afrikAI
 			Console.Clear();
 			if (!win) Console.WriteLine("   ______                                 ___                           _  \r\n .' ___  |                              .'   `.                        | | \r\n/ .'   \\_|  ,--.   _ .--..--.  .---.   /  .-.  \\ _   __  .---.  _ .--. | | \r\n| |   ____ `'_\\ : [ `.-. .-. |/ /__\\\\  | |   | |[ \\ [  ]/ /__\\\\[ `/'`\\]| | \r\n\\ `.___]  |// | |, | | | | | || \\__.,  \\  `-'  / \\ \\/ / | \\__., | |    |_| \r\n `._____.' \\'-;__/[___||__||__]'.__.'   `.___.'   \\__/   '.__.'[___]   (_) \r\n");
 			else Console.WriteLine(" ____  ____                               _            _  \r\n|_  _||_  _|                             (_)          | | \r\n  \\ \\  / / .--.   __   _     _   _   __  __   _ .--.  | | \r\n   \\ \\/ // .'`\\ \\[  | | |   [ \\ [ \\ [  ][  | [ `.-. | | | \r\n   _|  |_| \\__. | | \\_/ |,   \\ \\/\\ \\/ /  | |  | | | | |_| \r\n  |______|'.__.'  '.__.'_/    \\__/\\__/  [___][___||__](_) \r\n");
-			Console.ReadKey(true);
+            Console.WriteLine("\nNyomjon meg egy billentyűt, hogy visszatérjen a főmenüne!");
+            Console.ReadKey(true);
 			Menu menu = new Menu();
 		}
 		private void moveLions()
