@@ -30,8 +30,7 @@
         }
 		public static class PathFindingStrategys
 		{
-			// innen kivettem h string DP = "DP"
-			public static readonly List<string> PathfindingStrategies = new List<string> { "DP", "ADM" }; //ide vedd fel a tobbit
+			public static readonly List<string> PathfindingStrategies = new List<string> { "DP", "ADM" };
 		}
 		public static ConsoleKey[] MenuExit = new ConsoleKey[] { ConsoleKey.Escape, ConsoleKey.Backspace };
 		
@@ -66,6 +65,5 @@
         public static class FileValidation {
             public static readonly List<char> invalidFilenameCharacters = new List<char> { '\0', '\\', '/', ':', '*', '?', '\"', '<', '>', '|', '.' };
         }
-		
-    }
+	}
 }

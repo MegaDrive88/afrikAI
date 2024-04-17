@@ -72,6 +72,27 @@ namespace afrikAI
         {
             tiles[y,x].TileType = Type;
         }
+        public string GetTileType(int x, int y) => tiles[y, x].TileType;
+        public TileGeneratorData GetTilesData()
+        {
+            int lion = 0;int water = 0; int wall = 0; 
+            foreach (Tile tile in tiles)
+            {
+                switch (tile.TileType)
+                {
+                    case "lion":
+                        lion++; 
+                        break;
+					case "water":
+                        water++;
+                        break;
+                    case "wall":
+                        wall++;
+                        break;
+                }
+            }
+            return new TileGeneratorData(width, height, wall, lion, water);
+        }
         public void DrawShortestPathToWater(PathfindingContext pathfindingContext)
         {
             TilePath? path = getClosestPathToWater(pathfindingContext);
