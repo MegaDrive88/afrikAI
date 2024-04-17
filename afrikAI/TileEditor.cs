@@ -25,8 +25,6 @@ namespace afrikAI
 			catch (Exception) {isZebraOnMap = false;}
 			tileManager.DrawTiles();
 			inputHandler.HandleEditorInput();
-			
-			
 		}
 		public void MoveCursor(char dir)
 		{
@@ -37,6 +35,8 @@ namespace afrikAI
 		public void EditTile(string tileTpye)
 		{
 			if (isZebraOnMap && tileTpye == "zebra") return;
+			else if (tileManager.GetTileType(x, y) == "zebra" && tileTpye != "zebra") isZebraOnMap = false;
+			else if (!isZebraOnMap && tileTpye == "zebra") isZebraOnMap = true;
 			tileManager.SetTileTpye(x, y, tileTpye);
 		}
 		public void Save()
@@ -70,10 +70,22 @@ namespace afrikAI
 		public void Next()
 		{
 			TileManager lastSaved = new TileManager(name);
-			if(isValidMap()) 
-			{ 	
-				Menu menu = new Menu(); 
+			TileGeneratorData tileData = lastSaved.GetTilesData();
+			if (tileData.Water < 0)
+			{
+				writeError("Cannot save because no water is on the map.");
+				return;
 			}
+			try
+			{
+				lastSaved.GetZebra();
+				Menu menu = new Menu();
+			}
+			catch (Exception)
+			{
+				writeError("Cannot save because no zebra is on the map.");
+			}		
+			
 		}
 		public void Quit() => Environment.Exit(0);
 		private bool isValidMap()
@@ -93,10 +105,13 @@ namespace afrikAI
 		}
 		private void writeError(string errorMessage)
 		{
+			int left = Console.CursorLeft;
+			int top = Console.CursorTop;
 			Console.SetCursorPosition(0, height + 2);
 			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine(errorMessage);
 			Console.ResetColor();
+			Console.SetCursorPosition(left, top);
 		}
 	}
 }
