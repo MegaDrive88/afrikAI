@@ -14,9 +14,11 @@
 				{'D',  new ConsoleKey[] {ConsoleKey.S, ConsoleKey.DownArrow} },
 				{'+' , new ConsoleKey[] {ConsoleKey.Add } },
 				{'-' , new ConsoleKey[] {ConsoleKey.Subtract } },
-				{'S', new ConsoleKey[] {ConsoleKey.V} }
+				{'S', new ConsoleKey[] {ConsoleKey.V} },
+				{'Q', new ConsoleKey[] {ConsoleKey.Escape, ConsoleKey.Backspace } },
+				{'N', new ConsoleKey[] {ConsoleKey.Enter, ConsoleKey.N} },
 
-            };
+			};
 			public static List<int> AcceptedInputKeys() {
 				List<int> l = Enumerable.Range(48, 10).ToList(); // szamok
 				l.AddRange(Enumerable.Range(96, 10).ToList()); // numpad
