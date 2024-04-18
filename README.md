@@ -22,3 +22,8 @@ Az **AfrikAI** egy játékos implementációja több útkereső algoritmusnak. A
 #### A szerkesztő működése
 > A szerkesztő megnyitása után a felhasználó egy üres sivatagot talál a képernyőjén, amelyen a nyíl billentyűkkel navigálva a [+] és [-] billentyűk segítségével tudja egy mező típusát megváltoztatni.
 > Mindezek után a [V] gomb segítségével elmenthető a létrehozott pálya.
+> Ha ezzel készen vagyunk, akkor az [Enter] lenyomásával léphetünk vissza a főmenübe, hogy lefuttassuk az AI-t a pályánkon.
+#### Továbbfejlesztés
+> A projekt az OOP elvei alapján van felépítve, emiatt nagyon egyszerű betanulni, továbbfejleszteni.
+> Mivel nyílt forrású, értelemszerűen ha bármilyen problémát talál a programban legyen szíves jelezni Issue formájában.
+> A fejlesztés ugyan egy időre leállt, de ha van ötlete, comment formájában felveheti velünk a kapcsolatot.
