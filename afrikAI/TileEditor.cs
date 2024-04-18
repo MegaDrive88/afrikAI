@@ -25,6 +25,7 @@ namespace afrikAI
 			catch (Exception) {isZebraOnMap = false;}
 			tileManager.DrawTiles();
 			inputHandler.HandleEditorInput();
+			MoveCursor('R');
 		}
 		public void MoveCursor(char dir)
 		{

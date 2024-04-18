@@ -40,6 +40,10 @@ namespace afrikAI
         {
             tiles[y,x].Draw();
         }
+        public void DrawTile(int[] cords)
+        {
+            tiles[cords[1], cords[0]].Draw();
+        }
         public Tile AddToTile(int x, int y, int amount)
         {
             Tile tile = tiles[y,x];
@@ -179,7 +183,10 @@ namespace afrikAI
             if (path == null) return;
 			if (path.Length > 0)
 			{
-				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });   
+				SwapTiles(new int[] { startTile.x, startTile.y }, new int[] { (int)path.Path[1].X, (int)path.Path[1].Y });
+                if (startTile.TileType == "lion") Thread.Sleep(500);
+                DrawTile(startTile.x, startTile.y);
+                DrawTile((int)path.Path[1].X, (int)path.Path[1].Y);
 			}
 		}
 		public Tile GetZebra()
@@ -235,6 +242,7 @@ namespace afrikAI
                 Console.Write((i + 1).ToString() + new string(' ', 2 - (i + 1).ToString().Length));
             }
             Console.ResetColor();
+            Console.SetCursorPosition(width*2, height-1);
         }
         private List<Tile> getWaters()
         {

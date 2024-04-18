@@ -4,7 +4,6 @@
 	{
 		public readonly int Water;
 		public readonly int Wall;
-		public readonly int Water;
 		public readonly int Lion;
 		public readonly int Width;
 		public readonly int Height;

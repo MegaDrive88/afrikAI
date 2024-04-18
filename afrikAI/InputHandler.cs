@@ -24,7 +24,7 @@ namespace afrikAI
             do
 			{
 				pos1 = menu.getCordInput(width, height, "Adja meg a mozgatni kívánt mező 2 koordinátáját:");
-				if (!isValidCord(pos1, invalidTiles))
+				if (!isValidCord(pos1, invalidTiles,width, height))
 				{
 					onInvalidCord();
 				}
@@ -33,7 +33,7 @@ namespace afrikAI
 			do
 			{
 				pos2 = menu.getCordInput(width, height + 4, "Adja meg a mező új pozícióját:");
-				if (!isValidCord(pos2, invalidTiles))
+				if (!isValidCord(pos2, invalidTiles, width, height))
 				{
 					onInvalidCord();
 				}
@@ -84,11 +84,12 @@ namespace afrikAI
 			Console.WriteLine("Vizet, oroszlánt és zebrát nem mozgathat.\n");
 			Console.ResetColor();
 		}
-		private bool isValidCord(int[] cord, List<Tile> invalidTiles)
+		private bool isValidCord(int[] cord, List<Tile> invalidTiles, int width, int height)
 		{
 			if (cord == null) return false;
 			foreach (Tile tile in invalidTiles) if (cord[0] == tile.x && cord[1] == tile.y) return false;
-			return true;
+			return cord[0] >= 0 && cord[0] < width && cord[1] >= 0 && cord[1] < height;
+			//return true;
 		}
 	}
 }

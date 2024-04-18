@@ -61,7 +61,13 @@ namespace afrikAI
 				tileManager.DrawTiles();
 				int[][] input = inputHandler.GetGameInput(width, height, tileManager.GetInvalidTiles());
                 tileManager.SwapTiles(input);
-                tileManager.MoveCloserToWater(pathfindingContext, this);
+				Thread.Sleep(100);
+				tileManager.DrawTile(input[0]);
+				Thread.Sleep(100);
+				tileManager.DrawTile(input[1]);
+				Thread.Sleep(1000);
+
+				tileManager.MoveCloserToWater(pathfindingContext, this);
                 moveLions();
 			}
 		}
@@ -84,7 +90,10 @@ namespace afrikAI
 		private void moveLions()
 		{
 			Tile zebra = tileManager.GetZebra();
-            foreach (Tile lion in lions) tileManager.MoveCloserToTile(pathfindingContext, lion, zebra, this);
+            foreach (Tile lion in lions) {
+				tileManager.MoveCloserToTile(pathfindingContext, lion, zebra, this);
+				
+			}
         }
 
 	}
