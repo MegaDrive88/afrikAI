@@ -39,7 +39,7 @@
         }
 		private void genWater(TileGeneratorData data, Tile[,] tiles)
 		{
-			genTileOfType("water", 5, tiles);
+			genTileOfType("water", data.Water, tiles);
 			//genTileOfType("water", data.Water, tiles)
 		}
         private void genZebra(Tile[,] tiles)
